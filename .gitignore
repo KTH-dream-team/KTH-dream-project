@@ -1,0 +1,7 @@
+*.exe
+*.dll
+*.o
+*.out
+lib/
+include/sdl2/
+.vscode/
