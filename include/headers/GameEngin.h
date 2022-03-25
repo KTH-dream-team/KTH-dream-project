@@ -12,6 +12,7 @@ typedef struct gameEngin
     void (*handleEvents)(void *self);
     void (*handleUpdates)(void *self);
     void (*handleRenders)(void *self);
+    SDL_Renderer *(*getRenderer)(void *self);
 
     EnginInstance *instance;
 
