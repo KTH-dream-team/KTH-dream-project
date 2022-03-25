@@ -2,7 +2,7 @@
 #include "DataTypes.h"
 #include <stdio.h>
 
-struct gameInstance
+struct enginInstance
 {
     bool isRunning;
     SDL_Window *window;
@@ -61,7 +61,7 @@ void handleEvents(void *self)
 void handleUpdates(void *self)
 {
     // updates functions go here !!!
-    printf("Updates!!! \n");
+    printf("Updates!!!! \n");
     // updates functions go here !!!
 }
 
@@ -82,6 +82,7 @@ bool destroyEngine(void *self)
     SDL_Quit();
     SDL_DestroyWindow(Engin->instance->window);
     SDL_DestroyRenderer(Engin->instance->renderer);
+    free(Engin->instance);
     // destroy all assets here !!!
 
     // destroy functions go here !!!
@@ -93,6 +94,7 @@ GameEngin *createGameEngin()
 {
     static GameEngin self;
 
+    self.instance = malloc(sizeof(EnginInstance *));
     self.init = init;
     self.isRunning = isRunning;
     self.handleEvents = handleEvents;

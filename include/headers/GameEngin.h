@@ -1,8 +1,8 @@
 #pragma once
 #include "SDL2/SDL.h"
-#include "datatypes.h"
+#include "DataTypes.h"
 
-typedef struct gameInstance GameInstance;
+typedef struct enginInstance EnginInstance;
 
 typedef struct gameEngin
 {
@@ -13,7 +13,7 @@ typedef struct gameEngin
     void (*handleUpdates)(void *self);
     void (*handleRenders)(void *self);
 
-    GameInstance *instance;
+    EnginInstance *instance;
 
 } GameEngin;
 
