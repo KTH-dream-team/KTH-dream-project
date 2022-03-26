@@ -2,6 +2,9 @@
 #include "DataTypes.h"
 #include "TextureManager.h"
 #include <stdio.h>
+#include "Animation.h"
+#include "EntityManager.h"
+#include "Animation.h"
 
 struct enginInstance
 {
@@ -39,12 +42,17 @@ int init(void *self, char *title, int width, int height, int fullScreen)
         return 0;
     }
 
-    TextureManager *texterManager = createTextureManager();
+    TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "body", "./assets/image.png");
-    texterManager->load(texterManager, "body", "./assets/image.png");
-    texterManager->load(texterManager, "body", "./assets/image.png");
-    texterManager->load(texterManager, "body", "./assets/image.png");
-    texterManager->load(texterManager, "body", "./assets/image.png");
+    texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
+
+    EntityManager *entityManager = getEntityManager();
+
+    Animation *anim = newAnimation();
+    anim->set(anim, "warrior", 32, 32, 4, 10, 50, 0);
+    anim->draw(anim, 0, 0);
+
+    entityManager->add(entityManager, "anim1", anim);
 
     Engin->instance->isRunning = true;
 
@@ -71,6 +79,10 @@ void handleUpdates(void *self)
 {
     // updates functions go here !!!
     // printf("Updates!!!! \n");
+    EntityManager *entityManager = getEntityManager();
+    Animation *anim = entityManager->getByID(entityManager, "anim1");
+    anim->update(anim);
+
     // updates functions go here !!!
 }
 
@@ -81,13 +93,11 @@ void handleRenders(void *self)
     SDL_RenderClear(Engin->instance->renderer);
 
     // render functions go here !!!
-    TextureManager *texterManager = createTextureManager();
-    int x = 10;
-    int y = 40;
-    SDL_Rect srcRect = {0, 0, 500, 294};
-    SDL_Rect destRect = {x, y, 500 / 2, 249 / 2};
-    texterManager->draw(texterManager, "body", srcRect, destRect, 0);
-    // updates functions go here !!!
+    EntityManager *entityManager = getEntityManager();
+    Animation *anim = entityManager->getByID(entityManager, "anim1");
+    anim->draw(anim, 55, 55);
+
+    // render functions go here !!!
 
     SDL_RenderPresent(Engin->instance->renderer);
 }
@@ -100,8 +110,11 @@ bool destroyEngine(void *self)
     SDL_DestroyRenderer(Engin->instance->renderer);
     free(Engin->instance);
 
-    TextureManager *texterManager = createTextureManager();
+    TextureManager *texterManager = getTextureManager();
     texterManager->destroy(texterManager);
+
+    EntityManager *entityManager = getEntityManager();
+    entityManager->destroy(entityManager);
     //  destroy all assets here !!!
 
     // destroy functions go here !!!

@@ -52,9 +52,10 @@ void drop(void *self, char *id)
 
 void destroy(void *self)
 {
-    ((TextureManager *)self)->instance->textureList->destroy(((TextureManager *)self)->instance->textureList);
-    free(((TextureManager *)self)->instance->textureList);
-    free(((TextureManager *)self)->instance);
+    TextureManagerInstance *instance = ((TextureManager *)self)->instance;
+    instance->textureList->destroy(instance->textureList);
+    // free(instance->textureList);
+    free(instance);
     printf("TextureManager destroyed\n");
 }
 
@@ -81,10 +82,10 @@ void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_Rendere
     SDL_RenderCopyEx(ren, tex, &srcRect, &destRect, 0, NULL, flip);
 }
 
-void drawFrame(void *self, char *id, int x, int y, int w, int h, int row, int col, SDL_RendererFlip flip)
+void drawFrame(void *self, char *id, float x, float y, int w, int h, int row, int frame, SDL_RendererFlip flip)
 {
-    SDL_Rect srcRect = {w * col, h * row, w, h};
-    SDL_Rect destRect = {x, y, w / 1.5, h / 1.5};
+    SDL_Rect srcRect = {w * frame, h * row, w, h};
+    SDL_Rect destRect = {x, y, w, h};
 
     GameEngin *Engine = createGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
@@ -93,7 +94,7 @@ void drawFrame(void *self, char *id, int x, int y, int w, int h, int row, int co
     SDL_RenderCopyEx(ren, tex, &srcRect, &destRect, 0, NULL, flip);
 }
 
-TextureManager *createTextureManager()
+TextureManager *getTextureManager()
 {
     static TextureManager self;
 
