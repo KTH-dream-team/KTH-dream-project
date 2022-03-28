@@ -28,7 +28,7 @@ bool load(void *self, char *id, char *filename)
     }
 
     // Create texture from surface
-    GameEngin *Engine = createGameEngin();
+    GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(ren, surface);
     if (texture == NULL)
@@ -75,7 +75,7 @@ SDL_Texture *getTextureByID(void *self, char *id)
 
 void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip)
 {
-    GameEngin *Engine = createGameEngin();
+    GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
     SDL_Texture *tex = getTextureByID(self, id);
 
@@ -87,7 +87,7 @@ void drawFrame(void *self, char *id, float x, float y, int w, int h, int row, in
     SDL_Rect srcRect = {w * frame, h * row, w, h};
     SDL_Rect destRect = {x, y, w, h};
 
-    GameEngin *Engine = createGameEngin();
+    GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
     SDL_Texture *tex = getTextureByID(self, id);
 

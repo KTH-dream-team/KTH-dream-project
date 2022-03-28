@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Animation.h"
+#include "EventHandler.h"
 
 struct enginInstance
 {
@@ -61,18 +62,8 @@ int init(void *self, char *title, int width, int height, int fullScreen)
 
 void handleEvents(void *self)
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch (event.type)
-        {
-        case SDL_QUIT:
-            ((GameEngin *)self)->instance->isRunning = false;
-            break;
-        default:
-            break;
-        }
-    }
+    EventHandler *eventHandler = getEventHandler();
+    eventHandler->listen(eventHandler);
 }
 
 void handleUpdates(void *self)
@@ -84,6 +75,12 @@ void handleUpdates(void *self)
     anim->update(anim);
 
     // updates functions go here !!!
+}
+
+void quit(void *self)
+{
+    GameEngin *Engin = ((GameEngin *)self);
+    Engin->instance->isRunning = false;
 }
 
 void handleRenders(void *self)
@@ -127,7 +124,7 @@ SDL_Renderer *getRenderer(void *self)
     return ((GameEngin *)self)->instance->renderer;
 }
 
-GameEngin *createGameEngin()
+GameEngin *getGameEngin()
 {
     static GameEngin self;
 
@@ -142,6 +139,7 @@ GameEngin *createGameEngin()
     self.handleRenders = handleRenders;
     self.destroyEngine = destroyEngine;
     self.getRenderer = getRenderer;
+    self.quit = quit;
     printf("GameEngin initialized\n");
 
     return &self;
