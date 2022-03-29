@@ -9,7 +9,7 @@ struct warriorInstance
     Animation *animation;
 };
 
-void updateWarrior(void*self)
+void updateWarrior(void*self, float dt)
 {
     Animation *anim = ((Warrior*)self)->instance->animation;
     anim->update(anim);
