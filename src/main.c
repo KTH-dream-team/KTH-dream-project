@@ -11,8 +11,8 @@
 int main(int argc, char **argv)
 {
 
-    GameEngin *Engine = createGameEngin();
-    Engine->init(Engine, "Kth_dream", 500, 500, false);
+    GameEngin *Engine = getGameEngin();
+    Engine->init(Engine, "Kth_dream_team", 500, 500, false);
 
     while (Engine->isRunning(Engine))
     {

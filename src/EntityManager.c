@@ -47,6 +47,7 @@ void destroyEntityManager(void *self)
 
     instance->entityList->destroy(instance->entityList);
     // free(instance->entityList);
+    
     free(instance);
     printf("EntityManager Destroyed\n");
 }

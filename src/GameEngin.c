@@ -6,6 +6,7 @@
 #include "EntityManager.h"
 #include "Animation.h"
 #include "EventHandler.h"
+#include "Warrior.h"
 
 struct enginInstance
 {
@@ -45,15 +46,12 @@ int init(void *self, char *title, int width, int height, int fullScreen)
 
     TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "body", "./assets/image.png");
-    texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
 
     EntityManager *entityManager = getEntityManager();
 
-    Animation *anim = newAnimation();
-    anim->set(anim, "warrior", 32, 32, 4, 10, 50, 0);
-    anim->draw(anim, 0, 0);
-
-    entityManager->add(entityManager, "anim1", anim);
+    //Warrior creation
+    Warrior *warrior = createWarrior();
+    entityManager->add(entityManager, "warrior-1", warrior);
 
     Engin->instance->isRunning = true;
 
@@ -64,15 +62,23 @@ void handleEvents(void *self)
 {
     EventHandler *eventHandler = getEventHandler();
     eventHandler->listen(eventHandler);
+
+    EntityManager *entityManager = getEntityManager();
+
+    //Warrior Events
+    Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
+    warrior->eventHandler(warrior);
 }
 
 void handleUpdates(void *self)
 {
     // updates functions go here !!!
-    // printf("Updates!!!! \n");
+
     EntityManager *entityManager = getEntityManager();
-    Animation *anim = entityManager->getByID(entityManager, "anim1");
-    anim->update(anim);
+
+    //Warrior update
+    Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
+    warrior->update(warrior);
 
     // updates functions go here !!!
 }
@@ -90,9 +96,12 @@ void handleRenders(void *self)
     SDL_RenderClear(Engin->instance->renderer);
 
     // render functions go here !!!
+
     EntityManager *entityManager = getEntityManager();
-    Animation *anim = entityManager->getByID(entityManager, "anim1");
-    anim->draw(anim, 55, 55);
+
+    //Warrior Render
+    Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
+    warrior->render(warrior);
 
     // render functions go here !!!
 
@@ -112,7 +121,10 @@ bool destroyEngine(void *self)
 
     EntityManager *entityManager = getEntityManager();
     entityManager->destroy(entityManager);
-    //  destroy all assets here !!!
+
+    EventHandler *eventHandler = getEventHandler();
+    eventHandler->destroy(eventHandler);
+    // destroy all assets here !!!
 
     // destroy functions go here !!!
     printf("Engine Cleaned");
