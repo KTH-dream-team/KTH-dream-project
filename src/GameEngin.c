@@ -7,6 +7,7 @@
 #include "Animation.h"
 #include "EventHandler.h"
 #include "Warrior.h"
+#include "FpsManager.h"
 
 struct enginInstance
 {
@@ -73,12 +74,16 @@ void handleEvents(void *self)
 void handleUpdates(void *self)
 {
     // updates functions go here !!!
+    FpsManager *fpsManager = getFpsManager();
+    float dt = fpsManager->getDelta(fpsManager);
+    printf("dt: %f\n", dt);
+
 
     EntityManager *entityManager = getEntityManager();
 
     //Warrior update
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
-    warrior->update(warrior);
+    warrior->update(warrior, dt);
 
     // updates functions go here !!!
 }
