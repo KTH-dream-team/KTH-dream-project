@@ -17,8 +17,27 @@ struct textureManagerInstance
     ArrayList *textureList;
 };
 
+SDL_Texture *getTextureByID(void *self, char *id)
+{
+    ArrayList *textureList = ((TextureManager *)self)->instance->textureList;
+    int lenght = textureList->getLength(textureList);
+
+    for (int i = 0; i < lenght; i++)
+    {
+        TextureMap *t = (TextureMap *)(textureList->indexOf(textureList, i));
+        if (strcmp(t->id, id) == 0)
+            return t->texture;
+    }
+    return NULL;
+}
+
 bool load(void *self, char *id, char *filename)
 {
+    //check if texture is already loaded;
+    SDL_Texture *t = getTextureByID(self, id);
+    if(t != NULL)
+        return false;   
+
     // load texture;
     SDL_Surface *surface = IMG_Load(filename);
     if (surface == NULL)
@@ -57,20 +76,6 @@ void destroy(void *self)
     // free(instance->textureList);
     free(instance);
     printf("TextureManager destroyed\n");
-}
-
-SDL_Texture *getTextureByID(void *self, char *id)
-{
-    ArrayList *textureList = ((TextureManager *)self)->instance->textureList;
-    int lenght = textureList->getLength(textureList);
-
-    for (int i = 0; i < lenght; i++)
-    {
-        TextureMap *t = (TextureMap *)(textureList->indexOf(textureList, i));
-        if (strcmp(t->id, id) == 0)
-            return t->texture;
-    }
-    return NULL;
 }
 
 void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip)
