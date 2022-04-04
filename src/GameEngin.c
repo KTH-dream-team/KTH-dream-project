@@ -76,7 +76,7 @@ void handleUpdates(void *self)
     // updates functions go here !!!
     FpsManager *fpsManager = getFpsManager();
     float dt = fpsManager->getDelta(fpsManager);
-    printf("dt: %f\n", dt);
+    //printf("dt: %f\n", dt);
 
 
     EntityManager *entityManager = getEntityManager();

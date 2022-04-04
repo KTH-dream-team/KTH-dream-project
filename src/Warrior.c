@@ -3,23 +3,28 @@
 #include "EventHandler.h"
 #include "TextureManager.h"
 #include "Transform.h"
+#include "Rigidbody.h"
+#include <stdio.h>
 
 
 struct warriorInstance
 {
     Animation *animation;
     Transform *position;
-
+    Rigidbody *rigidBody;
 };
 
 void updateWarrior(void*self, float dt)
 {
     Animation *anim = ((Warrior*)self)->instance->animation;
     anim->update(anim);
+    
+    Rigidbody *rig = ((Warrior*)self)->instance->rigidBody;
+    rig->update(rig, dt);
 
     Transform *pos = ((Warrior*)self)->instance->position;
-    pos->translate(pos,1, 1);
-    printf("x: %f\n", pos->getX(pos));
+
+    pos->translate(pos,rig->getPositionX(rig), rig->getPositionY(rig));
 }
 void renderWarrior(void*self)
 {
@@ -54,6 +59,7 @@ void destroyWarrior(void *self)
 
     warrior->instance->animation->destroy(warrior->instance->animation);
     warrior->instance->position->destroy(warrior->instance->position);
+    warrior->instance->rigidBody->destroy(warrior->instance->rigidBody);
 
     free(warrior->instance);
     free(warrior);
@@ -70,7 +76,10 @@ Warrior *createWarrior()
     self->instance->animation->set(self->instance->animation, "warrior", 32, 32, 0, 13, 90, 0);
     
     self->instance->position = newTransform();
-    self->instance->position->set(self->instance->position, 0, 250);
+    self->instance->position->set(self->instance->position, 0, 0);
+
+    self->instance->rigidBody = newRigidBody();
+    self->instance->rigidBody->setForce(self->instance->rigidBody, 1 , -5);
 
     self->update = updateWarrior;
     self->eventHandler = warriorEventHandle;
