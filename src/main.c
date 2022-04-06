@@ -2,10 +2,11 @@
 #include "DataTypes.h"
 #include "FpsManager.h"
 #include "GameEngin.h"
+#include "map.h"
 
 #define SDL_MAIN_HANDLED
 
-#define SCREEN_WIDTH 500
+#define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 500
 
 int main(int argc, char **argv)
@@ -15,7 +16,6 @@ int main(int argc, char **argv)
     Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
 
     FpsManager *fpsManager = getFpsManager();
-
     while (Engine->isRunning(Engine))
     {
         fpsManager->listen(fpsManager);
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);
     }
-
     Engine->destroyEngine(Engine);
+    
     return 0;
 }

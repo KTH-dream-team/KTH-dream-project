@@ -1,5 +1,6 @@
 #include "FpsManager.h"
 #include "SDL2/SDL.h"
+#include <stdio.h>
 
 
 
@@ -16,7 +17,7 @@ void fpsListen(void*self)
 
     FpsManagerInstance *instance = ((FpsManager*)self)->instance;
 
-    float dt = (currentTime - instance->lastTime)*(TARGET_FRAME_RATE/1000.0);
+    float dt = (currentTime - instance->lastTime)*(float)(TARGET_FRAME_RATE/1000.0);
     instance->deltaTime = dt;
     instance->lastTime = currentTime;
 }

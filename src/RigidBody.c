@@ -87,10 +87,10 @@ void updateRigidBody(void*self, float dt)
 {
     RigidbodyInstance *instance = ((Rigidbody*)self)->instance;
 
-    dt = dt/60;
+    dt = dt/60;//ca 60 fps
 
-    float frictionX = instance->acc->getX(instance->acc);
-    float frictionY = instance->acc->getY(instance->acc);
+    float frictionX = instance->friction->getX(instance->friction);
+    float frictionY = instance->friction->getY(instance->friction);
     float forceX = instance->force->getX(instance->force);
     float forceY = instance->force->getY(instance->force);
     //acc
@@ -106,7 +106,7 @@ void updateRigidBody(void*self, float dt)
     float posY = velY*dt;
     instance->pos->set(instance->pos, posX, posY);
 
-    printf("posX: %f, posY: %f\n",posX, posY);
+   //todo sett på igen printf("posX: %f, posY: %f\n",posX, posY);
 
 }
 void destroyRigidBody(void *self)
@@ -139,8 +139,8 @@ Rigidbody * newRigidBody()
     Rigidbody *self = malloc(sizeof(Rigidbody));
     self->instance = malloc(sizeof(RigidbodyInstance));
 
-    self->instance->mass = 1;
-    self->instance->gravity = 5;
+    self->instance->mass = 1;//todo rest to 1
+    self->instance->gravity = 5;//todo set to 5 eller 9.8
 
     self->instance->friction = malloc(sizeof(Vector));
     self->instance->friction = newVector();

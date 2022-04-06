@@ -20,6 +20,7 @@ void keyDown(void*self)
     printf("keydown\n");
     EventHandlerInstance * instance = ((EventHandler*)self)->instance;
     instance->keyState = SDL_GetKeyboardState(NULL);
+    
 }
 void listen(void*self)
 {

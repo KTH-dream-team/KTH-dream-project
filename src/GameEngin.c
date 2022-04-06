@@ -8,6 +8,7 @@
 #include "EventHandler.h"
 #include "Warrior.h"
 #include "FpsManager.h"
+#include "map.h"
 
 struct enginInstance
 {
@@ -54,7 +55,10 @@ int init(void *self, char *title, int width, int height, int fullScreen)
     Warrior *warrior = createWarrior();
     entityManager->add(entityManager, "warrior-1", warrior);
 
+    initMap();
+
     Engin->instance->isRunning = true;
+
 
     return 1;
 }
@@ -97,7 +101,7 @@ void quit(void *self)
 void handleRenders(void *self)
 {
     GameEngin *Engin = ((GameEngin *)self);
-    SDL_SetRenderDrawColor(Engin->instance->renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(Engin->instance->renderer, 135, 206, 235, 255);
     SDL_RenderClear(Engin->instance->renderer);
 
     // render functions go here !!!
@@ -109,7 +113,7 @@ void handleRenders(void *self)
     warrior->render(warrior);
 
     // render functions go here !!!
-
+    showMap();
     SDL_RenderPresent(Engin->instance->renderer);
 }
 
