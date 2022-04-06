@@ -3,5 +3,5 @@
 *.o
 *.out
 lib/
-include/sdl2/
+include/SDL2/
 .vscode/
