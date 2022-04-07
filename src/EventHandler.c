@@ -44,6 +44,10 @@ void listen(void*self)
         }
     }
 }
+unsigned int getMouseState(int *mouseX, int *mouseY)
+{
+    return SDL_GetMouseState(mouseX, mouseY);
+}
 bool getKeyPress(void*self, SDL_Scancode scancode)
 {
     EventHandlerInstance * instance = ((EventHandler*)self)->instance;
@@ -71,6 +75,7 @@ EventHandler *getEventHandler(){
     self.listen = listen;
     self.getKeyPress = getKeyPress;
     self.destroy = destroyEventHandler;
+    self.getMouseState = getMouseState;
     self.instance->keyState = SDL_GetKeyboardState(NULL);
 
     return &self;
