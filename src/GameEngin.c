@@ -53,9 +53,9 @@ int init(void *self, char *title, int width, int height, int fullScreen)
 
     //Warrior creation
     Warrior *warrior = createWarrior();
-    entityManager->add(entityManager, "warrior-1", warrior);
+    entityManager->add(entityManager, "warrior-1", warrior);//add to entity manager list
 
-    initMap();
+    initMap();//!
 
     Engin->instance->isRunning = true;
 
@@ -73,6 +73,8 @@ void handleEvents(void *self)
     //Warrior Events
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
     warrior->eventHandler(warrior);
+
+
 }
 
 void handleUpdates(void *self)
@@ -108,12 +110,12 @@ void handleRenders(void *self)
 
     EntityManager *entityManager = getEntityManager();
 
+    showMap();//!render map behind player
     //Warrior Render
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
     warrior->render(warrior);
 
     // render functions go here !!!
-    showMap();
     SDL_RenderPresent(Engin->instance->renderer);
 }
 

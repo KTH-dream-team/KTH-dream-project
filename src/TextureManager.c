@@ -90,7 +90,7 @@ void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_Rendere
 void drawFrame(void *self, char *id, float x, float y, int w, int h, int row, int frame, SDL_RendererFlip flip)
 {
     SDL_Rect srcRect = {w * frame, h * row, w, h};
-    SDL_Rect destRect = {x, y, w, h};
+    SDL_Rect destRect = {x, y, w*2, h*2};//!änding med 2x
 
     GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);

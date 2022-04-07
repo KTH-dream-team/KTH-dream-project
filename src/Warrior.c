@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "Rigidbody.h"
 #include <stdio.h>
+#include <map.h>
 
 
 struct warriorInstance
@@ -31,7 +32,7 @@ void renderWarrior(void*self)
     Animation *anim = ((Warrior*)self)->instance->animation;
     Transform *pos = ((Warrior*)self)->instance->position;
 
-    anim->draw(anim,pos->getX(pos) , pos->getY(pos));
+    anim->draw(anim,pos->getX(pos) , pos->getY(pos));//!shiftar animatinner x och y
 }
 void warriorEventHandle(void*self)
 {
@@ -47,6 +48,11 @@ void warriorEventHandle(void*self)
     if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_S))
     {
         anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0);
+        
+        staticDig();//!gräva
+
+
+
     }
     if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_D))
     {
@@ -76,8 +82,8 @@ Warrior *createWarrior()
     self->instance->animation->set(self->instance->animation, "warrior", 32, 32, 0, 13, 90, 0);
     
     self->instance->position = newTransform();
-    self->instance->position->set(self->instance->position, 0, 0);
-
+    //todo orginal self->instance->position->set(self->instance->position, 0, 0);
+    self->instance->position->set(self->instance->position, 350,6*25 );
     self->instance->rigidBody = newRigidBody();
     self->instance->rigidBody->setForce(self->instance->rigidBody, 1 , -5);//!forces på gubben initialt
 

@@ -44,7 +44,7 @@ void listen(void*self)
         }
     }
 }
-bool getKeyPress(void*self, SDL_Scancode scancode)
+bool getKeyPress(void*self, SDL_Scancode scancode)//!if scancode is pressed, return true
 {
     EventHandlerInstance * instance = ((EventHandler*)self)->instance;
     if(instance->keyState[scancode] == 1)
