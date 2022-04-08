@@ -6,7 +6,8 @@
 #include "Rigidbody.h"
 #include <stdio.h>
 #include <map.h>
-
+static unsigned int currentTime;
+static unsigned int lastTime;
 
 struct warriorInstance
 {
@@ -49,7 +50,7 @@ void warriorEventHandle(void*self)
     {
         anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0);
         
-        staticDig();//!gräva
+        // staticDig();//!gräva
 
 
 
@@ -57,6 +58,31 @@ void warriorEventHandle(void*self)
     if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_D))
     {
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
+    }
+    int mouse_x, mouse_y;
+    if(eventHandler->getMouseState(&mouse_x,&mouse_y)==1){
+        printf("x =%d y=%d %u ",mouse_x, mouse_y, eventHandler->getMouseState(&mouse_x,&mouse_y));//todo remove
+
+        currentTime=SDL_GetTicks();
+     //   if (lastTime+100<currentTime)
+       // {
+            printf("hej\n");
+            //lastTime=currentTime;
+            if (eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_D))
+            {
+                /* code */
+                build(mouse_x,mouse_y,0);
+            }
+            if (eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_A))
+            {
+                /* code */
+                dig(mouse_x,mouse_y);
+            }
+            
+            //dig(mouse_x,mouse_y);
+
+      //  }
+
     }
 }
 void destroyWarrior(void *self)

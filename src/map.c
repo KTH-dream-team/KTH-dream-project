@@ -48,30 +48,35 @@ void initMap()
     textureManager->load(textureManager, "black", "./assets/black.png");//8
 }
 
+
 void dig(int y, int x){//!gräva rakt ner dely 100 tick
+    printf("in ding 1\n");
+    x = x/20;
+    y = y/20;
+    map[x][y] = 0;
     
 
-    map[y][x] = 0;
+    //map[x][y] = 0;
 }
 
-static int x = 18;//todo remove
-static int y = 10;//todo remove
-void staticDig(){//!gräva rakt ner tilfäligt implementerad för att testa 
 
-    static unsigned int currentTime;
-    static unsigned int lastTime;
-    currentTime=SDL_GetTicks();
-        if(y<30){
-            if (lastTime+100<currentTime)
-            {
-                y++;
-                lastTime=currentTime;
-            }
-        }
-    map[y][x] = 0;
+void build( int y,int x, int blockType){
+    blockType = 1; //defult dirt
+    x = x/20;
+    y = y/20;
+    printf("x %d y%d",x,y);
+    //map[x][y] =1;
 
-
+    if (map[x][y] == 0)
+    {
+        map[x][y] = blockType;
+    }else{
+        printf("\ncant build on exiisting block\n");
+    }
+       
 }
+
+
 
 void showMap()
 {

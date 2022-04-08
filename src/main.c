@@ -23,6 +23,7 @@ int main(int argc, char **argv)
     {
         fpsManager->listen(fpsManager);
         Engine->handleEvents(Engine);
+        //staticDig();//!gräva //todo remove
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);
     }
