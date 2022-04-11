@@ -23,10 +23,12 @@ int main(int argc, char **argv)
     {
         fpsManager->listen(fpsManager);
         Engine->handleEvents(Engine);
-        //staticDig();//!gräva //todo remove
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);
     }
     Engine->destroyEngine(Engine);
+    // MapManager *mapManager = getMapManager();
+    // mapManager->show(mapManager);
+
     return 0;
 }

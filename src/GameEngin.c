@@ -55,7 +55,10 @@ int init(void *self, char *title, int width, int height, int fullScreen)
     Warrior *warrior = createWarrior();
     entityManager->add(entityManager, "warrior-1", warrior);//add to entity manager list
 
-    initMap();//!
+    MapManager *mapManager = getMapManager();
+
+    mapManager->initMap(mapManager);//! initializes map
+
 
     Engin->instance->isRunning = true;
 
@@ -110,7 +113,9 @@ void handleRenders(void *self)
 
     EntityManager *entityManager = getEntityManager();
 
-    showMap();//!render map behind player
+    MapManager *mapManger = getMapManager();
+   
+    mapManger->showMap(mapManger);//!render map behind player
     //Warrior Render
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
     warrior->render(warrior);
@@ -138,6 +143,8 @@ bool destroyEngine(void *self)
     // destroy all assets here !!!
 
     // destroy functions go here !!!
+    MapManager *mapManager = getMapManager();
+    mapManager->destroyMap(mapManager);
     printf("Engine Cleaned");
     return false;
 }

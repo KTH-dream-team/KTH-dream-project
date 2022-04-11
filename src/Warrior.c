@@ -42,6 +42,9 @@ void warriorEventHandle(void*self)
 
     Animation *anim = ((Warrior*)self)->instance->animation;
 
+    MapManager *mapManager = getMapManager();//!map
+
+
     if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_A))
     {
         anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0);
@@ -49,11 +52,6 @@ void warriorEventHandle(void*self)
     if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_S))
     {
         anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0);
-        
-        // staticDig();//!gräva
-
-
-
     }
     if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_D))
     {
@@ -61,22 +59,21 @@ void warriorEventHandle(void*self)
     }
     int mouse_x, mouse_y;
     if(eventHandler->getMouseState(&mouse_x,&mouse_y)==1){
-        printf("x =%d y=%d %u ",mouse_x, mouse_y, eventHandler->getMouseState(&mouse_x,&mouse_y));//todo remove
+        printf("mouse x =%d y=%d %u \n",mouse_x, mouse_y, eventHandler->getMouseState(&mouse_x,&mouse_y));//todo remove
 
         currentTime=SDL_GetTicks();
      //   if (lastTime+100<currentTime)
        // {
-            printf("hej\n");
             //lastTime=currentTime;
-            if (eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_D))
+            if (eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_E))
             {
                 /* code */
-                build(mouse_x,mouse_y,0);
+                mapManager->build(mapManager,mouse_x,mouse_y,0);//!build hold E
             }
-            if (eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_A))
+            if (eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_Q))
             {
                 /* code */
-                dig(mouse_x,mouse_y);
+                mapManager->dig(mapManager,mouse_x,mouse_y);//!dig hold Q
             }
             
             //dig(mouse_x,mouse_y);
