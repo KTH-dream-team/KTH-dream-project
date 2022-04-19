@@ -1,3 +1,7 @@
+/*
+    rigidbody determines the movment of its owner by aply some basic physic.
+*/
+
 #pragma once
 #include <SDL2/SDL.h>
 
@@ -17,6 +21,7 @@ typedef struct rigidbody
     void (*setForce)(void *self, float fx, float fy);
     void (*setForceX)(void *self, float fx);
     void (*setForceY)(void *self, float fy);
+    void (*applyForce)(void *self, float fx, float fy);
     SDL_FPoint (*getForce)(void *self);
     // velocity getter/setter
     void (*setVelocity)(void *self, float fx, float fy);

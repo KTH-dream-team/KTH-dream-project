@@ -62,7 +62,7 @@ void handleUpdates(void *self)
     EntityManager *entityManager = getEntityManager();
 
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
-    // warrior->update(warrior, dt);
+    warrior->update(warrior, dt);
 
     Cube *cube = entityManager->getByID(entityManager, "cube-1");
     cube->update(cube, dt);

@@ -16,8 +16,7 @@ struct rigidbodyInstance
 
 void setMass(void *self, float mass)
 {
-    RigidbodyInstance *instance = ((Rigidbody *)self)->instance;
-    instance->mass = mass;
+    ((Rigidbody *)self)->instance->mass = mass;
 }
 float getMass(void *self)
 {
@@ -55,6 +54,12 @@ void setForceY(void *self, float fy)
 {
     ((Rigidbody *)self)->instance->force.y = fy;
 }
+void applyForce(void *self, float fx, float fy)
+{
+    RigidbodyInstance *instance = ((Rigidbody *)self)->instance;
+    instance->force.x = instance->force.x + fx;
+    instance->force.y = instance->force.y + fy;
+}
 SDL_FPoint getForce(void *self)
 {
     return ((Rigidbody *)self)->instance->force;
@@ -62,8 +67,8 @@ SDL_FPoint getForce(void *self)
 void setVelocity(void *self, float fx, float fy)
 {
     RigidbodyInstance *instance = ((Rigidbody *)self)->instance;
-    instance->force.x = fx;
-    instance->force.y = fy;
+    instance->vel.x = fx;
+    instance->vel.y = fy;
 }
 void setVelocityX(void *self, float fx)
 {
@@ -92,27 +97,27 @@ void updateRigidBody(void *self, float dt)
 
     dt = dt / 60;
 
-    float frictionX = instance->acc.x;
-    float frictionY = instance->acc.y;
+    float frictionX = instance->friction.x;
+    float frictionY = instance->friction.y;
     float forceX = instance->force.x;
     float forceY = instance->force.y;
-    // acc
+    //  acc
     float accX = (forceX + frictionX) / instance->mass;
     float accY = ((instance->gravity / instance->mass) + frictionY + forceY) / instance->mass;
     instance->acc.x = accX;
     instance->acc.y = accY;
-    // vel
+    //  vel
     float velX = instance->vel.x + accX * dt;
     float velY = instance->vel.y + accY * dt;
     instance->vel.x = velX;
     instance->vel.y = velY;
-    // pos
+    //  pos
     float posX = velX * dt;
     float posY = velY * dt;
     instance->pos.x = posX;
     instance->pos.y = posY;
 
-    // printf("posX: %f, posY: %f\n", posX, posY);
+    printf("val: %f\n", dt);
 }
 void destroyRigidBody(void *self)
 {
@@ -129,7 +134,17 @@ Rigidbody *newRigidBody()
     self->instance = malloc(sizeof(RigidbodyInstance));
 
     self->instance->mass = 1;
-    self->instance->gravity = 5;
+    self->instance->gravity = 50;
+    self->instance->friction.x = 0;
+    self->instance->friction.y = 0;
+    self->instance->force.x = 0;
+    self->instance->force.y = 0;
+    self->instance->pos.x = 0;
+    self->instance->pos.y = 0;
+    self->instance->acc.x = 0;
+    self->instance->acc.y = 0;
+    self->instance->vel.x = 0;
+    self->instance->vel.y = 0;
 
     self->getMass = getMass;
     self->setMass = setMass;
@@ -142,12 +157,13 @@ Rigidbody *newRigidBody()
     self->setForce = setForce;
     self->setForceX = setForceX;
     self->setForceY = setForceY;
+    self->applyForce = applyForce;
     self->getForce = getForce;
 
-    self->setVelocity = setForce;
-    self->setVelocityX = setForceX;
-    self->setVelocityY = setForceY;
-    self->getVelocity = getForce;
+    self->setVelocity = setVelocity;
+    self->setVelocityX = setVelocityX;
+    self->setVelocityY = setVelocityY;
+    self->getVelocity = getVelocity;
 
     self->getPosition = getPosition;
     self->getAcceleration = getAcceleration;

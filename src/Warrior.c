@@ -81,7 +81,7 @@ Warrior *createWarrior()
     self->instance->position->set(self->instance->position, 0, 0);
 
     self->instance->rigidBody = newRigidBody();
-    self->instance->rigidBody->setForce(self->instance->rigidBody, 1, -5);
+    self->instance->rigidBody->setForce(self->instance->rigidBody, 0, 0);
 
     self->update = updateWarrior;
     self->eventHandler = warriorEventHandle;
