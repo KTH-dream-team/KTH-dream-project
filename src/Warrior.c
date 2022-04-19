@@ -1,11 +1,10 @@
 #include "Warrior.h"
 #include "Animation.h"
-#include "EventHandler.h"
+#include "InputHandler.h"
 #include "TextureManager.h"
 #include "Transform.h"
 #include "Rigidbody.h"
 #include <stdio.h>
-
 
 struct warriorInstance
 {
@@ -14,48 +13,48 @@ struct warriorInstance
     Rigidbody *rigidBody;
 };
 
-void updateWarrior(void*self, float dt)
+void updateWarrior(void *self, float dt)
 {
-    Animation *anim = ((Warrior*)self)->instance->animation;
+    Animation *anim = ((Warrior *)self)->instance->animation;
     anim->update(anim);
-    
-    Rigidbody *rig = ((Warrior*)self)->instance->rigidBody;
+
+    Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
 
-    Transform *pos = ((Warrior*)self)->instance->position;
+    Transform *pos = ((Warrior *)self)->instance->position;
 
-    pos->translate(pos,rig->getPositionX(rig), rig->getPositionY(rig));
+    SDL_FPoint PTranslate = rig->getPosition(rig);
+    pos->translate(pos, PTranslate.x, PTranslate.y);
 }
-void renderWarrior(void*self)
+void renderWarrior(void *self)
 {
-    Animation *anim = ((Warrior*)self)->instance->animation;
-    Transform *pos = ((Warrior*)self)->instance->position;
+    Animation *anim = ((Warrior *)self)->instance->animation;
+    Transform *pos = ((Warrior *)self)->instance->position;
 
-    anim->draw(anim,pos->getX(pos) , pos->getY(pos));
+    anim->draw(anim, pos->getX(pos), pos->getY(pos));
 }
-void warriorEventHandle(void*self)
+void warriorEventHandle(void *self)
 {
-    EventHandler *eventHandler = getEventHandler();
-    eventHandler->listen(eventHandler);
+    InputHandler *inputHandler = getInputHandler();
 
-    Animation *anim = ((Warrior*)self)->instance->animation;
+    Animation *anim = ((Warrior *)self)->instance->animation;
 
-    if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_A))
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
         anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0);
     }
-    if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_S))
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
         anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0);
     }
-    if(eventHandler->getKeyPress(eventHandler,SDL_SCANCODE_D))
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
     {
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
     }
 }
 void destroyWarrior(void *self)
 {
-    Warrior *warrior = ((Warrior*)self);
+    Warrior *warrior = ((Warrior *)self);
 
     warrior->instance->animation->destroy(warrior->instance->animation);
     warrior->instance->position->destroy(warrior->instance->position);
@@ -71,23 +70,23 @@ Warrior *createWarrior()
 {
     Warrior *self = malloc(sizeof(Warrior));
     self->instance = malloc(sizeof(WarriorInstance));
-    
+
+    TextureManager *texterManager = getTextureManager();
+    texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
+
     self->instance->animation = newAnimation();
-    self->instance->animation->set(self->instance->animation, "warrior", 32, 32, 0, 13, 90, 0);
-    
+    self->instance->animation->set(self->instance->animation, "warrior", 32, 32, 0, 13, 90, SDL_FLIP_NONE);
+
     self->instance->position = newTransform();
     self->instance->position->set(self->instance->position, 0, 0);
 
     self->instance->rigidBody = newRigidBody();
-    self->instance->rigidBody->setForce(self->instance->rigidBody, 1 , -5);
+    self->instance->rigidBody->setForce(self->instance->rigidBody, 1, -5);
 
     self->update = updateWarrior;
     self->eventHandler = warriorEventHandle;
     self->destroy = destroyWarrior;
     self->render = renderWarrior;
-    
-    TextureManager *texterManager = getTextureManager();
-    texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
 
     return self;
 }

@@ -1,7 +1,7 @@
 
 typedef struct transformInstance TransformInstance;
 
-typedef struct transform 
+typedef struct transform
 {
     void (*set)(void *self, float x, float y);
     void (*setX)(void *self, float x);
@@ -16,7 +16,7 @@ typedef struct transform
 
     void (*destroy)(void *self);
 
-    TransformInstance * instance;
-}Transform;
+    TransformInstance *instance;
+} Transform;
 
-Transform* newTransform ();
+Transform *newTransform();

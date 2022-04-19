@@ -3,7 +3,7 @@
 #include "Transform.h"
 #include "SDL2/SDL.h"
 #include "GameEngin.h"
-#include "EventHandler.h"
+#include "InputHandler.h"
 #include "CollisionManager.h"
 #include "SDL2/SDL.h"
 
@@ -57,9 +57,9 @@ void updateCube(void *self, float dt)
 }
 void eventCube(void *self)
 {
-    EventHandler *eventHandler = getEventHandler();
+    InputHandler *inputHandler = getInputHandler();
     int x, y;
-    unsigned int buttons = eventHandler->getMouseState(&x, &y);
+    unsigned int buttons = inputHandler->getMouseState(&x, &y);
 
     CubeInstance *instance = ((Cube *)self)->instance;
 

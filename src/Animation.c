@@ -17,7 +17,7 @@ struct animationInstance
 void update(void *self)
 {
     AnimationInstance *instance = ((Animation *)self)->instance;
-    instance->currentframe = (SDL_GetTicks() / instance->animSpeed ) % instance->totalFrame;
+    instance->currentframe = (SDL_GetTicks() / instance->animSpeed) % instance->totalFrame;
 }
 void drawAnimationFrame(void *self, float x, float y)
 {

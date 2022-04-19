@@ -5,9 +5,10 @@
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Animation.h"
-#include "EventHandler.h"
+#include "InputHandler.h"
 #include "Warrior.h"
 #include "FpsManager.h"
+#include "Cube.h"
 
 struct enginInstance
 {
@@ -16,43 +17,22 @@ struct enginInstance
     SDL_Renderer *renderer;
 };
 
-bool isRunning(void *self)
-{
-    return ((GameEngin *)self)->instance->isRunning;
-}
-
-int init(void *self, char *title, int width, int height, int fullScreen)
+bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScreen);
+bool init(void *self, char *title, int width, int height, int fullScreen)
 {
     GameEngin *Engin = ((GameEngin *)self);
-
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
-    {
-        printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
+    bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
+    if (!isRenderSucced)
         return 0;
-    }
-
-    Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, fullScreen);
-    if (!Engin->instance->window)
-    {
-        printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
-        return 0;
-    }
-
-    Engin->instance->renderer = SDL_CreateRenderer(Engin->instance->window, -1, SDL_RENDERER_ACCELERATED);
-    if (!(Engin->instance->window))
-    {
-        printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
-        return 0;
-    }
-
-    TextureManager *texterManager = getTextureManager();
-    texterManager->load(texterManager, "body", "./assets/image.png");
 
     EntityManager *entityManager = getEntityManager();
-
-    //Warrior creation
+    // Warrior creation
     Warrior *warrior = createWarrior();
     entityManager->add(entityManager, "warrior-1", warrior);
+
+    // cube creation
+    Cube *cube = newCube();
+    entityManager->add(entityManager, "cube-1", cube);
 
     Engin->instance->isRunning = true;
 
@@ -61,14 +41,15 @@ int init(void *self, char *title, int width, int height, int fullScreen)
 
 void handleEvents(void *self)
 {
-    EventHandler *eventHandler = getEventHandler();
-    eventHandler->listen(eventHandler);
-
     EntityManager *entityManager = getEntityManager();
 
-    //Warrior Events
+    // Warrior Events
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
     warrior->eventHandler(warrior);
+
+    // cube
+    Cube *cube = entityManager->getByID(entityManager, "cube-1");
+    cube->events(cube);
 }
 
 void handleUpdates(void *self)
@@ -76,24 +57,18 @@ void handleUpdates(void *self)
     // updates functions go here !!!
     FpsManager *fpsManager = getFpsManager();
     float dt = fpsManager->getDelta(fpsManager);
-    //printf("dt: %f\n", dt);
-
+    // printf("dt: %f\n", dt);
 
     EntityManager *entityManager = getEntityManager();
 
-    //Warrior update
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
-    warrior->update(warrior, dt);
+    // warrior->update(warrior, dt);
+
+    Cube *cube = entityManager->getByID(entityManager, "cube-1");
+    cube->update(cube, dt);
 
     // updates functions go here !!!
 }
-
-void quit(void *self)
-{
-    GameEngin *Engin = ((GameEngin *)self);
-    Engin->instance->isRunning = false;
-}
-
 void handleRenders(void *self)
 {
     GameEngin *Engin = ((GameEngin *)self);
@@ -104,15 +79,19 @@ void handleRenders(void *self)
 
     EntityManager *entityManager = getEntityManager();
 
-    //Warrior Render
+    // Render Warrior
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
     warrior->render(warrior);
+
+    // render Cube
+    SDL_SetRenderDrawColor(Engin->instance->renderer, 0, 0, 255, 255);
+    Cube *cube = entityManager->getByID(entityManager, "cube-1");
+    cube->render(cube);
 
     // render functions go here !!!
 
     SDL_RenderPresent(Engin->instance->renderer);
 }
-
 bool destroyEngine(void *self)
 {
     GameEngin *Engin = ((GameEngin *)self);
@@ -127,20 +106,27 @@ bool destroyEngine(void *self)
     EntityManager *entityManager = getEntityManager();
     entityManager->destroy(entityManager);
 
-    EventHandler *eventHandler = getEventHandler();
-    eventHandler->destroy(eventHandler);
+    InputHandler *inputHandler = getInputHandler();
+    inputHandler->destroy(inputHandler);
     // destroy all assets here !!!
 
     // destroy functions go here !!!
     printf("Engine Cleaned");
     return false;
 }
-
 SDL_Renderer *getRenderer(void *self)
 {
     return ((GameEngin *)self)->instance->renderer;
 }
-
+bool isRunning(void *self)
+{
+    return ((GameEngin *)self)->instance->isRunning;
+}
+void quit(void *self)
+{
+    GameEngin *Engin = ((GameEngin *)self);
+    Engin->instance->isRunning = false;
+}
 GameEngin *getGameEngin()
 {
     static GameEngin self;
@@ -150,14 +136,39 @@ GameEngin *getGameEngin()
 
     self.instance = malloc(sizeof(EnginInstance *));
     self.init = init;
-    self.isRunning = isRunning;
     self.handleEvents = handleEvents;
     self.handleUpdates = handleUpdates;
     self.handleRenders = handleRenders;
     self.destroyEngine = destroyEngine;
     self.getRenderer = getRenderer;
+    self.isRunning = isRunning;
     self.quit = quit;
-    printf("GameEngin initialized\n");
 
     return &self;
+}
+
+// helper functions
+bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScreen)
+{
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
+        return false;
+    }
+
+    Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, fullScreen);
+    if (!Engin->instance->window)
+    {
+        printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
+        return false;
+    }
+
+    Engin->instance->renderer = SDL_CreateRenderer(Engin->instance->window, -1, SDL_RENDERER_ACCELERATED);
+    if (!(Engin->instance->window))
+    {
+        printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
+        return false;
+    }
+
+    return true;
 }

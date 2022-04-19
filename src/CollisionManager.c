@@ -3,13 +3,11 @@
 
 bool PointVsRect(float px, float py, SDL_Rect *r)
 {
-    // return (p.x >= r->pos.x && p.y >= r->pos.y && p.x < r->pos.x + r->size.x && p.y < r->pos.y + r->size.y);
     return (px >= r->x && py >= r->y && px < (r->x + r->w) && py < (r->y + r->h));
 }
 
 bool RectVsRect(SDL_Rect *r1, SDL_Rect *r2)
 {
-    // return (r1->pos.x < r2->pos.x + r2->size.x && r1->pos.x + r1->size.x > r2->pos.x && r1->pos.y < r2->pos.y + r2->size.y && r1->pos.y + r1->size.y > r2->pos.y);
     return (r1->x < r2->x + r2->w && r1->x + r1->w > r2->x && r1->y < r2->y + r2->h && r1->y + r1->h > r2->y);
 }
 
@@ -90,7 +88,7 @@ bool RayVsRect(SDL_FPoint origin, SDL_FPoint dir, SDL_Rect r, SDL_FPoint *normal
     return true;
 }
 
-bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, SDL_FPoint *contact, float *t, unsigned int dt)
+bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, unsigned int dt)
 {
     dt = dt / 60;
 
@@ -112,12 +110,25 @@ bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoin
     dir.x = dir.x * dt;
     dir.y = dir.y * dt;
 
-    bool coll = RayVsRect(DRectOrigin, dir, expandedTarget, normal, contact, t);
+    SDL_FPoint contact;
+    float t;
+    bool coll = RayVsRect(DRectOrigin, dir, expandedTarget, normal, &contact, &t);
 
     if (coll)
-        return (*t >= 0 && *t < 1);
+        return (t >= 0 && t < 1);
     else
         return false;
+}
+
+bool ResolveDynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, unsigned int dt)
+{
+    SDL_FPoint normal;
+    if (DynamicRectVsRect(DRect, dir, SRect, &normal, dt))
+    {
+
+        return true;
+    }
+    return false;
 }
 
 CollisionManager *GetCollisionManager()
@@ -131,6 +142,7 @@ CollisionManager *GetCollisionManager()
     self.RectVsRect = RectVsRect;
     self.RayVsRect = RayVsRect;
     self.DynamicRectVsRect = DynamicRectVsRect;
+    self.ResolveDynamicRectVsRect = ResolveDynamicRectVsRect;
 
     return &self;
 }

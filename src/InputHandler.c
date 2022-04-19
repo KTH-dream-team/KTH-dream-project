@@ -1,22 +1,22 @@
-#include "EventHandler.h"
+#include "InputHandler.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "GameEngin.h"
 
-struct eventHandlerInstance
+struct inputHandlerInstance
 {
     const Uint8 *keyState;
 };
 void keyUp(void *self)
 {
     printf("keyup\n");
-    EventHandlerInstance *instance = ((EventHandler *)self)->instance;
+    InputHandlerInstance *instance = ((InputHandler *)self)->instance;
     instance->keyState = SDL_GetKeyboardState(NULL);
 }
 void keyDown(void *self)
 {
     printf("keydown\n");
-    EventHandlerInstance *instance = ((EventHandler *)self)->instance;
+    InputHandlerInstance *instance = ((InputHandler *)self)->instance;
     instance->keyState = SDL_GetKeyboardState(NULL);
 }
 void listen(void *self)
@@ -47,31 +47,31 @@ unsigned int getMouseState(int *mouseX, int *mouseY)
 }
 bool getKeyPress(void *self, SDL_Scancode scancode)
 {
-    EventHandlerInstance *instance = ((EventHandler *)self)->instance;
+    InputHandlerInstance *instance = ((InputHandler *)self)->instance;
     if (instance->keyState[scancode] == 1)
         return true;
     return false;
 }
-void destroyEventHandler(void *self)
+void destroyInputHandler(void *self)
 {
-    EventHandlerInstance *instance = ((EventHandler *)self)->instance;
+    InputHandlerInstance *instance = ((InputHandler *)self)->instance;
     free(instance);
 
-    printf("EventHandler Destroyed\n");
+    printf("InputHandler Destroyed\n");
 }
 
-EventHandler *getEventHandler()
+InputHandler *getInputHandler()
 {
-    static EventHandler self;
+    static InputHandler self;
 
     if (self.instance != NULL)
         return &self;
 
     SDL_GetKeyboardState(NULL);
-    self.instance = malloc(sizeof(EventHandlerInstance *));
+    self.instance = malloc(sizeof(InputHandlerInstance *));
     self.listen = listen;
     self.getKeyPress = getKeyPress;
-    self.destroy = destroyEventHandler;
+    self.destroy = destroyInputHandler;
     self.getMouseState = getMouseState;
     self.instance->keyState = SDL_GetKeyboardState(NULL);
 
