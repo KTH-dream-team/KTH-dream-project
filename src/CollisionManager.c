@@ -119,12 +119,14 @@ bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoin
         return false;
 }
 
-bool ResolveDynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, float dt)
+bool ResolveDynamicRectVsRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, float dt)
 {
     SDL_FPoint normal;
-    if (DynamicRectVsRect(DRect, dir, SRect, &normal, dt))
-    {
-
+    if (DynamicRectVsRect(DRect, *dir, SRect, &normal, dt))
+    {   
+        printf("den kraokarrrrrr\n");
+        dir->x = 0;
+        dir->y = 0;
         return true;
     }
     return false;
