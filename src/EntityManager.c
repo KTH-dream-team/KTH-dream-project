@@ -63,7 +63,7 @@ EntityManager *getEntityManager()
     self.getByID = getEntityByID;
     self.destroy = destroyEntityManager;
 
-    self.instance = malloc(sizeof(EntityManagerInstance *));
+    self.instance = malloc(sizeof(EntityManagerInstance *));//todo ta bort * ???
     self.instance->entityList = malloc(sizeof(ArrayList *));
     self.instance->entityList = newArrayList();
 

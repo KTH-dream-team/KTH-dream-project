@@ -5,6 +5,9 @@
 #include "Transform.h"
 #include "Rigidbody.h"
 #include <stdio.h>
+#include <map.h>
+static unsigned int currentTime;
+static unsigned int lastTime;
 
 struct warriorInstance
 {
@@ -36,6 +39,7 @@ void renderWarrior(void *self)
 void warriorEventHandle(void *self)
 {
     InputHandler *inputHandler = getInputHandler();
+    MapManager *mapManager = getMapManager();//MAP
 
     Animation *anim = ((Warrior *)self)->instance->animation;
 
@@ -50,6 +54,30 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
     {
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
+    }
+    int mouse_x, mouse_y;
+    if(inputHandler->getMouseState(&mouse_x,&mouse_y)==1){
+        printf("mouse x =%d y=%d %u \n",mouse_x, mouse_y, inputHandler->getMouseState(&mouse_x,&mouse_y));//todo remove
+
+        currentTime=SDL_GetTicks();
+     //   if (lastTime+100<currentTime)
+       // {
+            //lastTime=currentTime;
+            if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_E))
+            {
+                /* code */
+                mapManager->build(mapManager,mouse_x,mouse_y,0);//!build hold E
+            }
+            if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_Q))
+            {
+                /* code */
+                mapManager->dig(mapManager,mouse_x,mouse_y);//!dig hold Q
+            }
+            
+            //dig(mouse_x,mouse_y);
+
+      //  }
+
     }
 }
 void destroyWarrior(void *self)
@@ -78,10 +106,10 @@ Warrior *createWarrior()
     self->instance->animation->set(self->instance->animation, "warrior", 32, 32, 0, 13, 90, SDL_FLIP_NONE);
 
     self->instance->position = newTransform();
-    self->instance->position->set(self->instance->position, 0, 0);
-
+    //todo orginal self->instance->position->set(self->instance->position, 0, 0);
+    self->instance->position->set(self->instance->position, 350,6*25 );
     self->instance->rigidBody = newRigidBody();
-    self->instance->rigidBody->setForce(self->instance->rigidBody, 0, 0);
+    self->instance->rigidBody->setForce(self->instance->rigidBody, 1 , -5);//!forces på gubben initialt
 
     self->update = updateWarrior;
     self->eventHandler = warriorEventHandle;
