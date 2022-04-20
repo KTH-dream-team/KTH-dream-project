@@ -23,8 +23,10 @@ void updateWarrior(void *self, float dt)
     Animation *anim = ((Warrior *)self)->instance->animation;
     anim->update(anim);
 
-    //handle collision
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
+    rig->update(rig, dt);
+
+    //handle collision
     MapManager *mapManager = getMapManager();//MAP
     Transform *pos = ((Warrior *)self)->instance->position;
     SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
@@ -34,13 +36,9 @@ void updateWarrior(void *self, float dt)
         hitBox.w,
         hitBox.h,
     };
-    SDL_FPoint vel = rig->getPosition(rig);
-    mapManager->checkColision(mapManager, dRect, &vel, dt);
-    rig->setPosition(rig, vel.x, vel.y);
-    //printf("vel.y %d ",vel.y);
-    //if(vel.x == 0 && vel.y == 0)printf("velX: %f, velY: %f\n", vel.x, vel.y);
-    //update rigidBody
-    rig->update(rig, dt);
+    SDL_FPoint *vel = rig->getPositionPointer(rig);
+
+    mapManager->checkColision(mapManager, dRect, vel, dt);
 
 
     //update position
@@ -70,12 +68,14 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
         anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0);
-        rig->setVelocityY(rig, -20);
+        rig->setVelocityY(rig, -100);
+        printf("trycker AAAAA\n");
 
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
         anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0);
+        rig->setVelocityX(rig, 50);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
     {
@@ -141,7 +141,7 @@ Warrior *createWarrior()
 
     self->instance->position = newTransform();
     //todo orginal self->instance->position->set(self->instance->position, 0, 0);
-    self->instance->position->set(self->instance->position, 10,10);
+    self->instance->position->set(self->instance->position, 0,10);
     self->instance->rigidBody = newRigidBody();
     self->instance->rigidBody->setForce(self->instance->rigidBody, 20 , 0);//!forces på gubben initialt
 
