@@ -45,7 +45,7 @@ void updateCube(void *self, float dt)
     SDL_Rect SRect = {100, 200, 100, 50};
     SDL_FPoint nor;
 
-    bool c = collision->ResolveDynamicRectVsRect(DRect, vel, SRect, 60);
+    bool c = collision->ResolveDynamicRectVsRect(DRect, vel, SRect, dt);
 
     if (c)
     {

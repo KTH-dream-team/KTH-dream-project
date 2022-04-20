@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//#include <time.h>
-#include "textureManager.h"
+#include "TextureManager.h"
 #include "map.h"
 #define row 25
 #define col 50
