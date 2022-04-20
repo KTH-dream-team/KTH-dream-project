@@ -3,13 +3,10 @@
 #include "FpsManager.h"
 #include "GameEngin.h"
 #include "InputHandler.h"
-#include "map.h"
-#include "hitBox.h"
-
 
 #define SDL_MAIN_HANDLED
 
-#define SCREEN_WIDTH 1000
+#define SCREEN_WIDTH 500
 #define SCREEN_HEIGHT 500
 
 int main(int argc, char **argv)
@@ -34,9 +31,7 @@ int main(int argc, char **argv)
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);
     }
-    Engine->destroyEngine(Engine);
-    // MapManager *mapManager = getMapManager();
-    // mapManager->show(mapManager);
 
+    Engine->destroyEngine(Engine);
     return 0;
 }

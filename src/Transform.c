@@ -24,15 +24,6 @@ void transformSetY(void *self, float y)
     TransformInstance* instance = ((Transform*)self)->instance;
     instance->Y = y;
 }
-SDL_FPoint transformGet(void *self)
-{
-    TransformInstance* instance = ((Transform*)self)->instance;
-    SDL_FPoint r = {
-        instance->X,
-        instance->Y
-    };
-    return r;
-}
 float transformGetX(void *self){
     return ((Transform*)self)->instance->X;
 }
@@ -68,7 +59,6 @@ Transform* newTransform ()
     self->setX = transformSetX;
     self->setY = transformSetY;
 
-    self->get = transformGet;
     self->getX = transformGetX;
     self->getY = transformGetY;
 

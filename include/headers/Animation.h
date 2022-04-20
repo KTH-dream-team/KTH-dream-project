@@ -6,9 +6,6 @@
         id: id to the texture, it need to be loaded on textureManager first;
         spriteWidth, spriteHeight: width and height of sprite
 
-    void (*update)(void *self)
-        update fuction should be called on every update of owner object. 
-
     void draw(void *self, float x, float y);
         Draw the animation. This function should be called in side the render function of corresponding object. it should be called on every render. this function is smart enough to know when to draw which frame based on parameter that got set by set function.
         x,y is the location that the animation will be rendered;
@@ -26,7 +23,7 @@ typedef struct animationInstance AnimationInstance;
 typedef struct animation
 {
     void (*update)(void *self);
-    void (*draw)(void *self, float x, float y, float scale);
+    void (*draw)(void *self, float x, float y);
     void (*set)(void *self, char *id, int spriteWidth, int spriteHeight, int row, int totalFrame, int animSpeed, SDL_RendererFlip flip);
     void (*destroy)(void *self);
 

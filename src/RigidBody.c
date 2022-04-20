@@ -145,6 +145,8 @@ Rigidbody *newRigidBody()
     self->instance->acc.y = 0;
     self->instance->vel.x = 0;
     self->instance->vel.y = 0;
+    self->instance->mass = 1;//todo rest to 1
+    self->instance->gravity = 0;//todo set to 5 eller 9.8
 
     self->getMass = getMass;
     self->setMass = setMass;

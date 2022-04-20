@@ -19,12 +19,12 @@ void update(void *self)
     AnimationInstance *instance = ((Animation *)self)->instance;
     instance->currentframe = (SDL_GetTicks() / instance->animSpeed) % instance->totalFrame;
 }
-void drawAnimationFrame(void *self, float x, float y, float scale)
+void drawAnimationFrame(void *self, float x, float y)
 {
     AnimationInstance *instance = ((Animation *)self)->instance;
 
     TextureManager *textureManager = getTextureManager();
-    textureManager->drawFrame(textureManager, instance->id, x, y, instance->spriteWidth, instance->spriteHeight, instance->row, instance->currentframe, scale, instance->flip);
+    textureManager->drawFrame(textureManager, instance->id, x, y, instance->spriteWidth, instance->spriteHeight, instance->row, instance->currentframe, instance->flip);
 }
 void set(void *self, char *textureId, int spriteWidth, int spriteHeight, int row, int totalFrame, int animSpeed, SDL_RendererFlip flip)
 {
