@@ -1,3 +1,8 @@
+/*
+    the main perpuse of this class is to simplify the process of transform a vector
+    
+*/
+#include "SDL2/SDL.h"
 
 typedef struct transformInstance TransformInstance;
 
@@ -7,6 +12,7 @@ typedef struct transform
     void (*setX)(void *self, float x);
     void (*setY)(void *self, float y);
 
+    SDL_FPoint (*get)(void *self);
     float (*getX)(void *self);
     float (*getY)(void *self);
 

@@ -87,10 +87,10 @@ void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_Rendere
     SDL_RenderCopyEx(ren, tex, &srcRect, &destRect, 0, NULL, flip);
 }
 
-void drawFrame(void *self, char *id, float x, float y, int w, int h, int row, int frame, SDL_RendererFlip flip)
+void drawFrame(void *self, char *id, float x, float y, int w, int h, int row, int frame, float scale, SDL_RendererFlip flip)
 {
     SDL_Rect srcRect = {w * frame, h * row, w, h};
-    SDL_Rect destRect = {x, y, w, h};
+    SDL_Rect destRect = {x, y, w*scale, h*scale};
 
     GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);

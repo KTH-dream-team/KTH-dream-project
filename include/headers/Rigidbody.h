@@ -1,5 +1,15 @@
 /*
     rigidbody determines the movment of its owner by aply some basic physic.
+
+    rigidbodyInstance contain mass, gravity, friction, force, position, accileration and velocity
+    getter and setter functions used to set and get the current values
+    the most important function in this object is the update function it should be called on every update of its owner class
+    
+    void update(void *self, float dt)
+        dt: delta time from getDeltaTime() in FpsManager class
+
+    void destroy(void *self)
+        call this function on it owners destroy function
 */
 
 #pragma once

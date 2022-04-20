@@ -31,7 +31,7 @@ void renderWarrior(void *self)
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
 
-    anim->draw(anim, pos->getX(pos), pos->getY(pos));
+    anim->draw(anim, pos->getX(pos), pos->getY(pos), 3);
 }
 void warriorEventHandle(void *self)
 {
