@@ -36,7 +36,11 @@ void renderWarrior(void*self)
     Animation *anim = ((Warrior*)self)->instance->animation;
     Transform *pos = ((Warrior*)self)->instance->position;
 
+<<<<<<< HEAD
     anim->draw(anim,pos->getX(pos) , pos->getY(pos));//!shiftar animatinner x och y
+=======
+    anim->draw(anim, pos->getX(pos), pos->getY(pos));
+>>>>>>> parent of b975077 (added doc)
 }
 void warriorEventHandle(void*self)
 {
