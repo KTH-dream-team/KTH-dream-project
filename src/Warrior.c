@@ -68,8 +68,11 @@ void warriorEventHandle(void*self)
     printf("position %f \n",position->getY(position));
 =======
     InputHandler *inputHandler = getInputHandler();
+<<<<<<< HEAD
     MapManager *mapManager = getMapManager();//MAP
 >>>>>>> 24fd0418550284cc5e479b351d712bd2fe1c585d
+=======
+>>>>>>> parent of 24fd041 (merge map to beta, resolved conflict)
 
 
     if (position->getY(position)<0)
@@ -148,30 +151,6 @@ void warriorEventHandle(void*self)
       //  }
 
     }
-    int mouse_x, mouse_y;
-    if(inputHandler->getMouseState(&mouse_x,&mouse_y)==1){
-        printf("mouse x =%d y=%d %u \n",mouse_x, mouse_y, inputHandler->getMouseState(&mouse_x,&mouse_y));//todo remove
-
-        currentTime=SDL_GetTicks();
-     //   if (lastTime+100<currentTime)
-       // {
-            //lastTime=currentTime;
-            if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_E))
-            {
-                /* code */
-                mapManager->build(mapManager,mouse_x,mouse_y,0);//!build hold E
-            }
-            if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_Q))
-            {
-                /* code */
-                mapManager->dig(mapManager,mouse_x,mouse_y);//!dig hold Q
-            }
-            
-            //dig(mouse_x,mouse_y);
-
-      //  }
-
-    }
 }
 void destroyWarrior(void *self)
 {
@@ -196,6 +175,7 @@ Warrior *createWarrior()
     self->instance->animation->set(self->instance->animation, "warrior", 32, 32, 0, 13, 90, 0);
     
     self->instance->position = newTransform();
+<<<<<<< HEAD
     //todo orginal self->instance->position->set(self->instance->position, 0, 0);
 <<<<<<< HEAD
     self->instance->position->set(self->instance->position, 320,138);//!x y inital position 
@@ -206,6 +186,12 @@ Warrior *createWarrior()
     self->instance->rigidBody = newRigidBody();
     self->instance->rigidBody->setForce(self->instance->rigidBody, 1 , -5);//!forces på gubben initialt
 >>>>>>> 24fd0418550284cc5e479b351d712bd2fe1c585d
+=======
+    self->instance->position->set(self->instance->position, 0, 0);
+
+    self->instance->rigidBody = newRigidBody();
+    self->instance->rigidBody->setForce(self->instance->rigidBody, 0, 0);
+>>>>>>> parent of 24fd041 (merge map to beta, resolved conflict)
 
     self->update = updateWarrior;
     self->eventHandler = warriorEventHandle;
