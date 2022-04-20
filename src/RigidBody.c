@@ -117,7 +117,7 @@ void updateRigidBody(void *self, float dt)
     instance->pos.x = posX;
     instance->pos.y = posY;
 
-    printf("val: %f\n", dt);
+    //printf("val: %f\n", dt);
 }
 void destroyRigidBody(void *self)
 {

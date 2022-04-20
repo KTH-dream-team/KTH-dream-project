@@ -37,8 +37,8 @@ typedef struct colisionManager
     bool (*PointVsRect)(float x, float y, SDL_Rect *r);
     bool (*RectVsRect)(SDL_Rect *r1, SDL_Rect *r2);
     bool (*RayVsRect)(SDL_FPoint rayOrigin, SDL_FPoint rayDir, SDL_Rect r, SDL_FPoint *normal, SDL_FPoint *contact, float *t);
-    bool (*DynamicRectVsRect)(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, unsigned int dt);
-    bool (*ResolveDynamicRectVsRect)(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, unsigned int dt);
+    bool (*DynamicRectVsRect)(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, float dt);
+    bool (*ResolveDynamicRectVsRect)(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, float dt);
 
     CollisionManagerInstance *instance;
 } CollisionManager;

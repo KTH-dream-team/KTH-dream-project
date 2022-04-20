@@ -88,9 +88,8 @@ bool RayVsRect(SDL_FPoint origin, SDL_FPoint dir, SDL_Rect r, SDL_FPoint *normal
     return true;
 }
 
-bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, unsigned int dt)
+bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, float dt)
 {
-    dt = dt / 60;
 
     if (dir.x == 0 && dir.y == 0)
         return false;
@@ -120,12 +119,13 @@ bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoin
         return false;
 }
 
-bool ResolveDynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, unsigned int dt)
+bool ResolveDynamicRectVsRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, float dt)
 {
     SDL_FPoint normal;
-    if (DynamicRectVsRect(DRect, dir, SRect, &normal, dt))
+    if (DynamicRectVsRect(DRect, *dir, SRect, &normal, dt))
     {
-
+        dir->x = 0;
+        dir->y = 0;
         return true;
     }
     return false;

@@ -41,17 +41,11 @@ void updateCube(void *self, float dt)
         instance->hitBox.w,
         instance->hitBox.h,
     };
-    SDL_FPoint vel = instance->vel;
+    SDL_FPoint *vel = &(instance->vel);
     SDL_Rect SRect = {100, 200, 100, 50};
     SDL_FPoint nor;
 
-    bool c = collision->ResolveDynamicRectVsRect(DRect, vel, SRect, 60);
-
-    if (c)
-    {
-        instance->vel.x = 0;
-        instance->vel.y = 0;
-    }
+    bool c = collision->ResolveDynamicRectVsRect(DRect, vel, SRect, dt);
 
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 }
