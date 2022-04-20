@@ -1,6 +1,10 @@
 /*
     the main perpuse of this class is to simplify the process of transform a vector
-    
+    this class include x, y values and helper functions
+
+    setter and getter function used to get and set x,y values
+
+    translate functions used to translate x,y values. 
 */
 #include "SDL2/SDL.h"
 
