@@ -25,6 +25,7 @@ float fpsGetDelta(void *self)
 }
 int fpsGetElapsedTime(void *self)
 {
+    return ((FpsManager *)self)->instance->elapsedTime;
 }
 void destroyFpsManager(void *self)
 {
