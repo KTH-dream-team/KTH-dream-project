@@ -9,6 +9,7 @@
 #include "Warrior.h"
 #include "FpsManager.h"
 #include "Cube.h"
+#include "map.h"
 
 struct enginInstance
 {
@@ -28,13 +29,19 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     EntityManager *entityManager = getEntityManager();
     // Warrior creation
     Warrior *warrior = createWarrior();
-    entityManager->add(entityManager, "warrior-1", warrior);
+    entityManager->add(entityManager, "warrior-1", warrior);//add to entity manager list
+
+    MapManager *mapManager = getMapManager();
+
+    mapManager->initMap(mapManager);//! initializes map
+
 
     // cube creation
     Cube *cube = newCube();
     entityManager->add(entityManager, "cube-1", cube);
 
     Engin->instance->isRunning = true;
+
 
     return 1;
 }
@@ -72,14 +79,17 @@ void handleUpdates(void *self)
 void handleRenders(void *self)
 {
     GameEngin *Engin = ((GameEngin *)self);
-    SDL_SetRenderDrawColor(Engin->instance->renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(Engin->instance->renderer, 135, 206, 235, 255);
     SDL_RenderClear(Engin->instance->renderer);
 
     // render functions go here !!!
 
     EntityManager *entityManager = getEntityManager();
 
-    // Render Warrior
+    MapManager *mapManger = getMapManager();
+   
+    mapManger->showMap(mapManger);//!render map behind player
+    //Warrior Render
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
     warrior->render(warrior);
 
@@ -89,7 +99,6 @@ void handleRenders(void *self)
     cube->render(cube);
 
     // render functions go here !!!
-
     SDL_RenderPresent(Engin->instance->renderer);
 }
 bool destroyEngine(void *self)
@@ -111,6 +120,8 @@ bool destroyEngine(void *self)
     // destroy all assets here !!!
 
     // destroy functions go here !!!
+    MapManager *mapManager = getMapManager();
+    mapManager->destroyMap(mapManager);
     printf("Engine Cleaned");
     return false;
 }

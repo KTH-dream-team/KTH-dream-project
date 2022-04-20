@@ -7,10 +7,13 @@
 #include <stdio.h>
 #include <map.h>
 #include <stdbool.h>
+
 static unsigned int currentTime;
 static unsigned int lastTime;
 static unsigned int tickNow;
 static unsigned int tickLast;
+static unsigned int currentTime;
+static unsigned int lastTime;
 
 struct warriorInstance
 {
@@ -28,6 +31,8 @@ void updateWarrior(void*self, float dt)
     rig->update(rig, dt);
 
     Transform *pos = ((Warrior*)self)->instance->position;
+
+
 
     pos->translate(pos,rig->getPositionX(rig), rig->getPositionY(rig));
 }
@@ -48,6 +53,7 @@ void renderWarrior(void*self)
 }
 void warriorEventHandle(void*self)
 {
+<<<<<<< HEAD
     EventHandler *eventHandler = getEventHandler();
     eventHandler->listen(eventHandler);
 
@@ -60,6 +66,10 @@ void warriorEventHandle(void*self)
     Transform *position =((Warrior*)self)->instance->position;
 
     printf("position %f \n",position->getY(position));
+=======
+    InputHandler *inputHandler = getInputHandler();
+    MapManager *mapManager = getMapManager();//MAP
+>>>>>>> 24fd0418550284cc5e479b351d712bd2fe1c585d
 
 
     if (position->getY(position)<0)
@@ -138,6 +148,30 @@ void warriorEventHandle(void*self)
       //  }
 
     }
+    int mouse_x, mouse_y;
+    if(inputHandler->getMouseState(&mouse_x,&mouse_y)==1){
+        printf("mouse x =%d y=%d %u \n",mouse_x, mouse_y, inputHandler->getMouseState(&mouse_x,&mouse_y));//todo remove
+
+        currentTime=SDL_GetTicks();
+     //   if (lastTime+100<currentTime)
+       // {
+            //lastTime=currentTime;
+            if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_E))
+            {
+                /* code */
+                mapManager->build(mapManager,mouse_x,mouse_y,0);//!build hold E
+            }
+            if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_Q))
+            {
+                /* code */
+                mapManager->dig(mapManager,mouse_x,mouse_y);//!dig hold Q
+            }
+            
+            //dig(mouse_x,mouse_y);
+
+      //  }
+
+    }
 }
 void destroyWarrior(void *self)
 {
@@ -163,9 +197,15 @@ Warrior *createWarrior()
     
     self->instance->position = newTransform();
     //todo orginal self->instance->position->set(self->instance->position, 0, 0);
+<<<<<<< HEAD
     self->instance->position->set(self->instance->position, 320,138);//!x y inital position 
     self->instance->rigidBody = newRigidBody();
     self->instance->rigidBody->setForce(self->instance->rigidBody, 0 , 0);//!forces på gubben initialt
+=======
+    self->instance->position->set(self->instance->position, 350,6*25 );
+    self->instance->rigidBody = newRigidBody();
+    self->instance->rigidBody->setForce(self->instance->rigidBody, 1 , -5);//!forces på gubben initialt
+>>>>>>> 24fd0418550284cc5e479b351d712bd2fe1c585d
 
     self->update = updateWarrior;
     self->eventHandler = warriorEventHandle;

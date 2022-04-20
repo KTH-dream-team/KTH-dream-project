@@ -1,4 +1,7 @@
-
+/*
+    warrior function is a test class used to test out our components
+    testing animation, trasform, rigidbody
+*/
 typedef struct warriorInstance WarriorInstance;
 
 typedef struct warrior
