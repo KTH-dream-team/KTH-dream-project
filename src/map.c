@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//#include <time.h>
-#include "textureManager.h"
+#include "TextureManager.h"
 #include "map.h"
 #define row 25
 #define col 50
@@ -26,16 +25,9 @@ void initMap(void *self)
     textureManager->load(textureManager, "brick", "./assets/brick.png");//7
     textureManager->load(textureManager, "black", "./assets/black.png");//8
 
-<<<<<<< Updated upstream
     MapManager *mapmanager =(MapManager*)self;
     int map1[row][col] ={ 
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-=======
-    
-    MapManager *mapmanager =(MapManager*)self;
-    int map1[row][col] ={ 
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
->>>>>>> Stashed changes
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
@@ -106,15 +98,10 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
     }else{
         printf("\ncant build on exiisting block\n");
     }
-<<<<<<< Updated upstream
        
 }
 
 
-=======
-}
-
->>>>>>> Stashed changes
 void showMap(void *self)
 {
     TextureManager *textureManager = getTextureManager();//! hämta befintlig instant av textureManager
@@ -122,10 +109,7 @@ void showMap(void *self)
     SDL_Rect srcRec = {0, 0, 20, 20};//!skapa 20x20 source rectangel
     for (int i = 0; i < row; i++)
     {   
-<<<<<<< Updated upstream
         //printf("{");
-=======
->>>>>>> Stashed changes
         for (int j = 0; j < col; j++)
         {
             SDL_Rect destRect = {j * 20, i * 20, 20, 20};//! positionera rectangel enligt for loop
@@ -139,13 +123,9 @@ void showMap(void *self)
                 case 6: textureManager->draw(textureManager, "gun", srcRec, destRect, 1); break;
                 case 7: textureManager->draw(textureManager, "brick", srcRec, destRect, 1); break;
                 case 8: textureManager->draw(textureManager, "black", srcRec, destRect, 1); break;
-<<<<<<< Updated upstream
 
             }
         
-=======
-            } 
->>>>>>> Stashed changes
         }
     }
 }
@@ -178,10 +158,7 @@ MapManager *getMapManager(){
     {
         return &self;
     }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     self.instance = malloc(sizeof(MapManagerInstance));
     self.show = show;
     self.showMap = showMap;

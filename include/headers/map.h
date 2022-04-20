@@ -1,3 +1,4 @@
+
 typedef struct mapManagerInstance MapManagerInstance;
 
 typedef struct mapManager{
@@ -12,4 +13,3 @@ typedef struct mapManager{
 }MapManager;
 
 
-MapManager *getMapManager();
