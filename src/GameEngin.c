@@ -31,17 +31,15 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     Warrior *warrior = createWarrior();
     entityManager->add(entityManager, "warrior-1", warrior);//add to entity manager list
 
+    //init map
     MapManager *mapManager = getMapManager();
-
     mapManager->initMap(mapManager);//! initializes map
-
 
     // cube creation
     Cube *cube = newCube();
     entityManager->add(entityManager, "cube-1", cube);
 
     Engin->instance->isRunning = true;
-
 
     return 1;
 }
@@ -64,7 +62,6 @@ void handleUpdates(void *self)
     // updates functions go here !!!
     FpsManager *fpsManager = getFpsManager();
     float dt = fpsManager->getDelta(fpsManager);
-    // printf("dt: %f\n", dt);
 
     EntityManager *entityManager = getEntityManager();
 
@@ -86,9 +83,10 @@ void handleRenders(void *self)
 
     EntityManager *entityManager = getEntityManager();
 
+    //render map
     MapManager *mapManger = getMapManager();
-   
-    mapManger->showMap(mapManger);//!render map behind player
+    mapManger->showMap(mapManger);
+
     //Warrior Render
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
     warrior->render(warrior);
@@ -109,19 +107,25 @@ bool destroyEngine(void *self)
     SDL_DestroyRenderer(Engin->instance->renderer);
     free(Engin->instance);
 
+    //destroy texture manager
     TextureManager *texterManager = getTextureManager();
     texterManager->destroy(texterManager);
 
+    //destroy entityManager
     EntityManager *entityManager = getEntityManager();
     entityManager->destroy(entityManager);
 
+    //destroy inputHandler
     InputHandler *inputHandler = getInputHandler();
     inputHandler->destroy(inputHandler);
+
+    //destroy mapManager
+    MapManager *mapManager = getMapManager();
+    mapManager->destroyMap(mapManager);
+    
     // destroy all assets here !!!
 
     // destroy functions go here !!!
-    MapManager *mapManager = getMapManager();
-    mapManager->destroyMap(mapManager);
     printf("Engine Cleaned");
     return false;
 }
