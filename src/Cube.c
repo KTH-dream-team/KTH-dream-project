@@ -43,7 +43,8 @@ void updateCube(void *self, float dt)
     };
     SDL_FPoint *vel = &(instance->vel);
     MapManager *mapManager = getMapManager();
-    //!mapManager->checkColision(mapManager,DRect,vel,dt);
+    
+    //mapManager->checkColision(mapManager,DRect,vel,dt);//!cube collision detection
 
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 

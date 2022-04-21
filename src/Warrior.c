@@ -38,7 +38,7 @@ void updateWarrior(void *self, float dt)
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
 
-    mapManager->checkColision(mapManager, dRect, vel, dt);
+    mapManager->checkColision(mapManager, dRect, vel, dt);//!warrior collision check
 
 
     //update position
@@ -68,8 +68,7 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
         anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0);
-        rig->setVelocityY(rig, -100);
-        printf("trycker AAAAA\n");
+      
 
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
@@ -80,6 +79,12 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
     {
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
+    }
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
+    {
+        anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
+          rig->setVelocityY(rig, -100);
+        printf("trycker SPACE\n");
     }
     int mouse_x, mouse_y;
     if(inputHandler->getMouseState(&mouse_x,&mouse_y)==1){

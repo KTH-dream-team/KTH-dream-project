@@ -21,9 +21,12 @@ typedef struct fpsManagerInstance FpsManagerInstance;
 typedef struct fpsManager
 {
     void (*listen)(void *self);
+    void (*list)(void *self);
     float (*getDelta)(void *self);
     int (*getElapsedTime)(void *self);
     void (*destroy)(void *self);
+    void (*frameRateListen)(void *self);
+    int (*getFrameRate)(void *self);
 
     FpsManagerInstance *instance;
 } FpsManager;

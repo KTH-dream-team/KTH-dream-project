@@ -89,12 +89,7 @@ bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funk
 void checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt){//
 
     CollisionManager *colisionManager = GetCollisionManager();
-    MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance;
-
-
-
-
-    
+    MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance;    
     int lowerBounce = ((dRect.y+dRect.h)/20)+2;
     int upperBounce = (dRect.y/20)-1;    
     int rightBounce = ((dRect.x+dRect.w)/20)+2;
