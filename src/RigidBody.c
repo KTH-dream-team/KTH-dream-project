@@ -72,11 +72,11 @@ void setVelocity(void *self, float fx, float fy)
 }
 void setVelocityX(void *self, float fx)
 {
-    ((Rigidbody *)self)->instance->force.x = fx;
+    ((Rigidbody *)self)->instance->vel.x = fx;
 }
 void setVelocityY(void *self, float fy)
 {
-    ((Rigidbody *)self)->instance->force.y = fy;
+    ((Rigidbody *)self)->instance->vel.y = fy;
 }
 SDL_FPoint getVelocity(void *self)
 {
@@ -86,6 +86,18 @@ SDL_FPoint getPosition(void *self)
 {
     return ((Rigidbody *)self)->instance->pos;
 }
+void setPosition(void *self, float fx, float fy)
+{
+    RigidbodyInstance *instance = ((Rigidbody *)self)->instance;
+    instance->pos.x = fx;
+    instance->pos.y = fy;
+}
+
+SDL_FPoint* getPositionPointer(void *self){
+
+    return &(((Rigidbody *)self)->instance->pos);
+}
+
 SDL_FPoint getAcceleration(void *self)
 {
     return ((Rigidbody *)self)->instance->acc;
@@ -117,7 +129,7 @@ void updateRigidBody(void *self, float dt)
     instance->pos.x = posX;
     instance->pos.y = posY;
 
-    //printf("val: %f\n", dt);
+  //  printf("val: %f\n", dt);
 }
 void destroyRigidBody(void *self)
 {
@@ -167,7 +179,11 @@ Rigidbody *newRigidBody()
     self->setVelocityY = setVelocityY;
     self->getVelocity = getVelocity;
 
+
+
     self->getPosition = getPosition;
+    self->getPositionPointer = getPositionPointer;
+    self->setPosition = setPosition;
     self->getAcceleration = getAcceleration;
 
     self->update = updateRigidBody;

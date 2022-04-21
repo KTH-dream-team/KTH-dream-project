@@ -9,6 +9,7 @@
 #include "Warrior.h"
 #include "FpsManager.h"
 #include "Cube.h"
+#include "map.h"
 
 struct enginInstance
 {
@@ -29,6 +30,9 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     // Warrior creation
     Warrior *warrior = createWarrior();
     entityManager->add(entityManager, "warrior-1", warrior);
+
+    MapManager *mapManager = getMapManager();
+    mapManager->initMap(mapManager);
 
     // cube creation
     Cube *cube = newCube();
@@ -62,7 +66,7 @@ void handleUpdates(void *self)
     EntityManager *entityManager = getEntityManager();
 
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
-    warrior->update(warrior, dt);
+    warrior->update(warrior, dt); //! update warrior ska va på
 
     Cube *cube = entityManager->getByID(entityManager, "cube-1");
     cube->update(cube, dt);
@@ -78,6 +82,10 @@ void handleRenders(void *self)
     // render functions go here !!!
 
     EntityManager *entityManager = getEntityManager();
+
+    MapManager *mapManager = getMapManager();
+
+    mapManager->showMap(mapManager);
 
     // Render Warrior
     Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");

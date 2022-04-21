@@ -6,7 +6,7 @@
 #include "InputHandler.h"
 #include "CollisionManager.h"
 #include "SDL2/SDL.h"
-
+#include "map.h"
 struct cubeInstance
 {
     Transform *position;
@@ -27,7 +27,7 @@ void renderCube(void *self)
     };
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
-    SDL_Rect SRect = {100, 200, 100, 50};
+    SDL_Rect SRect = {100, 200, 60, 60};
     SDL_RenderDrawRect(engin->getRenderer(engin), &SRect);
 }
 void updateCube(void *self, float dt)
@@ -42,12 +42,12 @@ void updateCube(void *self, float dt)
         instance->hitBox.h,
     };
     SDL_FPoint *vel = &(instance->vel);
-    SDL_Rect SRect = {100, 200, 100, 50};
-    SDL_FPoint nor;
-
-    bool c = collision->ResolveDynamicRectVsRect(DRect, vel, SRect, dt);
+    MapManager *mapManager = getMapManager();
+    
+    //mapManager->checkColision(mapManager,DRect,vel,dt);//!cube collision detection
 
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
+
 }
 void eventCube(void *self)
 {
@@ -81,8 +81,8 @@ Cube *newCube()
 
     self->instance->hitBox.x = 0;
     self->instance->hitBox.y = 0;
-    self->instance->hitBox.w = 50;
-    self->instance->hitBox.h = 70;
+    self->instance->hitBox.w = 10;
+    self->instance->hitBox.h = 10;
 
     self->render = renderCube;
     self->update = updateCube;

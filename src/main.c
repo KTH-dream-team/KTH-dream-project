@@ -6,7 +6,7 @@
 
 #define SDL_MAIN_HANDLED
 
-#define SCREEN_WIDTH 500
+#define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 500
 
 int main(int argc, char **argv)
@@ -26,7 +26,13 @@ int main(int argc, char **argv)
     while (Engine->isRunning(Engine))
     {
         fpsManager->listen(fpsManager);
+        // printf("fps delta %f ",fpsManager->getDelta(fpsManager));
+        // printf("fps elapsed time %d \n",fpsManager->getElapsedTime(fpsManager));
+        // printf(" fps = %f\n",fpsManager->getElapsedTime(fpsManager)/0.006);
+        fpsManager->frameRateListen(fpsManager);
+        printf("fps = %d\n",fpsManager->getFrameRate(fpsManager));
         inputHandler->listen(inputHandler);
+        
         Engine->handleEvents(Engine);
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);

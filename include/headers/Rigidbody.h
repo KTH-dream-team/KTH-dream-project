@@ -30,6 +30,8 @@ typedef struct rigidbody
     SDL_FPoint (*getVelocity)(void *self);
     // position, accileration getter
     SDL_FPoint (*getPosition)(void *self);
+    SDL_FPoint *(*getPositionPointer)(void *self);
+    void (*setPosition)(void *self, float fx, float fy);
     SDL_FPoint (*getAcceleration)(void *self);
 
     void (*update)(void *self, float dt);

@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//#include <time.h>
 #include "TextureManager.h"
 #include "map.h"
-#define row 25
-#define col 50
+#include "CollisionManager.h"
+#define ROW 25
+#define COL 50
 #define PRIVET static 
 #define PUBLIC
 
 struct mapManagerInstance {
-    int map[row][col];
+    int map[ROW][COL];
 };
 
 void initMap(void *self)
@@ -27,12 +27,12 @@ void initMap(void *self)
     textureManager->load(textureManager, "black", "./assets/black.png");//8
 
     MapManager *mapmanager =(MapManager*)self;
-    int map1[row][col] ={ 
+    int map1[ROW][COL] ={ 
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,7,7,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
@@ -55,8 +55,8 @@ void initMap(void *self)
     {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,},
     }; 
 
-          for (int i = 0; i < row; i++){
-            for (int j = 0; j < col; j++){   
+          for (int i = 0; i < ROW; i++){
+            for (int j = 0; j < COL; j++){   
                 //printf("%d ",mapmanager->instance->map[i][j]);
                 mapmanager->instance->map[i][j]=map1[i][j];
             
@@ -86,6 +86,37 @@ bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funk
     return false;
 }
 
+void checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt){//
+
+    CollisionManager *colisionManager = GetCollisionManager();
+    MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance;    
+    int lowerBounce = ((dRect.y+dRect.h)/20)+2;
+    int upperBounce = (dRect.y/20)-1;    
+    int rightBounce = ((dRect.x+dRect.w)/20)+2;
+    int leftBounce = (dRect.x/20)-1;
+   // int rightBounce = (dRect.x+dRect.w/20)+2;//!optimize collision detection
+
+
+    for (int i = 0; i < ROW; i++)
+        {   
+            for (int j = leftBounce; j < rightBounce; j++)
+            {
+                if(i<0 && i>ROW)continue;
+                if(j<0 && j>COL)continue;
+
+                SDL_Rect mapBlock = {j * 20, i * 20, 20, 20};
+                int blockType = mapManagerInstance->map[i][j];
+                
+                if (blockType==0)continue;
+                
+                (colisionManager->ResolveDynamicRectVsRect(dRect,dir,mapBlock,dt));
+            
+            }
+        }
+        
+    //printf("l=%d r=%d u=%d d=%d\n",leftBounce,rightBounce, upperBounce, lowerBounce);
+}
+
 void build(void *self, int x,int y, int blockType){//!builds when holding E
     MapManager *mapmanager = (MapManager *)self;
 
@@ -105,13 +136,14 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
 
 void showMap(void *self)
 {
+
     TextureManager *textureManager = getTextureManager();//! hämta befintlig instant av textureManager
     MapManager *mapmanager = (MapManager *)self;
     SDL_Rect srcRec = {0, 0, 20, 20};//!skapa 20x20 source rectangel
-    for (int i = 0; i < row; i++)
+    for (int i = 0; i < ROW; i++)
     {   
         //printf("{");
-        for (int j = 0; j < col; j++)
+        for (int j = 0; j < COL; j++)
         {
             SDL_Rect destRect = {j * 20, i * 20, 20, 20};//! positionera rectangel enligt for loop
             switch (mapmanager->instance->map[i][j]){
@@ -142,9 +174,9 @@ void show(void *self){ //todo remove :debug
     printf("in show\n");
 
     MapManager *mapmanager = (MapManager *)self;
-        for (int i = 0; i < row; i++){
+        for (int i = 0; i < ROW; i++){
             printf("\n");   
-            for (int j = 0; j < col; j++){   
+            for (int j = 0; j < COL; j++){   
                 printf("%d ",mapmanager->instance->map[i][j]);
             
             }
@@ -167,6 +199,7 @@ MapManager *getMapManager(){
     self.dig = dig;
     self.build = build;
     self.destroyMap = destroyMap;
+    self.checkColision = checkColision;
 
     return &self;
 }
