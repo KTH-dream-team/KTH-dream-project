@@ -24,6 +24,8 @@ typedef struct transform
     void (*translateY)(void *self, float y);
     void (*translate)(void *self, float x, float y);
 
+    SDL_FPoint (*getNormalized)(void *self);
+
     void (*destroy)(void *self);
 
     TransformInstance *instance;

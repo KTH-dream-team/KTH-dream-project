@@ -10,6 +10,7 @@
 #include "FpsManager.h"
 #include "Cube.h"
 #include "map.h"
+#include "Bullet.h"
 
 struct enginInstance
 {
@@ -35,7 +36,7 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     Warrior *warrior = createWarrior();
     entityManager->add(entityManager, "Warrior-1", warrior);//add to entity manager list
 
-    // cube creation
+    //cube creation
     Cube *cube = newCube();
     entityManager->add(entityManager, "Cube-1", cube);
 
@@ -71,6 +72,14 @@ void handleRenders(void *self)
 
     EntityManager *entityManager = getEntityManager();
     entityManager->renderAll(entityManager);
+
+    // render Bullet
+    SDL_SetRenderDrawColor(Engin->instance->renderer, 0, 0, 255, 255);
+    Bullet *bullet = entityManager->getByID(entityManager, "bullet-1");
+    if(bullet != NULL){
+        bullet->render(bullet);
+    }
+    
 
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
