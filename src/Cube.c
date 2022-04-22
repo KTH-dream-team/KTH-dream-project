@@ -11,6 +11,7 @@
 #include "Bullet.h"
 #include "EntityManager.h"
 #include <math.h>
+#include <string.h>
 struct cubeInstance
 {
     Transform *position;
@@ -29,6 +30,8 @@ void renderCube(void *self)
         instance->hitBox.w,
         instance->hitBox.h,
     };
+    SDL_Renderer *ren =  engin->getRenderer(engin);
+    SDL_SetRenderDrawColor(ren, 200,20,20,255);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
 }
@@ -74,12 +77,11 @@ void eventCube(void *self)
         float xN =  velx / sqrt(velx*velx+vely*vely);
         float yN =  vely / sqrt(velx*velx+vely*vely);
 
-        SDL_FPoint velN = {xN, yN};
-
-        Bullet *bullet1 = newBullet(pos->get(pos), velN);
         EntityManager* entityManager=getEntityManager();
-        entityManager->add(entityManager, "bullet-1", bullet1);
-        printf("make bullit\n");
+
+        SDL_FPoint velN = {xN*5, yN*5};
+        Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
+        entityManager->add(entityManager, "Bullet-1", bullet1);
     }
 }
 void destroyCube(void *self)

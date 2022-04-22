@@ -8,6 +8,7 @@
 #include "CollisionManager.h"
 #include "SDL2/SDL.h"
 #include "Cube.h"
+#include "EntityManager.h"
 void destroyBullet(void *self);
 
 struct bulletInstance
@@ -15,6 +16,7 @@ struct bulletInstance
     Transform *position;
     SDL_FPoint vel;
     SDL_Rect hitBox;
+    char *id;
 };
 
 void renderBullet(void *self)
@@ -29,32 +31,10 @@ void renderBullet(void *self)
         instance->hitBox.h,
     };
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
-
-    SDL_Rect SRect = {100, 200, 100, 50};
-    SDL_RenderDrawRect(engin->getRenderer(engin), &SRect);
 }
 void updateBullet(void *self, float dt)
 {
     BulletInstance *instance = ((Bullet *)self)->instance;
-
-    CollisionManager *collision = GetCollisionManager();
-    SDL_Rect DRect = {
-        instance->position->getX(instance->position),
-        instance->position->getY(instance->position),
-        instance->hitBox.w,
-        instance->hitBox.h,
-    };
-    SDL_FPoint vel = instance->vel;
-    SDL_Rect SRect = {100, 200, 100, 50};
-    SDL_FPoint nor;
-
-    bool c = collision->ResolveDynamicRectVsRect(DRect, &vel, SRect, dt);
-
-    if (c)
-    {
-        instance->vel.x = 0;
-        instance->vel.y = 0;
-    }
 
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 
@@ -62,31 +42,17 @@ void updateBullet(void *self, float dt)
     if(pos->getX(pos) > 1100 || pos->getY(pos) > 1100 || pos->getY(pos) < 0 || pos->getX(pos) < 0){
         printf("bullet destroyd\n");
         ((Bullet *)self)->destroy(self);
-        
+        EntityManager * EM = getEntityManager();
+        EM->drop(EM,instance->id);
     }
 }
-/*
-void eventBullet(void *self)
-{
-    InputHandler *inputHandler = getInputHandler();
-    int x, y;
-    unsigned int buttons = inputHandler->getMouseState(&x, &y);
-
-    BulletInstance *instance = ((Bullet *)self)->instance;
-
-    if ((buttons & SDL_BUTTON_RMASK) != 0)
-    {
-        instance->vel.x = (x - instance->position->getX(instance->position)) / 120;
-        instance->vel.y = (y - instance->position->getY(instance->position)) / 120;
-    }
-}*/
 void destroyBullet(void *self)
 {
     free(self);
     free(((Bullet *)self)->instance);
 }
 
-Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel)
+Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
 {
     Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
@@ -95,17 +61,18 @@ Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel)
 
     self->instance->position->set(self->instance->position, pos.x, pos.y);
 
+    self->instance->id = id;
+
     self->instance->vel.x = vel.x;
     self->instance->vel.y = vel.y;
 
     self->instance->hitBox.x = 0;
     self->instance->hitBox.y = 0;
-    self->instance->hitBox.w = 25;
-    self->instance->hitBox.h = 25;
+    self->instance->hitBox.w = 5;
+    self->instance->hitBox.h = 5;
 
     self->render = renderBullet;
     self->update = updateBullet;
-    //self->events = eventBullet;
     self->destroy = destroyBullet;
 
     return self;

@@ -5,6 +5,7 @@
 #include <string.h>
 #include "Warrior.h"
 #include "Cube.h"
+#include "Bullet.h"
 
 typedef struct Entity
 {
@@ -19,13 +20,22 @@ struct entityManagerInstance
 
 void addInstance(void *self, char *id, void *entity)
 {
-    EntityManagerInstance *instance = ((EntityManager *)self)->instance;
+    EntityManager *EM = (EntityManager*)self;
+    if(EM->getByID(EM, id) != NULL)
+    {
+        printf("Allready added: %s\n", id);
+        return;
+    }
+
+    EntityManagerInstance *instance = EM->instance;
 
     Entity *temp = malloc(sizeof(Entity));
     temp->id = id;
     temp->entity = entity;
 
     instance->entityList->add(instance->entityList, temp);
+
+    printf("Added: %s\n", id);
 }
 
 void *getEntityByID(void *self, char *id)
@@ -53,6 +63,7 @@ void dropEntity(void *self, char*id)
         if (strcmp(t->id, id) == 0)
         {
             entitylist->drop(entitylist, i);
+            printf("Droped: %s\n", id);
             break;
         }
     }
@@ -74,6 +85,10 @@ void renderAllEntities(void *self)
         {
             ((Cube*)t->entity)->render((Cube*)t->entity);
         }
+        else if(strstr(t->id, "Bullet-") != NULL)
+        {
+            ((Bullet*)t->entity)->render((Cube*)t->entity);
+        }
     }
 }
 void updateAllEntities(void *self, float dt)
@@ -87,12 +102,14 @@ void updateAllEntities(void *self, float dt)
         if(strstr(t->id, "Warrior-") != NULL)
         {
             ((Warrior*)t->entity)->update((Warrior*)t->entity, dt);
-            printf("update Warior: %s\n", t->id);
         }
         else if(strstr(t->id, "Cube-") != NULL)
         {
             ((Cube*)t->entity)->update((Cube*)t->entity, dt);
-            printf("update Cube: %s\n", t->id);
+        }
+        else if(strstr(t->id, "Bullet-") != NULL)
+        {
+            ((Bullet*)t->entity)->update((Cube*)t->entity, dt);
         }
     }
 }
@@ -111,7 +128,7 @@ void handleAllEvents(void *self)
         else if(strstr(t->id, "Cube-") != NULL)
         {
             ((Cube*)t->entity)->events((Cube*)t->entity);
-        }
+        }      
     }
 }
 
@@ -130,6 +147,10 @@ void destroyEntityManager(void *self)
         {
             ((Cube*)t->entity)->destroy((Cube*)t->entity);
             printf("update Cube: %s\n", t->id);
+        }      
+        else if(strstr(t->id, "Bullet-") != NULL)
+        {
+            ((Bullet*)t->entity)->destroy((Cube*)t->entity);
         }
     }
 
