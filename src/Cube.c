@@ -1,4 +1,5 @@
 #include "Cube.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include "Transform.h"
 #include "SDL2/SDL.h"
@@ -7,6 +8,9 @@
 #include "CollisionManager.h"
 #include "SDL2/SDL.h"
 #include "map.h"
+#include "Bullet.h"
+#include "EntityManager.h"
+#include <math.h>
 struct cubeInstance
 {
     Transform *position;
@@ -27,8 +31,6 @@ void renderCube(void *self)
     };
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
-    SDL_Rect SRect = {100, 200, 60, 60};
-    SDL_RenderDrawRect(engin->getRenderer(engin), &SRect);
 }
 void updateCube(void *self, float dt)
 {
@@ -61,6 +63,23 @@ void eventCube(void *self)
     {
         instance->vel.x = (x - instance->position->getX(instance->position)) / 120;
         instance->vel.y = (y - instance->position->getY(instance->position)) / 120;
+    }
+
+
+    if(buttons == SDL_BUTTON_RMASK){
+        Transform* pos = ((Cube*)self)->instance->position;
+
+        float velx = x - pos->getX(pos);
+        float vely = y - pos->getY(pos);
+        float xN =  velx / sqrt(velx*velx+vely*vely);
+        float yN =  vely / sqrt(velx*velx+vely*vely);
+
+        SDL_FPoint velN = {xN, yN};
+
+        Bullet *bullet1 = newBullet(pos->get(pos), velN);
+        EntityManager* entityManager=getEntityManager();
+        entityManager->add(entityManager, "bullet-1", bullet1);
+        printf("make bullit\n");
     }
 }
 void destroyCube(void *self)

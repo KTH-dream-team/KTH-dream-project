@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include <stdlib.h>
+#include <math.h>
 
 
 struct transformInstance
@@ -54,6 +55,19 @@ void transformTranslate(void *self, float x, float y)
     TransformInstance* instance = ((Transform*)self)->instance;
     instance->X += x;
     instance->Y += y;
+}
+
+SDL_FPoint getNormalized(void *self)
+{
+    TransformInstance* instance = ((Transform*)self)->instance;
+    float x = instance->X;
+    float y = instance->Y;
+    float xN =  x / sqrt(x*x+y*y);
+    float yN =  y / sqrt(x*x+y*y);
+    
+    SDL_FPoint ret = {xN, yN};
+    
+    return ret;
 }
 
 Transform* newTransform ()

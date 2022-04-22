@@ -1,11 +1,14 @@
 #include "Bullet.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include "Transform.h"
 #include "SDL2/SDL.h"
 #include "GameEngin.h"
 #include "InputHandler.h"
 #include "CollisionManager.h"
 #include "SDL2/SDL.h"
+#include "Cube.h"
+void destroyBullet(void *self);
 
 struct bulletInstance
 {
@@ -45,7 +48,7 @@ void updateBullet(void *self, float dt)
     SDL_Rect SRect = {100, 200, 100, 50};
     SDL_FPoint nor;
 
-    bool c = collision->ResolveDynamicRectVsRect(DRect, vel, SRect, dt);
+    bool c = collision->ResolveDynamicRectVsRect(DRect, &vel, SRect, dt);
 
     if (c)
     {
@@ -54,6 +57,13 @@ void updateBullet(void *self, float dt)
     }
 
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
+
+    Transform *pos = instance->position;
+    if(pos->getX(pos) > 1100 || pos->getY(pos) > 1100 || pos->getY(pos) < 0 || pos->getX(pos) < 0){
+        printf("bullet destroyd\n");
+        ((Bullet *)self)->destroy(self);
+        
+    }
 }
 /*
 void eventBullet(void *self)

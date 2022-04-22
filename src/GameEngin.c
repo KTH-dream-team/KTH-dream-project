@@ -10,6 +10,7 @@
 #include "FpsManager.h"
 #include "Cube.h"
 #include "map.h"
+#include "Bullet.h"
 
 struct enginInstance
 {
@@ -35,7 +36,7 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     MapManager *mapManager = getMapManager();
     mapManager->initMap(mapManager);//! initializes map
 
-    // cube creation
+    //cube creation
     Cube *cube = newCube();
     entityManager->add(entityManager, "cube-1", cube);
 
@@ -55,6 +56,9 @@ void handleEvents(void *self)
     // cube
     Cube *cube = entityManager->getByID(entityManager, "cube-1");
     cube->events(cube);
+    
+
+    
 }
 
 void handleUpdates(void *self)
@@ -70,6 +74,12 @@ void handleUpdates(void *self)
 
     Cube *cube = entityManager->getByID(entityManager, "cube-1");
     cube->update(cube, dt);
+
+    // update Bullet
+    Bullet *bullet = entityManager->getByID(entityManager, "bullet-1");
+    if(bullet != NULL){
+        bullet->update(bullet, dt);
+    }
 
     // updates functions go here !!!
 }
@@ -95,6 +105,14 @@ void handleRenders(void *self)
     SDL_SetRenderDrawColor(Engin->instance->renderer, 0, 0, 255, 255);
     Cube *cube = entityManager->getByID(entityManager, "cube-1");
     cube->render(cube);
+
+    // render Bullet
+    SDL_SetRenderDrawColor(Engin->instance->renderer, 0, 0, 255, 255);
+    Bullet *bullet = entityManager->getByID(entityManager, "bullet-1");
+    if(bullet != NULL){
+        bullet->render(bullet);
+    }
+    
 
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
