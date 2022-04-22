@@ -9,6 +9,7 @@
 #include "Warrior.h"
 #include "FpsManager.h"
 #include "Cube.h"
+#include "Bullet.h"
 #include "map.h"
 
 struct enginInstance
@@ -40,6 +41,9 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     Cube *cube = newCube();
     entityManager->add(entityManager, "cube-1", cube);
 
+    Bullet *bullet = newBullet();
+    entityManager->add(entityManager, "bullet-1", bullet);
+
     Engin->instance->isRunning = true;
 
 
@@ -57,6 +61,10 @@ void handleEvents(void *self)
     // cube
     Cube *cube = entityManager->getByID(entityManager, "cube-1");
     cube->events(cube);
+
+    // bullet
+    Bullet *bullet = entityManager->getByID(entityManager, "bullet-1");
+    bullet->events(bullet);
 }
 
 void handleUpdates(void *self)
@@ -73,6 +81,9 @@ void handleUpdates(void *self)
 
     Cube *cube = entityManager->getByID(entityManager, "cube-1");
     cube->update(cube, dt);
+
+    Bullet *bullet = entityManager->getByID(entityManager, "bullet-1");
+    bullet->update(bullet, dt);
 
     // updates functions go here !!!
 }
@@ -97,6 +108,12 @@ void handleRenders(void *self)
     SDL_SetRenderDrawColor(Engin->instance->renderer, 0, 0, 255, 255);
     Cube *cube = entityManager->getByID(entityManager, "cube-1");
     cube->render(cube);
+
+    // render bullet
+    SDL_SetRenderDrawColor(Engin->instance->renderer, 0, 0, 255, 0);
+    Bullet *bullet = entityManager->getByID(entityManager, "bullet-1");
+    bullet->render(bullet);
+    
 
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
