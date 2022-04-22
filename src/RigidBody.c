@@ -146,7 +146,7 @@ Rigidbody *newRigidBody()
     self->instance = malloc(sizeof(RigidbodyInstance));
 
     self->instance->mass = 1;
-    self->instance->gravity = 50;
+    self->instance->gravity = 150;
     self->instance->friction.x = 0;
     self->instance->friction.y = 0;
     self->instance->force.x = 0;

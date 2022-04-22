@@ -162,7 +162,7 @@ Warrior *createWarrior()
     //todo orginal self->instance->position->set(self->instance->position, 0, 0);
     self->instance->position->set(self->instance->position, 0,10);
     self->instance->rigidBody = newRigidBody();
-    self->instance->rigidBody->setForce(self->instance->rigidBody, 20 , 0);//!forces på gubben initialt
+    self->instance->rigidBody->setForce(self->instance->rigidBody, 0 , 0);//!forces på gubben initialt
 
     self->update = updateWarrior;
     self->events = warriorEventHandle;
