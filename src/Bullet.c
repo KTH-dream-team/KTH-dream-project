@@ -55,6 +55,7 @@ void updateBullet(void *self, float dt)
 
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 }
+/*
 void eventBullet(void *self)
 {
     InputHandler *inputHandler = getInputHandler();
@@ -68,31 +69,31 @@ void eventBullet(void *self)
         instance->vel.x = (x - instance->position->getX(instance->position)) / 120;
         instance->vel.y = (y - instance->position->getY(instance->position)) / 120;
     }
-}
+}*/
 void destroyBullet(void *self)
 {
     free(self);
     free(((Bullet *)self)->instance);
 }
 
-Bullet *newBullet()
+Bullet *newBullet(SDL_FPoint vel)
 {
     Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
 
     self->instance->position = newTransform();
 
-    self->instance->vel.x = 1;
-    self->instance->vel.y = 1;
+    self->instance->vel.x = vel.x;
+    self->instance->vel.y = vel.y;
 
-    self->instance->hitBox.x = 300;
-    self->instance->hitBox.y = 100;
+    self->instance->hitBox.x = 0;
+    self->instance->hitBox.y = 0;
     self->instance->hitBox.w = 25;
     self->instance->hitBox.h = 25;
 
     self->render = renderBullet;
     self->update = updateBullet;
-    self->events = eventBullet;
+    //self->events = eventBullet;
     self->destroy = destroyBullet;
 
     return self;
