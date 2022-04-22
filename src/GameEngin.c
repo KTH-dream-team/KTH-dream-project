@@ -25,19 +25,19 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
     if (!isRenderSucced)
         return 0;
-
-    EntityManager *entityManager = getEntityManager();
-    // Warrior creation
-    Warrior *warrior = createWarrior();
-    entityManager->add(entityManager, "warrior-1", warrior);//add to entity manager list
-
+    
     //init map
     MapManager *mapManager = getMapManager();
     mapManager->initMap(mapManager);//! initializes map
 
+    EntityManager *entityManager = getEntityManager();
+    // Warrior creation
+    Warrior *warrior = createWarrior();
+    entityManager->add(entityManager, "Warrior-1", warrior);//add to entity manager list
+
     // cube creation
     Cube *cube = newCube();
-    entityManager->add(entityManager, "cube-1", cube);
+    entityManager->add(entityManager, "Cube-1", cube);
 
     Engin->instance->isRunning = true;
 
@@ -47,14 +47,7 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 void handleEvents(void *self)
 {
     EntityManager *entityManager = getEntityManager();
-
-    // Warrior Events
-    Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
-    warrior->eventHandler(warrior);
-
-    // cube
-    Cube *cube = entityManager->getByID(entityManager, "cube-1");
-    cube->events(cube);
+    entityManager->handleAllEvents(entityManager);
 }
 
 void handleUpdates(void *self)
@@ -64,14 +57,7 @@ void handleUpdates(void *self)
     float dt = fpsManager->getDelta(fpsManager);
 
     EntityManager *entityManager = getEntityManager();
-
-    Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
-    warrior->update(warrior, dt); //! update warrior ska va på
-
-    Cube *cube = entityManager->getByID(entityManager, "cube-1");
-    cube->update(cube, dt);
-
-    // updates functions go here !!!
+    entityManager->updateAll(entityManager, dt);
 }
 void handleRenders(void *self)
 {
@@ -79,22 +65,12 @@ void handleRenders(void *self)
     SDL_SetRenderDrawColor(Engin->instance->renderer, 135, 206, 235, 255);
     SDL_RenderClear(Engin->instance->renderer);
 
-    // render functions go here !!!
-
-    EntityManager *entityManager = getEntityManager();
-
     //render map
     MapManager *mapManger = getMapManager();
     mapManger->showMap(mapManger);
 
-    //Warrior Render
-    Warrior *warrior = entityManager->getByID(entityManager, "warrior-1");
-    warrior->render(warrior);
-
-    // render Cube
-    SDL_SetRenderDrawColor(Engin->instance->renderer, 0, 0, 255, 255);
-    Cube *cube = entityManager->getByID(entityManager, "cube-1");
-    cube->render(cube);
+    EntityManager *entityManager = getEntityManager();
+    entityManager->renderAll(entityManager);
 
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);

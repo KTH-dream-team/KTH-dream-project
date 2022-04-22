@@ -8,7 +8,7 @@ typedef struct warrior
 {
     void (*update)(void *self, float dt);
     void (*render)(void *self);
-    void (*eventHandler)(void *self);
+    void (*events)(void *self);
     void (*destroy)(void *self);
 
     WarriorInstance *instance;

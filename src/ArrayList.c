@@ -26,6 +26,16 @@ void add(void *self, void *toAdd)
     list->arr = temp;
 }
 
+void dropElement(void *self, int index)
+{
+    Inst *list = ((ArrayList *)self)->list;
+
+    for (int i = index; i < list->lenght-1; i++)
+        list->arr[i] = list->arr[i];
+
+    list->lenght = list->lenght -1;
+}
+
 void *indexOf(void *self, int index)
 {
     return ((ArrayList *)self)->list->arr[index];
@@ -57,6 +67,7 @@ ArrayList *newArrayList(void)
     self->list->total = BLOCK;
 
     self->add = add;
+    self->drop = dropElement;
     self->indexOf = indexOf;
     self->getLength = getLength;
     self->destroy = clean;

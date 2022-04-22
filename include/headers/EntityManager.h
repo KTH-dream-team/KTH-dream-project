@@ -25,7 +25,12 @@ typedef struct entityManager
 {
     void (*add)(void *self, char *id, void *entity);
     void *(*getByID)(void *self, char *id);
+    void (*drop)(void *self, char*id);
     void (*destroy)(void *self);
+    void (*updateAll)(void *self, float dt);
+    void (*renderAll)(void *self);
+    void (*handleAllEvents)(void *self);
+
 
     EntityManagerInstance *instance;
 } EntityManager;

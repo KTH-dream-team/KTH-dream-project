@@ -55,6 +55,11 @@ void transformTranslate(void *self, float x, float y)
     instance->X += x;
     instance->Y += y;
 }
+void destroyTransform(void *self)
+{
+    free(((Transform*)self)->instance);
+    free((Transform*)self);
+}
 
 Transform* newTransform ()
 {
@@ -75,6 +80,8 @@ Transform* newTransform ()
     self->translate = transformTranslate;
     self->translateX = transformTranslateX;
     self->translateY = transformTranslateY;
+
+    self->destroy = destroyTransform;
 
     return self;
 }

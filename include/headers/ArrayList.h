@@ -27,6 +27,7 @@ typedef struct inst Inst;
 typedef struct arrayList
 {
     void (*add)(void *self, void *toAdd);
+    void (*drop)(void *self, int index);
     void *(*indexOf)(void *self, int index);
     void (*destroy)(void *self);
     int (*getLength)(void *self);
