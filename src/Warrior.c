@@ -8,6 +8,8 @@
 #include <map.h>
 static unsigned int currentTime;
 static unsigned int lastTime;
+#define accMan 0.5
+#define speedMan 2
 
 struct warriorInstance
 {
@@ -64,12 +66,24 @@ void warriorEventHandle(void *self)
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
 
     Animation *anim = ((Warrior *)self)->instance->animation;
+    
+    Transform *pos = ((Warrior *)self)->instance->position;
+    float x, y;
+    x = pos->getX(pos);
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT)){
+        printf("left go\n");
+        pos->setX(pos, (pos->getX(pos)-speedMan));
+    }
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT)){
+        printf("right go\n");
+        pos->setX(pos, (pos->getX(pos)+speedMan));
+    }
+
+
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
         anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0);
-      
-
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
