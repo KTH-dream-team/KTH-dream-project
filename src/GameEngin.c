@@ -74,6 +74,14 @@ void handleRenders(void *self)
     entityManager->renderAll(entityManager);
     
 
+    // render Bullet
+    SDL_SetRenderDrawColor(Engin->instance->renderer, 0, 0, 255, 255);
+    Bullet *bullet = entityManager->getByID(entityManager, "bullet-1");
+    if(bullet != NULL){
+        bullet->render(bullet);
+    }
+    
+
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
 }
