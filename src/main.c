@@ -6,7 +6,6 @@
 #include "map.h"
 #include "hitBox.h"
 
-
 #define SDL_MAIN_HANDLED
 
 #define SCREEN_WIDTH 1000

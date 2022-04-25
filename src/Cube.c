@@ -12,6 +12,7 @@
 #include "EntityManager.h"
 #include <math.h>
 #include <string.h>
+#include "Warrior.h"
 struct cubeInstance
 {
     Transform *position;
@@ -60,6 +61,7 @@ void eventCube(void *self)
     int x, y;
     unsigned int buttons = inputHandler->getMouseState(&x, &y);
 
+
     CubeInstance *instance = ((Cube *)self)->instance;
 
     if ((buttons & SDL_BUTTON_LMASK) != 0)
@@ -69,21 +71,23 @@ void eventCube(void *self)
     }
 
 
-    if(buttons == SDL_BUTTON_RMASK){
-        Transform* pos = ((Cube*)self)->instance->position;
+    // if(buttons == SDL_BUTTON_RMASK){
+    //     Transform* pos = ((Cube*)self)->instance->position;
 
-        float velx = x - pos->getX(pos);
-        float vely = y - pos->getY(pos);
-        float xN =  velx / sqrt(velx*velx+vely*vely);
-        float yN =  vely / sqrt(velx*velx+vely*vely);
+    //     float velx = x - pos->getX(pos);
+    //     float vely = y - pos->getY(pos);
+    //     float xN =  velx / sqrt(velx*velx+vely*vely);
+    //     float yN =  vely / sqrt(velx*velx+vely*vely);
 
-        EntityManager* entityManager=getEntityManager();
+    //     EntityManager* entityManager=getEntityManager();
 
-        SDL_FPoint velN = {xN*5, yN*5};
-        Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
-        entityManager->add(entityManager, "Bullet-1", bullet1);
-    }
+    //     SDL_FPoint velN = {xN*5, yN*5};
+    //     Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
+    //     entityManager->add(entityManager, "Bullet-1", bullet1);
+    // }
 }
+
+
 void destroyCube(void *self)
 {
     free(((Cube *)self)->instance->position);

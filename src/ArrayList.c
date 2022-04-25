@@ -31,7 +31,7 @@ void dropElement(void *self, int index)
     Inst *list = ((ArrayList *)self)->list;
 
     for (int i = index; i < list->lenght-1; i++)
-        list->arr[i] = list->arr[i];
+        list->arr[i] = list->arr[i+1];
 
     list->lenght = list->lenght -1;
 }

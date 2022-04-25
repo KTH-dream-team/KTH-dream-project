@@ -46,8 +46,10 @@ void *getEntityByID(void *self, char *id)
     for (int i = 0; i < lenght; i++)
     {
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
-        if (strcmp(t->id, id) == 0)
+        if (strcmp(t->id, id) == 0){
+            printf("t %s id %s \n",t->id, id);
             return t->entity;
+        }
     }
 
     return NULL;
@@ -127,10 +129,11 @@ void handleAllEvents(void *self)
         }
         else if(strstr(t->id, "Cube-") != NULL)
         {
-            ((Cube*)t->entity)->events((Cube*)t->entity);
+            //((Cube*)t->entity)->events((Cube*)t->entity);//!check cube event 
         }      
     }
 }
+
 
 void destroyEntityManager(void *self)
 {
