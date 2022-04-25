@@ -88,7 +88,7 @@ bool RayVsRect(SDL_FPoint origin, SDL_FPoint dir, SDL_Rect r, SDL_FPoint *normal
     return true;
 }
 
-bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, float dt)
+bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, float *t, float dt)
 {
 
     if (dir.x == 0 && dir.y == 0)
@@ -106,15 +106,14 @@ bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoin
         DRect.y + DRect.h / 2,
     };
 
-    dir.x = dir.x * dt;
-    dir.y = dir.y * dt;
+    dir.x = dir.x * 1;
+    dir.y = dir.y * 1;
 
     SDL_FPoint contact;
-    float t;
-    bool coll = RayVsRect(DRectOrigin, dir, expandedTarget, normal, &contact, &t);
+    bool coll = RayVsRect(DRectOrigin, dir, expandedTarget, normal, &contact, t);
 
     if (coll)
-        return (t >= 0 && t < 1);
+        return (*t >= 0 && *t < 1);
     else
         return false;
 }
@@ -122,11 +121,16 @@ bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoin
 bool ResolveDynamicRectVsRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, float dt)
 {
     SDL_FPoint normal;
-    if (DynamicRectVsRect(DRect, *dir, SRect, &normal, dt))
+    float t;
+    if (DynamicRectVsRect(DRect, *dir, SRect, &normal, &t, dt))
     {   
-       // printf("den kraokarrrrrr\n");
-        dir->x = 0;
-        dir->y = 0;
+        printf("normal: x: %f,y:%f \n", normal.x, normal.y);
+        
+        if(normal.y == -1 || normal.y == 1)
+            dir->y = dir->x * (t-0.1);
+        if(normal.x == -1 || normal.x == 1)
+            dir->x = dir->y * (t-0.01);
+
         return true;
     }
     return false;
