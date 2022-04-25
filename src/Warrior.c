@@ -29,6 +29,8 @@ void updateWarrior(void *self, float dt)
     rig->update(rig, dt);
 
     //handle collision
+
+     
     MapManager *mapManager = getMapManager();//MAP
     Transform *pos = ((Warrior *)self)->instance->position;
     SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
@@ -40,12 +42,16 @@ void updateWarrior(void *self, float dt)
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
 
+    printf("=========================\n");
     mapManager->checkColision(mapManager, dRect, vel, dt);//!warrior collision check
 
 
     //update position
     SDL_FPoint PTranslate = rig->getPosition(rig);
-    //printf("get pos %d", (rig->getPosition(rig)).y);
+
+    SDL_FPoint acc = rig->getAcceleration(rig);
+
+    printf("vel: x:%f, y:%f, acc: x:%f, y: %f\n", PTranslate.x, PTranslate.y, acc.x, acc.y);
 
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
@@ -55,9 +61,23 @@ void renderWarrior(void *self)
 {
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
+    WarriorInstance * instance = ((Warrior *)self)->instance;
     
-
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
+    
+    GameEngin *engin = getGameEngin();
+
+    SDL_Rect box = {
+        instance->position->getX(instance->position) + instance->hitBox.x,
+        instance->position->getY(instance->position) + instance->hitBox.y,
+        instance->hitBox.w,
+        instance->hitBox.h,
+    };
+    SDL_Renderer *ren =  engin->getRenderer(engin);
+    SDL_SetRenderDrawColor(ren, 200,20,20,255);
+    SDL_RenderDrawRect(engin->getRenderer(engin), &box);
+
+    
 }
 void warriorEventHandle(void *self)
 {
@@ -68,18 +88,14 @@ void warriorEventHandle(void *self)
     Animation *anim = ((Warrior *)self)->instance->animation;
     
     Transform *pos = ((Warrior *)self)->instance->position;
-    float x, y;
-    x = pos->getX(pos);
+
+    rig->setVelocityX(rig, 0);
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT)){
-        printf("left go\n");
-        pos->setX(pos, (pos->getX(pos)-speedMan));
+        rig->setVelocityX(rig,-50);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT)){
-        printf("right go\n");
-        pos->setX(pos, (pos->getX(pos)+speedMan));
+        rig->setVelocityX(rig,50);
     }
-
-
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
@@ -150,10 +166,10 @@ Warrior *createWarrior()
     TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
 
-    self->instance->hitBox.x = 0;
-    self->instance->hitBox.y = 0;
-    self->instance->hitBox.w = warriorWidth;
-    self->instance->hitBox.y = warriorHight;
+    self->instance->hitBox.x = 3;
+    self->instance->hitBox.y = 7;
+    self->instance->hitBox.w = warriorWidth-10;
+    self->instance->hitBox.h = warriorHight-7;
 
     self->instance->animation = newAnimation();
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);
