@@ -171,7 +171,7 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
         return false;
     }
 
-    Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, fullScreen);
+    Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_RESIZABLE);
     if (!Engin->instance->window)
     {
         printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());

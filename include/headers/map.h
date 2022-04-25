@@ -12,5 +12,7 @@ typedef struct mapManager{
     MapManagerInstance *instance;
 }MapManager;
 
+void printMapHelper();
+
 
 MapManager *getMapManager();

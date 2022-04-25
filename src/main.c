@@ -9,8 +9,8 @@
 
 #define SDL_MAIN_HANDLED
 
-#define SCREEN_WIDTH 1000
-#define SCREEN_HEIGHT 500
+#define SCREEN_WIDTH 3000
+#define SCREEN_HEIGHT 1500
 
 int main(int argc, char **argv)
 {
@@ -33,7 +33,11 @@ int main(int argc, char **argv)
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);
     }
+
+    printMapHelper();
     Engine->destroyEngine(Engine);
+
+
 
     return 0;
 }
