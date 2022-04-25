@@ -127,9 +127,9 @@ bool ResolveDynamicRectVsRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, f
         printf("normal: x: %f,y:%f \n", normal.x, normal.y);
         
         if(normal.y == -1 || normal.y == 1)
-            dir->y = dir->x * (t-0.1);
+            dir->y = 0;
         if(normal.x == -1 || normal.x == 1)
-            dir->x = dir->y * (t-0.01);
+            dir->x =0;
 
         return true;
     }
