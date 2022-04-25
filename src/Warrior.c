@@ -142,9 +142,7 @@ void warriorEventHandle(void *self)
 
              sprintf(result, "%d", bulletCount);
              strcat(bulletId,result);
-            // Bullet *bullet1 = newBullet(bulletId, pos->get(pos), velN);
-            // char *id = malloc(sizeof(char)*10);
-            // id = "Bullet-a";
+  
             static int count = 0;
             Bullet *bullet1 = newBullet(bulletId, pos->get(pos), velN);
             // Bullet *bullet2 = newBullet(bulletId, pos->get(pos), velN);
@@ -155,9 +153,6 @@ void warriorEventHandle(void *self)
             // entityManager->add(entityManager,"Bullet-3", bullet3);
             // entityManager->add(entityManager,"Bullet-3", bullet3);
              bulletCount++;
-            // id[7]+=count;
-            // count ++;
-             //printf("%s\n",bulletId);
             lastTime = currentTime;
         }
     }

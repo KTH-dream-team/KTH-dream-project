@@ -11,6 +11,7 @@
 #include "EntityManager.h"
 #include "Warrior.h"
 #include "string.h"
+#include "TextureManager.h"
 
 void destroyBullet(void *self);
 
@@ -26,6 +27,10 @@ void renderBullet(void *self)
 {
     BulletInstance *instance = ((Bullet *)self)->instance;
     GameEngin *engin = getGameEngin();
+    TextureManager *textureManager = getTextureManager();
+    textureManager->load(textureManager, "gun", "./assets/gun.png");//!if not null ta befintlig
+    SDL_Rect srcRec = {0, 0, 20, 20};//!skapa 20x20 source rectangel
+
 
     SDL_Rect box = {
         instance->position->getX(instance->position) + instance->hitBox.x,
@@ -33,6 +38,7 @@ void renderBullet(void *self)
         instance->hitBox.w,
         instance->hitBox.h,
     };
+    textureManager->draw(textureManager, "gun",srcRec, box, 1);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 }
 void updateBullet(void *self, float dt)
