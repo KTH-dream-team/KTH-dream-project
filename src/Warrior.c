@@ -6,7 +6,7 @@
 #include "Rigidbody.h"
 #include <stdio.h>
 #include <map.h>
-#include "cube.h"
+#include "Cube.h"
 #include "EntityManager.h"
 #include "Bullet.h"
 #include "math.h"
@@ -49,7 +49,7 @@ void updateWarrior(void *self, float dt)
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
 
-    printf("=========================\n");
+    //printf("=========================\n");
     mapManager->checkColision(mapManager, dRect, vel, dt);//!warrior collision check
 
 
@@ -58,7 +58,7 @@ void updateWarrior(void *self, float dt)
 
     SDL_FPoint acc = rig->getAcceleration(rig);
 
-    printf("vel: x:%f, y:%f, acc: x:%f, y: %f\n", PTranslate.x, PTranslate.y, acc.x, acc.y);
+    //printf("vel: x:%f, y:%f, acc: x:%f, y: %f\n", PTranslate.x, PTranslate.y, acc.x, acc.y);
 
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
@@ -120,7 +120,6 @@ void warriorEventHandle(void *self)
     {
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
           rig->setVelocityY(rig, -100);
-        printf("trycker SPACE\n");
     }
     int mouse_x, mouse_y;
     char result[50];
@@ -139,25 +138,8 @@ void warriorEventHandle(void *self)
             float xN =  velx / sqrt(velx*velx+vely*vely);
             float yN =  vely / sqrt(velx*velx+vely*vely);
             SDL_FPoint velN = {xN*5, yN*5};
-
-             sprintf(result, "%d", bulletCount);
-             strcat(bulletId,result);
-            // Bullet *bullet1 = newBullet(bulletId, pos->get(pos), velN);
-            // char *id = malloc(sizeof(char)*10);
-            // id = "Bullet-a";
-            static int count = 0;
-            Bullet *bullet1 = newBullet(bulletId, pos->get(pos), velN);
-            // Bullet *bullet2 = newBullet(bulletId, pos->get(pos), velN);
-            // Bullet *bullet3 = newBullet(bulletId, pos->get(pos), velN);
-           
+            Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
-            // entityManager->add(entityManager,"Bullet-2", bullet2);
-            // entityManager->add(entityManager,"Bullet-3", bullet3);
-            // entityManager->add(entityManager,"Bullet-3", bullet3);
-             bulletCount++;
-            // id[7]+=count;
-            // count ++;
-             //printf("%s\n",bulletId);
             lastTime = currentTime;
         }
     }

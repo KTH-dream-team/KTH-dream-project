@@ -47,7 +47,6 @@ void *getEntityByID(void *self, char *id)
     {
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
         if (strcmp(t->id, id) == 0){
-            printf("t %s id %s \n",t->id, id);
             return t->entity;
         }
     }

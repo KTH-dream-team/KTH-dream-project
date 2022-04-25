@@ -9,16 +9,13 @@ struct inputHandlerInstance
 };
 void keyUp(void *self)
 {
-    printf("keyup\n");
     InputHandlerInstance *instance = ((InputHandler *)self)->instance;
     instance->keyState = SDL_GetKeyboardState(NULL);
 }
 void keyDown(void *self)
 {
-    printf("keydown\n");
     InputHandlerInstance *instance = ((InputHandler *)self)->instance;
     instance->keyState = SDL_GetKeyboardState(NULL);
-    
 }
 void listen(void *self)
 {

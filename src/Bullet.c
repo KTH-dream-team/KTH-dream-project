@@ -44,7 +44,6 @@ void updateBullet(void *self, float dt)
     Transform *pos = instance->position;
     if(pos->getX(pos) > 1100 || pos->getY(pos) > 1100 || pos->getY(pos) < 0 || pos->getX(pos) < 0){
         EntityManager * EM = getEntityManager();
-        printf("bullet destroyd id %st\n",instance->id);
         EM->drop(EM,instance->id);
         ((Bullet *)self)->destroy(self);
     }
@@ -65,7 +64,6 @@ Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
     self->instance->position->set(self->instance->position, pos.x, pos.y);//!position
     //self->instance->id = id;
     strcpy(self->instance->id, id);
-    printf("bullet destroyd idnew %st\n",self->instance->id);
     self->instance->vel.x = vel.x;
     self->instance->vel.y = vel.y;
 
