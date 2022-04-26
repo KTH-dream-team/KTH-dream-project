@@ -141,6 +141,7 @@ void warriorEventHandle(void *self)
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
             lastTime = currentTime;
+            
         }
     }
     
