@@ -126,10 +126,7 @@ void handleAllEvents(void *self)
         {
             ((Warrior*)t->entity)->events((Warrior*)t->entity);
         }
-        else if(strstr(t->id, "Cube-") != NULL)
-        {
-            //((Cube*)t->entity)->events((Cube*)t->entity);//!check cube event 
-        }      
+    
     }
 }
 
@@ -178,7 +175,7 @@ EntityManager *getEntityManager()
     self.renderAll = renderAllEntities;
     self.handleAllEvents = handleAllEvents;
 
-    self.instance = malloc(sizeof(EntityManagerInstance *));//todo ta bort * ???
+    self.instance = malloc(sizeof(EntityManagerInstance ));
     self.instance->entityList = malloc(sizeof(ArrayList *));
     self.instance->entityList = newArrayList();
 

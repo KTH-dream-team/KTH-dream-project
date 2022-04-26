@@ -36,10 +36,6 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     Warrior *warrior = createWarrior();
     entityManager->add(entityManager, "Warrior-1", warrior);//add to entity manager list
 
-    //cube creation
-    Cube *cube = newCube();
-    entityManager->add(entityManager, "Cube-1", cube);
-
     Engin->instance->isRunning = true;
 
     return 1;
@@ -61,11 +57,8 @@ void handleUpdates(void *self)
     entityManager->updateAll(entityManager, dt);
 }
 void handleRenders(void *self)
-{//todo implemnt neew bakgrund
+{
     GameEngin *Engin = ((GameEngin *)self);
-    SDL_RenderClear(Engin->instance->renderer);
-    // SDL_SetRenderDrawColor(Engin->instance->renderer, 135, 206, 235, 255);//färg bakgrund
-    
     //render background
     TextureManager *textureManager = getTextureManager(textureManager);
     textureManager->load(textureManager,"moon","./assets/moon.jpg");
