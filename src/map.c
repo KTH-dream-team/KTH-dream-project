@@ -180,9 +180,7 @@ void show(void *self){ //todo remove :debug
             
             }
     }
-
 }
-
 
 MapManager *getMapManager(){
     PRIVET MapManager self;

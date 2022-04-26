@@ -61,11 +61,18 @@ void handleUpdates(void *self)
     entityManager->updateAll(entityManager, dt);
 }
 void handleRenders(void *self)
-{
+{//todo implemnt neew bakgrund
     GameEngin *Engin = ((GameEngin *)self);
-    SDL_SetRenderDrawColor(Engin->instance->renderer, 135, 206, 235, 255);
     SDL_RenderClear(Engin->instance->renderer);
-
+    // SDL_SetRenderDrawColor(Engin->instance->renderer, 135, 206, 235, 255);//färg bakgrund
+    
+    //render background
+    TextureManager *textureManager = getTextureManager(textureManager);
+    textureManager->load(textureManager,"moon","./assets/moon.jpg");
+    SDL_Rect srcRect = {0, 0, 1000, 500};
+    SDL_Rect destRect = {0, 0, 1000, 500};
+    textureManager->draw(textureManager,"moon",srcRect, destRect,1);//!draw bakgrundsbild
+    
     //render map
     MapManager *mapManger = getMapManager();
     mapManger->showMap(mapManger);

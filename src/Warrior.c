@@ -11,8 +11,7 @@
 #include "Bullet.h"
 #include "math.h"
 #include "string.h"
-
-
+#include "CollisionManager.h"
 static unsigned int currentTime;
 static unsigned int lastTime;
 #define accMan 0.5
@@ -94,18 +93,21 @@ void warriorEventHandle(void *self)
     EntityManager* entityManager=getEntityManager();//!entityManager
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
+    // CollisionManager *collisionManager = getCollisionManager(collisionManager);//!collisionManager
 
     rig->setVelocityX(rig, 0);
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT)){
-        rig->setVelocityX(rig,-50);
+        rig->setVelocityX(rig,-130);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT)){
-        rig->setVelocityX(rig,50);
+        rig->setVelocityX(rig,130);
     }
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
         anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0);
+        rig->setVelocityX(rig,-130);
+        
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
@@ -115,11 +117,19 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
     {
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
+        rig->setVelocityX(rig,130);
+
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
     {
+        
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
-          rig->setVelocityY(rig, -100);
+        rig->setVelocityY(rig, -100);
+    }
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_W))
+    {
+        anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
+        rig->setVelocityY(rig, -100);
     }
     int mouse_x, mouse_y;
     char result[50];
@@ -141,6 +151,7 @@ void warriorEventHandle(void *self)
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
             lastTime = currentTime;
+            
         }
     }
     
