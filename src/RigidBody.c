@@ -80,7 +80,7 @@ void setVelocityY(void *self, float fy)
 }
 SDL_FPoint getVelocity(void *self)
 {
-    return ((Rigidbody *)self)->instance->force;
+    return ((Rigidbody *)self)->instance->vel;
 }
 SDL_FPoint getPosition(void *self)
 {
