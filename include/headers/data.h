@@ -1,5 +1,5 @@
 #pragma once
-typedef struct data
+typedef struct dataclient
 {
     int x;
     int y;

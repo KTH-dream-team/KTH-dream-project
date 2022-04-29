@@ -1,5 +1,6 @@
 #pragma once
-typedef struct UDPserverInstance UDPServerInstance;
+#include"data.h"
+typedef struct udpServerInstance UDPServerInstance;
 
 typedef struct {
 

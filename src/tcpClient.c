@@ -70,7 +70,7 @@ int setRand(void *self){
     return 0;
 }
 
-void destroy(void *self){
+void TCPClientdestroy(void *self){
     TCPclient *client = ((TCPclient *)self);
 
     SDLNet_TCP_Close(client->instance->serverSocket);
@@ -96,7 +96,7 @@ TCPclient *getTCPclient()
     self.broadCast = TCPbroadCast;
     self.listen = TCPlisten;
     self.recive = TCPrecive;
-    self.destroy = destroy;
+    self.destroy = TCPClientdestroy;
 
     self.instance->serverSocket = NULL;
     self.instance->nrOfSocketRdy = 0;

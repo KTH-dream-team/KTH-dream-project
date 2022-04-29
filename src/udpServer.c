@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "udpServer.h"
+//#include"data.h"
 #define MAX_CLIENTS 4
 #define MAX_SIZE 512
 #define SERVER_PORT 3000
@@ -27,7 +28,7 @@ typedef struct client
     Data data;
 } Client;
 
-struct UDPserverInstance
+struct udpServerInstance
 {
     Client clients[MAX_CLIENTS];
     SDLNet_SocketSet socketSet;

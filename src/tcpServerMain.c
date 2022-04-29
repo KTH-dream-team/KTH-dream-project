@@ -5,7 +5,7 @@
 #include "SDL2/SDL_net.h"
 #include "tcpServer.h"
 
-
+/*
 
 int main(int argc, char **argv)
 {
@@ -29,4 +29,4 @@ int main(int argc, char **argv)
         }
     }
     return 0;
-}
+}*/

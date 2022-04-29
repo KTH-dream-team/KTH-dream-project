@@ -15,7 +15,7 @@
 
 bool sendUdpPacageToServer(void *self, void* data, unsigned long len);
 
-struct clientInstance
+struct udpClientInstance
 {
     UDPsocket serverSocket;
     UDPpacket *packetReceived;
@@ -35,7 +35,7 @@ bool clientIsRunning(void *self)
 
 bool UDPinit(void *self)
 {
-    ClientInstance *instance = ((UDPclient *)self)->instance;
+    UDPClientInstance *instance = ((UDPclient *)self)->instance;
     if (SDLNet_Init() < 0)
     {
         fprintf(stderr, "Init error: %s\n", SDLNet_GetError());
@@ -85,7 +85,7 @@ void UDPbroadCast(void *self, DataClient *data, unsigned long length)
 
 void UDPclientListen(void *self)
 {
-    ClientInstance *instance = ((UDPclient *)self)->instance;   
+    UDPClientInstance *instance = ((UDPclient *)self)->instance;   
     if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
     {
         if(instance->packetReceived->len == sizeof(int)+1)
@@ -137,7 +137,7 @@ UDPclient *getUDPclient()
     if (self.instance != NULL)
         return &self;
 
-    self.instance = malloc(sizeof(ClientInstance));
+    self.instance = malloc(sizeof(UDPClientInstance));
     self.init = UDPinit;
     self.isRunning = clientIsRunning;
     self.destroy = UDPClientdestroy;

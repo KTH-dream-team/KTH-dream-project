@@ -7,6 +7,9 @@
 #include "SDL2/SDL_net.h"
 #include "tcpClient.h"
 #include "tcpServer.h"
+#include "udpClient.h"
+#include "udpServer.h"
+//#include"data.h"
 
 #define MAX_CLIENTS 4
 #define MAX_SIZE 512
@@ -19,6 +22,8 @@
 
 typedef struct network
 {
-    TCPClientInstance tcpClientInstance;
-    TCPServerInstance tcpServerInstance;
+    TCPserver tcpS;
+    TCPclient tcpC;
+    UDPserver udpS;
+    UDPclient udpC;
 }Network;

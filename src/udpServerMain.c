@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "udpServer.h"
-
+/*
 int main(int argc, char **argv)
 {
     UDPserver *server = getUDPserver();
@@ -17,4 +17,4 @@ int main(int argc, char **argv)
 
     server->destroy(server);
     return 0;
-}
+}*/

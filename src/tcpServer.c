@@ -121,7 +121,7 @@ void broadcastData(void *self, Client sender, Data *data, int dataSize){
     
 }
 
-void TCPdestroy(void *self)
+void TCPServerdestroy(void *self)
 {
     TCPserver *server = ((TCPserver *)self);
     SDLNet_FreeSocketSet(server->instance->socketSet);
@@ -140,7 +140,7 @@ TCPserver *getTCPserver()
     self.listenConnection = listenConnection;
     self.checknrOfSockets = checknrOfSockets;
     self.loopClients = loopClients;
-    self.destroy = TCPdestroy;
+    self.destroy = TCPServerdestroy;
 
     self.instance->serverSocket = NULL;
     self.instance->numOfClients = 0;

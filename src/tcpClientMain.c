@@ -6,7 +6,7 @@
 #include "tcpClient.h"
 #include <time.h>
 
-
+/*
 int main(int argc, char **argv)
 {
     srand(time(NULL));
@@ -57,4 +57,4 @@ int main(int argc, char **argv)
     client->destroy(client);
 
     return 0;
-}
+}*/

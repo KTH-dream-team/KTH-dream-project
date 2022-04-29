@@ -1,7 +1,7 @@
 #pragma once
 #include"data.h"
 
-typedef struct clientInstance ClientInstance;
+typedef struct udpClientInstance UDPClientInstance;
 
 
 typedef struct {
@@ -14,7 +14,7 @@ typedef struct {
     void (*closeConnection)(void *self);
     void (*listen)(void *self);
     void (*broadCast)(void *self, DataClient *data, unsigned long length);
-    ClientInstance *instance;
+    UDPClientInstance *instance;
 } UDPclient;
 
 
