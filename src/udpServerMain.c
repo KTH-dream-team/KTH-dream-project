@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
-#include "server.h"
+#include "udpServer.h"
 
 int main(int argc, char **argv)
 {

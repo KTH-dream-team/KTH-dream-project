@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
-#include "tcpClient.h"
 
 #define MAX_CLIENTS 4
 #define MAX_SIZE 512

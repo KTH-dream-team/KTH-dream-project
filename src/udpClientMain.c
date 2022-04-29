@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
-#include "client.h"
+#include "udpClient.h"
 #include "time.h"
 #include "data.h"
 

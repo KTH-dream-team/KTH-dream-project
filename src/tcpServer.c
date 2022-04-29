@@ -76,7 +76,6 @@ void listenConnection (void *self)
         instance->clients[instance->numOfClients].socket = tmpSock;
         instance->clients[instance->numOfClients].ip = *SDLNet_TCP_GetPeerAddress(tmpSock);
         instance->clients[instance->numOfClients].id = instance->currentID++;
-        instance->clients[instance->numOfClients].socket = tmpSock;
         SDLNet_TCP_AddSocket(instance->socketSet, tmpSock);
         instance->numOfClients++;
     }
