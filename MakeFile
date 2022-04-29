@@ -12,3 +12,7 @@ wserver:
 	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o gcc -o S  mainServer.c server.c -lsdl2 -lsdl2_net -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 clear:
 	rm *.o *.exe
+wtcp:
+	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o CT.exe  src/tcpClient.c server/tcpClientMain.c -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
+wudp:
+	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o CU.exe  src/udpClient.c server/udpClientMain.c -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
