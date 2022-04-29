@@ -4,17 +4,17 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "udpServer.h"
-/*
+
 int main(int argc, char **argv)
 {
-    UDPserver *server = getUDPserver();
-    server->init(server);
+    UDPserver *udpserver = getUDPserver();
+    udpserver->init(udpserver);
 
-    while (server->isRunning)
+    while (udpserver->isRunning)
     {
-        server->listen(server);
+        udpserver->listen(udpserver);
     }
 
-    server->destroy(server);
+    udpserver->destroy(udpserver);
     return 0;
-}*/
+}

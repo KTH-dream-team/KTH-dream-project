@@ -10,7 +10,7 @@
 #define SERVER_IP "127.0.0.1"
 
 
-void broadcastData(void *self, Client sender, Data *data, int dataSize);
+void broadcastData(void *self, Client sender, TCPServerData *data, int dataSize);
 
 bool TCPinitServer (void *self)
 {
@@ -96,20 +96,20 @@ void loopClients(void *self){
         }
         else if (SDLNet_SocketReady(instance->clients[i].socket)) 
         {
-            if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(Data)) > 0)
+            if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(TCPServerData)) > 0)
             {
                 printf("new package from tempClientID %d  (x:%d, y:%d, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
                 instance->nrOfRdy--;//! ready tempClient in main -1
                 //broadcast data to all tempClients exept sender
                 instance->clients[i].data.from = instance->clients[i].id;
-                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(Data));
+                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(TCPServerData));
             }
         }
     }
 }
 
 
-void broadcastData(void *self, Client sender, Data *data, int dataSize){
+void broadcastData(void *self, Client sender, TCPServerData *data, int dataSize){
     TCPServerInstance *instance = ((TCPserver*)self)->instance;
 
     for (int i = 0; i < instance->numOfClients; i++)

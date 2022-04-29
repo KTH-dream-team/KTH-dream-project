@@ -1,14 +1,14 @@
-all:
+wgame:
 	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o Main src/*.c -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
-mac: 
+mgame: 
 	gcc -Iinclude/headers src/*.c -o main.o -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
-server: 
-	gcc -o S  mainServer.c server.c -lsdl2 -lsdl2_net
-client: 
-	gcc -o C  mainClient.c client.c -lsdl2 -lsdl2_net
+mserver: 
+	gcc -Iinclude/headers -o S.exe  server/server.c src/tcpServer.c src/udpServer.c -lsdl2 -lsdl2_net
+mtcp:
+	gcc -Iinclude/headers -o CT.exe  src/tcpClient.c server/tcpClientMain.c -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
+mudp:
+	gcc -Iinclude/headers -o CU.exe  src/udpClient.c server/udpClientMain.c -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 wserver:
 	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o gcc -o S  mainServer.c server.c -lsdl2 -lsdl2_net -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
-wclient:
-	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o gcc -o C  mainClient.c client.c -lsdl2 -lsdl2_net -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 clear:
 	rm *.o *.exe

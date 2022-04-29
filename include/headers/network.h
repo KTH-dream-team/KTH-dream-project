@@ -9,7 +9,6 @@
 #include "tcpServer.h"
 #include "udpClient.h"
 #include "udpServer.h"
-//#include"data.h"
 
 #define MAX_CLIENTS 4
 #define MAX_SIZE 512

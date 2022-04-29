@@ -48,13 +48,13 @@ void TCPlisten (void *self)
 void TCPrecive (void *self)
 {
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
-    if(SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, sizeof(Data)))
+    if(SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, sizeof(TCPClientData)))
     {
         printf("got message from client %d. \ndata \nx: %d \ny: %d\n", instance->packetReceived->from,instance->packetReceived->x,instance->packetReceived->y);
     }
 }
 
-int TCPbroadCast(void *self, Data *data, int dataSize)
+int TCPbroadCast(void *self, TCPClientData *data, int dataSize)
 {
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
     int amoutSent = SDLNet_TCP_Send(instance->serverSocket,data,dataSize);
@@ -88,8 +88,8 @@ TCPclient *getTCPclient()
     if (self.instance != NULL)
         return &self;
     self.instance = malloc(sizeof(TCPClientInstance));
-    self.instance->packetReceived = malloc(sizeof(Data));
-    self.instance->packetSent = malloc(sizeof(Data));
+    self.instance->packetReceived = malloc(sizeof(TCPClientData));
+    self.instance->packetSent = malloc(sizeof(TCPClientData));
     self.instance->clientSocketSet = malloc(sizeof(SDLNet_SocketSet));
     
     self.init = TCPinitclient;

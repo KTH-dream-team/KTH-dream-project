@@ -3,19 +3,19 @@
 #include "SDL2/SDL_net.h"
 #define MAX_CLIENTS 4
 
-typedef struct data
+typedef struct tcpserverdata
 {
     int x;
     int y;
     int from;
-} Data;
+} TCPServerData;
 
 typedef struct client
 {
     int id;
     IPaddress ip;
     TCPsocket socket;
-    Data data;
+    TCPServerData data;
 } Client;
 
 struct tcpServerInstance
