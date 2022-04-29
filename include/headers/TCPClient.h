@@ -1,25 +1,53 @@
-#ifndef TCPClient_H
-#define TCPClient_H
-#define SELFCONNECT "127.0.0.1"
+#pragma once
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 #include "SDL2/SDL_net.h"
+#include "tcpClient.h"
 
-typedef struct clientData ClientData;
-typedef struct tCPClientInstance TCPClientInstance;
+#define MAX_CLIENTS 4
+#define MAX_SIZE 512
+#define CLIENT_PORT 0
+#define CLIENT_IP "127.0.0.1"
+#define SERVER_PORT 3000
+#define SERVER_IP "127.0.0.1"
 
-
-typedef struct TCPClient
+typedef struct data
 {
-	void (*initClient)();
-	void (*connect)(void*self, char* IPAddress, int port);
-	void (*receiveData)(void*self);
-	void (*createSocketClient)(void*self);
-	void (*sendData)(void *self);
-	void (*destroy)(void *self);
+    int x;
+    int y;
+    int from;
+} Data;
 
-	TCPClientInstance *instance;
-} TCPClient;
+struct TCPclientInstance
+{
+    TCPsocket serverSocket;
+    SDLNet_SocketSet *clientSocketSet;
+    Data *packetReceived;
+    Data *packetSent;
+    int nrOfSocketRdy; // includeing it self
+    IPaddress serverAddress;
+    int port;
+    int id;
+    bool isRunning;
+};
 
-TCPClient *getTCPClient();
-void setData(void *self,int x,int y);
+int setRand(void *self);
 
-#endif
+typedef struct TCPclientInstance TCPClientInstance;
+
+
+typedef struct {
+
+    bool (*init)(void *self);
+    bool (*isRunning)(void *self);
+    void (*destroy)(void *self);
+    void (*recive)(void *self);
+    void (*listen)(void *self);
+    int (*broadCast)(void *self, Data *data, int dataSize);
+    TCPClientInstance *instance;
+} TCPclient;
+
+
+TCPclient *getTCPclient();

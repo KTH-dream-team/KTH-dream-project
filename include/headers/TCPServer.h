@@ -1,28 +1,49 @@
-#ifndef H_network
-#define H_network
-#define SELFCONNECT "127.0.0.1"
-#include <SDL2/SDL_net.h>
+#pragma once
+#include <stdbool.h>
+#include "SDL2/SDL_net.h"
+#define MAX_CLIENTS 4
 
-typedef struct serverData ServerData;
-typedef struct tCPServerInstance TCPServerInstance;
-
-
-int checkTCPAccept(void*self);//!Hjälp funktion
-
-typedef struct TCPServer
+typedef struct data
 {
-	void (*initNetwork)(void*self);
-	void (*TCPAccept)(void*self);
-	void (*receiveData)(void*self);
-	void (*sendData)(void*self);
-	void (*createSocketServer)(void*self);
-	void (*destroy)(void *self);
-	void (*setInstance)(void*self);
+    int x;
+    int y;
+    int from;
+} Data;
 
-	int serverRunning;
-	TCPServerInstance *instance;
-} TCPServer;
+typedef struct client
+{
+    int id;
+    IPaddress ip;
+    TCPsocket socket;
+    Data data;
+} Client;
 
-TCPServer *getTCPServer();
+struct tcpServerInstance
+{
+    Client clients[MAX_CLIENTS];
+    SDLNet_SocketSet socketSet;
+    TCPsocket serverSocket;
+    TCPsocket clientSocket;
+    IPaddress serverAddress;
+    int numOfClients;
+    int currentID;
+    int nrOfRdy;
+    bool isRunning;
+};
 
-#endif
+typedef struct tcpServerInstance TCPServerInstance;
+
+typedef struct {
+
+    bool (*init)(void *self);
+    bool (*isRunning)(void *self);
+    void (*destroy)(void *self);
+    void (*listenConnection)(void *self);
+    void (*checknrOfSockets)(void *self);
+    void (*loopClients)(void *self);
+
+    TCPServerInstance *instance;
+} TCPserver;
+
+
+TCPserver *getTCPserver();
