@@ -61,7 +61,7 @@ bool UDPinit(void *self)
     return true;
 }
 
-void UDPdestroy(void *self)
+void UDPClientdestroy(void *self)
 {
     UDPclient *client = ((UDPclient *)self);
 
@@ -140,7 +140,7 @@ UDPclient *getUDPclient()
     self.instance = malloc(sizeof(ClientInstance));
     self.init = UDPinit;
     self.isRunning = clientIsRunning;
-    self.destroy = UDPdestroy;
+    self.destroy = UDPClientdestroy;
     self.makeHandShake = UDPmakeHandShake;
     self.closeConnection = UDPcloseConnection;
     self.broadCast = UDPbroadCast;

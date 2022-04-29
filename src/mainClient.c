@@ -7,9 +7,6 @@
 #include "time.h"
 #include "data.h"
 
-
-
-
 int main(int argc, char **argv)
 {
     UDPclient *client = getUDPclient();

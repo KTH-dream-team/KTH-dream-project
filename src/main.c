@@ -34,5 +34,9 @@ int main(int argc, char **argv)
     }
     Engine->destroyEngine(Engine);
 
+    MapManager *mapManager = getMapManager();
+
+    mapManager->getMap(mapManager);
+
     return 0;
 }
