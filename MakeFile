@@ -5,9 +5,9 @@ mgame:
 mserver: 
 	gcc -Iinclude/headers -o S.exe  server/server.c src/tcpServer.c src/udpServer.c -lsdl2 -lsdl2_net
 mtcp:
-	gcc -Iinclude/headers -o CT.exe  src/tcpClient.c server/tcpClientMain.c -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
+	gcc -Iinclude/headers -o CT.exe  src/tcpClient.c client/tcpClientMain.c -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 mudp:
-	gcc -Iinclude/headers -o CU.exe  src/udpClient.c server/udpClientMain.c -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
+	gcc -Iinclude/headers -o CU.exe  src/udpClient.c client/udpClientMain.c -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 wserver:
 	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o gcc -o S  mainServer.c server.c -lsdl2 -lsdl2_net -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 clear:

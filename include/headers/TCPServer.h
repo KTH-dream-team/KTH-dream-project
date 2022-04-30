@@ -36,11 +36,8 @@ typedef struct tcpServerInstance TCPServerInstance;
 typedef struct {
 
     bool (*init)(void *self);
-    bool (*isRunning)(void *self);
+    void (*TCPlisten)(void *self);
     void (*destroy)(void *self);
-    void (*listenConnection)(void *self);
-    void (*checknrOfSockets)(void *self);
-    void (*loopClients)(void *self);
 
     TCPServerInstance *instance;
 } TCPserver;

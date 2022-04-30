@@ -10,7 +10,13 @@
 #define SERVER_IP "127.0.0.1"
 
 
+
+void TCPListen(void *self);
 void broadcastData(void *self, Client sender, TCPServerData *data, int dataSize);
+void listenConnection (void *self);
+void checkSockets(void *self);
+void readySocket(void *self);
+
 
 bool TCPinitServer (void *self)
 {
@@ -25,7 +31,7 @@ bool TCPinitServer (void *self)
         printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 		return false;
     }
-    instance->socketSet = SDLNet_AllocSocketSet(MAX_CLIENTS + 1);
+    instance->socketSet = SDLNet_AllocSocketSet(MAX_CLIENTS);
     if (instance->socketSet == NULL)
     {
         fprintf(stderr, "TCP_AllocSocket_Set error: %s\n", SDLNet_GetError());
@@ -41,25 +47,17 @@ bool TCPinitServer (void *self)
     return true;
 }
 
-void checknrOfSockets(void *self){
+void checkSockets(void *self){
     TCPServerInstance *instance = ((TCPserver*)self)->instance;
-   // printf("checking for number of sockets\n");
+    instance->nrOfRdy+=SDLNet_CheckSockets(instance->socketSet,1000);
+}
 
-    int nrOfActiveSocket=SDLNet_CheckSockets(instance->socketSet,1000);
-    if(nrOfActiveSocket==-1)
-    {
-        printf("SDLNet_checksocket: %s\n",SDLNet_GetError());
-    }
-    else if(nrOfActiveSocket)
-    {
-        printf("%d sockets with activity\n",nrOfActiveSocket);
-        if(SDLNet_SocketReady(instance->serverSocket))
-        {
-            TCPsocket tmpClient=SDLNet_TCP_Accept(instance->serverSocket);
-            printf("Inside socketReady() \n");
-        }
-    }
-    return;
+void TCPlisten(void *self)
+{
+    TCPserver *server = ((TCPserver*)self);
+    listenConnection(server);
+    checkSockets(server);
+    readySocket(server);
 }
 
 void listenConnection (void *self)
@@ -72,25 +70,20 @@ void listenConnection (void *self)
 
     if(tmpSock != NULL)
     {
-        printf("new Client\n");
         instance->clients[instance->numOfClients].socket = tmpSock;
         instance->clients[instance->numOfClients].ip = *SDLNet_TCP_GetPeerAddress(tmpSock);
         instance->clients[instance->numOfClients].id = instance->currentID++;
         SDLNet_TCP_AddSocket(instance->socketSet, tmpSock);
         instance->numOfClients++;
+        printf("---New Client Connected---\n");
     }
 }
 
-void loopClients(void *self){
-    printf("loopClients\n");
+void readySocket(void *self){
     TCPServerInstance *instance = ((TCPserver*)self)->instance;
     //listen for incomming packages from all clients
-    printf("before for\n");
     for (int i = 0; i < instance->numOfClients; i++)
     {
-        if(instance->clients[i].socket==NULL){
-            continue;
-        }
         if(instance->nrOfRdy<=0){
             break;
         }
@@ -100,6 +93,7 @@ void loopClients(void *self){
             {
                 printf("new package from tempClientID %d  (x:%d, y:%d, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
                 instance->nrOfRdy--;//! ready tempClient in main -1
+
                 //broadcast data to all tempClients exept sender
                 instance->clients[i].data.from = instance->clients[i].id;
                 broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(TCPServerData));
@@ -136,10 +130,9 @@ TCPserver *getTCPserver()
     if (self.instance != NULL)
         return &self;
     self.instance = malloc(sizeof(TCPServerInstance));
+
     self.init = TCPinitServer;
-    self.listenConnection = listenConnection;
-    self.checknrOfSockets = checknrOfSockets;
-    self.loopClients = loopClients;
+    self.TCPlisten = TCPlisten;
     self.destroy = TCPServerdestroy;
 
     self.instance->serverSocket = NULL;
@@ -149,9 +142,3 @@ TCPserver *getTCPserver()
 
     return &self;
 }
-
-
-
-
-
-
