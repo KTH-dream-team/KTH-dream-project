@@ -3,25 +3,21 @@
 #include <string.h>
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
-#include "network.h"
+#include "../include/headers/networkServer.h"
 
 int main(int argc, char **argv)
 {
+    NetworkServer *server =  getNetworkServer();
 
-    TCPserver *tcpserver = getTCPserver();
-	UDPserver *udpserver = getUDPserver();
+    server->init(server);
 
-    tcpserver->init(tcpserver);
-	udpserver->init(udpserver);
-    printf("Hello\n");
+    printf("Hello I'm Server\n");
     int running = 1;
     while(running)
     {
-        tcpserver->TCPlisten(tcpserver);
-		udpserver->listen(udpserver);
+        server->listen(server);
     }
-	tcpserver->destroy(tcpserver);
-	udpserver->destroy(udpserver);
-    return 0;
+    server->destroy(server);
 	printf("Bye\n");
+    return 0;
 }

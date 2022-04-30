@@ -6,7 +6,7 @@
 #include "udpClient.h"
 #include "time.h"
 #include "data.h"
-/*
+
 int main(int argc, char **argv)
 {
     UDPclient *client = getUDPclient();
@@ -27,4 +27,4 @@ int main(int argc, char **argv)
     client->destroy(client);
 
     return 0;
-}*/
+}

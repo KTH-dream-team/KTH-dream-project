@@ -132,7 +132,7 @@ TCPserver *getTCPserver()
     self.instance = malloc(sizeof(TCPServerInstance));
 
     self.init = TCPinitServer;
-    self.TCPlisten = TCPlisten;
+    self.listen = TCPlisten;
     self.destroy = TCPServerdestroy;
 
     self.instance->serverSocket = NULL;
