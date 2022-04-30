@@ -2,6 +2,7 @@
 #include "tcpClient.h"
 #include "udpClient.h"
 
+
 struct networkClientInstance
 {
     UDPclient * UDP;
@@ -34,13 +35,13 @@ void networkClientListen (void *self)
     instance->UDP->listen(instance->UDP);
 }
 
-int networkTCPbroadcast(void *self, Data *data, int dataSize)
+int networkTCPbroadcast(void *self, void *data, int dataSize)
 {
     NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
     return instance->TCP->broadCast(instance->TCP, data, dataSize);
 }
 
-void networkUDPbroadcast(void *self, Data *data, int dataSize)
+void networkUDPbroadcast(void *self, void *data, int dataSize)
 {
     NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
     instance->UDP->broadCast(instance->UDP, data, dataSize);

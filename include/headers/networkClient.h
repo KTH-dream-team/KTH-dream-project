@@ -9,8 +9,8 @@ typedef struct {
 
     bool (*init)(void *self);
     void (*listen)(void *self);
-    int (*TCPbroadCast)(void *self, Data *data, int dataSize);
-    void (*UDPbroadCast)(void *self, Data *data, int dataSize);
+    int (*TCPbroadCast)(void *self, void *data, int dataSize);
+    void (*UDPbroadCast)(void *self, void *data, int dataSize);
     
     NetworkClientInstance *instance;
 } NetworkClient;
