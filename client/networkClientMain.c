@@ -5,7 +5,7 @@
 #include "SDL2/SDL_net.h"
 #include "networkClient.h"
 #include "../include/headers/data.h"
-
+/*
 int main(int argc, char **argv)
 {
     DataClient dataToSentTCP = {1,2,3};
@@ -26,4 +26,4 @@ int main(int argc, char **argv)
     }
 
     return 0;
-}
+}*/

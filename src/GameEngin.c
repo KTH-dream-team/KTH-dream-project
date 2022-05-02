@@ -11,6 +11,7 @@
 #include "Cube.h"
 #include "map.h"
 #include "Bullet.h"
+#include "networkClient.h"
 
 struct enginInstance
 {
@@ -106,6 +107,10 @@ bool destroyEngine(void *self)
     //destroy mapManager
     MapManager *mapManager = getMapManager();
     mapManager->destroyMap(mapManager);
+
+    //destroy networkClient
+    NetworkClient *network = getNetworkClient();
+    network->destroy(network);
     
     // destroy all assets here !!!
 

@@ -31,7 +31,7 @@ bool networkClientInnit(void *self)
 void networkClientListen (void *self)
 {
     NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
-    instance->TCP->listen(instance->TCP);
+    //instance->TCP->listen(instance->TCP); //! THIS BLOCKS game very hard!!!
     instance->UDP->listen(instance->UDP);
 }
 
@@ -47,6 +47,13 @@ void networkUDPbroadcast(void *self, void *data, int dataSize)
     instance->UDP->broadCast(instance->UDP, data, dataSize);
 }
 
+void networkClientDestory (void *self)
+{
+    NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
+    instance->TCP->destroy(instance->TCP);
+    instance->UDP->destroy(instance->UDP);
+}
+
 NetworkClient * getNetworkClient()
 {
     static NetworkClient self;
@@ -57,10 +64,11 @@ NetworkClient * getNetworkClient()
     self.instance->UDP = getUDPclient();
     self.instance->TCP = getTCPclient();
 
+    
     self.init = networkClientInnit;
     self.listen = networkClientListen;
     self.TCPbroadCast = networkTCPbroadcast;
     self.UDPbroadCast = networkUDPbroadcast;
-
+    self.destroy = networkClientDestory;
     return &self;
 }
