@@ -12,6 +12,8 @@
 #include "math.h"
 #include "string.h"
 #include "CollisionManager.h"
+#include "networkClient.h"
+#include "data.h"
 static unsigned int currentTime;
 static unsigned int lastTime;
 #define accMan 0.5
@@ -68,7 +70,7 @@ void renderWarrior(void *self)
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
     WarriorInstance * instance = ((Warrior *)self)->instance;
-    
+    NetworkClient *network = getNetworkClient();
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
     
     GameEngin *engin = getGameEngin();
@@ -83,6 +85,9 @@ void renderWarrior(void *self)
     SDL_SetRenderDrawColor(ren, 200,20,20,255);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
+    SDL_FPoint warriorPos = pos->get(pos);
+    DataPos wariorSendPos ={warriorPos.x, warriorPos.y, 1};
+    network->UDPbroadCast(network,&wariorSendPos,sizeof(DataPos));//todo fixa size
     
 }
 void warriorEventHandle(void *self)

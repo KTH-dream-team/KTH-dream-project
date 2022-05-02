@@ -5,7 +5,17 @@
 #include "SDL2/SDL_net.h"
 #include "tcpClient.h"
 
-
+struct TCPclientInstance
+{
+    TCPsocket serverSocket;
+    SDLNet_SocketSet socketSet;
+    void* packetReceived;
+    int numOfClients; // includeing it self
+    IPaddress serverAddress;
+    int port;
+    int id;
+    bool isRunning;
+};
 
 bool TCPinitclient(void *self)
 {
@@ -25,36 +35,40 @@ bool TCPinitclient(void *self)
         fprintf(stderr, "TCP_Open error: %s", SDLNet_GetError());
         return false;
     }
-    *instance->clientSocketSet = SDLNet_AllocSocketSet(MAX_CLIENTS + 1); // +1 for server
-    if (*instance->clientSocketSet == NULL)
+    instance->socketSet = SDLNet_AllocSocketSet(1); 
+    if (instance->socketSet == NULL)
     {
         fprintf(stderr, "TCP_AllocSocket_Set error: %s\n", SDLNet_GetError());
         return false;
     }
-    if((SDLNet_TCP_AddSocket(*instance->clientSocketSet, instance->serverSocket))<0)
+    if((SDLNet_TCP_AddSocket(instance->socketSet, instance->serverSocket))<0)
     {
         printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
         return false;
     }
 
     instance->isRunning = true;
+    instance->numOfClients=1;//todo fix ++
     return true;
 }
 void TCPlisten (void *self)
 {
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
-    instance->nrOfSocketRdy = SDLNet_CheckSockets(*instance->clientSocketSet, 1000);
-}
-void TCPrecive (void *self)
-{
-    TCPClientInstance *instance = ((TCPclient*)self)->instance;
-    if(SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, sizeof(TCPClientData)))
+
+    while(SDLNet_CheckSockets(instance->socketSet,0) >0)
     {
-        printf("got message from client %d. \ndata \nx: %d \ny: %d\n", instance->packetReceived->from,instance->packetReceived->x,instance->packetReceived->y);
+        int nrOfbytes=SDLNet_SocketReady(instance->serverSocket);
+        if(nrOfbytes>0)
+        {
+            if(SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived,nrOfbytes) > 0)
+            {
+                printf("nr of bytes %d \n",nrOfbytes);//!remove
+                // printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived.from,instance->packetReceived.x,instance->packetReceived.y);
+            }
+        }
     }
 }
-
-int TCPbroadCast(void *self, TCPClientData *data, int dataSize)
+int TCPbroadCast(void *self, void *data, int dataSize)
 {
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
     int amoutSent = SDLNet_TCP_Send(instance->serverSocket,data,dataSize);
@@ -63,10 +77,10 @@ int TCPbroadCast(void *self, TCPClientData *data, int dataSize)
 
 int setRand(void *self){
     TCPclient *client = ((TCPclient*)self);
-    client->instance->packetSent->x=rand()%10+1;
-    client->instance->packetSent->y=rand()%10+1;
-    client->instance->packetSent->from=rand()%10+1;
-    printf("from:%d x:%d y:%d\n",client->instance->packetSent->from,client->instance->packetSent->x,client->instance->packetSent->y);
+    // client->instance->packetSent->x=rand()%10+1;
+    // client->instance->packetSent->y=rand()%10+1;
+    // client->instance->packetSent->from=rand()%10+1;
+    // printf("from:%d x:%d y:%d\n",client->instance->packetSent->from,client->instance->packetSent->x,client->instance->packetSent->y);
     return 0;
 }
 
@@ -74,10 +88,8 @@ void TCPClientdestroy(void *self){
     TCPclient *client = ((TCPclient *)self);
 
     SDLNet_TCP_Close(client->instance->serverSocket);
-    SDLNet_TCP_DelSocket(*client->instance->clientSocketSet,client->instance->serverSocket);
+    SDLNet_TCP_DelSocket(client->instance->socketSet,client->instance->serverSocket);
     SDLNet_Quit();
-    free(client->instance->packetReceived);
-    free(client->instance->packetSent);
     free(client->instance);
     printf("Data has been destroyed!\n");
 }
@@ -88,20 +100,15 @@ TCPclient *getTCPclient()
     if (self.instance != NULL)
         return &self;
     self.instance = malloc(sizeof(TCPClientInstance));
-    self.instance->packetReceived = malloc(sizeof(TCPClientData));
-    self.instance->packetSent = malloc(sizeof(TCPClientData));
-    self.instance->clientSocketSet = malloc(sizeof(SDLNet_SocketSet));
     
     self.init = TCPinitclient;
     self.broadCast = TCPbroadCast;
     self.listen = TCPlisten;
-    self.recive = TCPrecive;
     self.destroy = TCPClientdestroy;
 
+    self.instance->numOfClients=0;
     self.instance->serverSocket = NULL;
-    self.instance->nrOfSocketRdy = 0;
     self.instance->isRunning = false;
-
 
     return &self;
 }

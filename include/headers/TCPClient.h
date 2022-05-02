@@ -12,25 +12,6 @@
 #define SERVER_PORT 3000
 #define SERVER_IP "127.0.0.1"
 
-typedef struct tcpclientdata
-{
-    int x;
-    int y;
-    int from;
-} TCPClientData;
-
-struct TCPclientInstance
-{
-    TCPsocket serverSocket;
-    SDLNet_SocketSet *clientSocketSet;
-    TCPClientData *packetReceived;
-    TCPClientData *packetSent;
-    int nrOfSocketRdy; // includeing it self
-    IPaddress serverAddress;
-    int port;
-    int id;
-    bool isRunning;
-};
 
 int setRand(void *self);
 
@@ -44,7 +25,7 @@ typedef struct {
     void (*destroy)(void *self);
     void (*recive)(void *self);
     void (*listen)(void *self);
-    int (*broadCast)(void *self, TCPClientData *data, int dataSize);
+    int (*broadCast)(void *self, void *data, int dataSize);
     TCPClientInstance *instance;
 } TCPclient;
 

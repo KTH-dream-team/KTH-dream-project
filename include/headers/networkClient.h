@@ -5,6 +5,7 @@
 
 typedef struct networkClientInstance NetworkClientInstance;
 
+
 typedef struct {
 
     bool (*init)(void *self);

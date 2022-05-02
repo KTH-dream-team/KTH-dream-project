@@ -1,6 +1,7 @@
 #include "networkServer.h"
 #include "tcpServer.h"
 #include "udpServer.h"
+#include <stdio.h>
 
 struct networkServerInstance
 {
