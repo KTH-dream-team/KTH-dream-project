@@ -65,10 +65,6 @@ void initMap(void *self)
 
 }
 
-*getMap(void *self){//!use in net
-    MapManager *mapmanager =(MapManager*)self;
-    return mapmanager->instance->map;
-}
 
 void dig(void *self,int x, int y){//!dig when holding Q
     MapManager *mapmanager = (MapManager *)self;
@@ -198,7 +194,6 @@ MapManager *getMapManager(){
     self.show = show;
     self.showMap = showMap;
     self.initMap = initMap;
-    self.getMap = getMap;
     self.dig = dig;
     self.build = build;
     self.destroyMap = destroyMap;

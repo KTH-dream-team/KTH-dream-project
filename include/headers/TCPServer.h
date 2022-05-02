@@ -5,8 +5,8 @@
 
 typedef struct tcpserverdata
 {
-    int x;
-    int y;
+    float x;
+    float y;
     int from;
 } TCPServerData;
 

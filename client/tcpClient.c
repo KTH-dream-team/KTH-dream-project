@@ -55,17 +55,18 @@ void TCPlisten (void *self)
 {
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
 
-    while(SDLNet_CheckSockets(instance->socketSet,0) >0)
+    int a;
+    while(a = SDLNet_CheckSockets(instance->socketSet,0) >0)
     {
         int nrOfbytes=SDLNet_SocketReady(instance->serverSocket);
         if(nrOfbytes>0)
         {
             if(SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived,nrOfbytes) > 0)
             {
-                printf("nr of bytes %d \n",nrOfbytes);//!remove
                 // printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived.from,instance->packetReceived.x,instance->packetReceived.y);
             }
         }
+
     }
 }
 int TCPbroadCast(void *self, void *data, int dataSize)

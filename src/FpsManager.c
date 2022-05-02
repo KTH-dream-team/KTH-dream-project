@@ -1,7 +1,7 @@
 #include "FpsManager.h"
 #include "SDL2/SDL.h"
 #include <stdio.h>
-#define FPSARRAY_SIZE 100
+#define FPSARRAY_SIZE 1000
 //#include <SDL_TTF.h>
 
 struct fpsManagerInstance

@@ -91,7 +91,7 @@ void readySocket(void *self){
         {
             if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(TCPServerData)) > 0)
             {
-                printf("new package from tempClientID %d  (x:%d, y:%d, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
+                printf("new package from tempClientID %d  (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
                 instance->nrOfRdy--;//! ready tempClient in main -1
 
                 //broadcast data to all tempClients exept sender
