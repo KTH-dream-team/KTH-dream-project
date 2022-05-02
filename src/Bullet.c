@@ -12,7 +12,7 @@
 #include "Warrior.h"
 #include "string.h"
 #include "TextureManager.h"
-
+#include "map.h"
 void destroyBullet(void *self);
 
 struct bulletInstance
@@ -44,7 +44,6 @@ void renderBullet(void *self)
 void updateBullet(void *self, float dt)
 {
     BulletInstance *instance = ((Bullet *)self)->instance;
-
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 
     Transform *pos = instance->position;
@@ -53,6 +52,7 @@ void updateBullet(void *self, float dt)
         EM->drop(EM,instance->id);
         ((Bullet *)self)->destroy(self);
     }
+
 }
 void destroyBullet(void *self)
 {
@@ -68,7 +68,6 @@ Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
 
     self->instance->position = newTransform();//!positon
     self->instance->position->set(self->instance->position, pos.x, pos.y);//!position
-    //self->instance->id = id;
     strcpy(self->instance->id, id);
     self->instance->vel.x = vel.x;
     self->instance->vel.y = vel.y;

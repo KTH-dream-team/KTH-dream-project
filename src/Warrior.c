@@ -30,13 +30,12 @@ void updateWarrior(void *self, float dt)
     //update animation
     Animation *anim = ((Warrior *)self)->instance->animation;
     anim->update(anim);
-
+    
+    //update rigidBody
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
 
     //handle collision
-
-     
     MapManager *mapManager = getMapManager();//MAP
     Transform *pos = ((Warrior *)self)->instance->position;
     SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
@@ -47,21 +46,12 @@ void updateWarrior(void *self, float dt)
         hitBox.h,
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
-
-    //printf("=========================\n");
     mapManager->checkColision(mapManager, dRect, vel, dt);//!warrior collision check
-
 
     //update position
     SDL_FPoint PTranslate = rig->getPosition(rig);
-
     SDL_FPoint acc = rig->getAcceleration(rig);
-
-    //printf("vel: x:%f, y:%f, acc: x:%f, y: %f\n", PTranslate.x, PTranslate.y, acc.x, acc.y);
-
     pos->translate(pos, PTranslate.x, PTranslate.y);
-
-
 }
 void renderWarrior(void *self)
 {
@@ -80,6 +70,8 @@ void renderWarrior(void *self)
         instance->hitBox.h,
     };
     SDL_Renderer *ren =  engin->getRenderer(engin);
+   
+    //draw hitbox debugg
     SDL_SetRenderDrawColor(ren, 200,20,20,255);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
@@ -93,7 +85,6 @@ void warriorEventHandle(void *self)
     EntityManager* entityManager=getEntityManager();//!entityManager
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
-    // CollisionManager *collisionManager = getCollisionManager(collisionManager);//!collisionManager
 
     rig->setVelocityX(rig, 0);
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT)){
@@ -135,7 +126,7 @@ void warriorEventHandle(void *self)
     char result[50];
     char bulletId[50]="Bullet-";
     static int bulletCount = 0;//!ongoing
-    if (inputHandler->getMouseState(&mouse_x,&mouse_y)==SDL_BUTTON_RMASK)
+    if (inputHandler->getMouseState(&mouse_x,&mouse_y)==SDL_BUTTON_RMASK)//!right mouse button pressed
     {
         static unsigned int currentTime;
         static unsigned int lastTime;
@@ -147,7 +138,7 @@ void warriorEventHandle(void *self)
             float vely = cubeY - pos->getY(pos);
             float xN =  velx / sqrt(velx*velx+vely*vely);
             float yN =  vely / sqrt(velx*velx+vely*vely);
-            SDL_FPoint velN = {xN*5, yN*5};
+            SDL_FPoint velN = {xN*15, yN*15};//!bullet velocity
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
             lastTime = currentTime;
@@ -155,25 +146,17 @@ void warriorEventHandle(void *self)
         }
     }
     
-    if(inputHandler->getMouseState(&mouse_x,&mouse_y)==1){
-       // printf("mouse x =%d y=%d %u \n",mouse_x, mouse_y, inputHandler->getMouseState(&mouse_x,&mouse_y));//todo remove
+    if(inputHandler->getMouseState(&mouse_x,&mouse_y)==SDL_BUTTON_LEFT){
 
-        currentTime=SDL_GetTicks();
-     //   if (lastTime+100<currentTime)
-       // {
-            //lastTime=currentTime;
             if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_E))
             {
-                /* code */
                 mapManager->build(mapManager,mouse_x,mouse_y,0);//!build hold E
             }
             if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_Q))
             {
-                /* code */
                 mapManager->dig(mapManager,mouse_x,mouse_y);//!dig hold Q
             }
             
-            //dig(mouse_x,mouse_y);
     }
        
 }
