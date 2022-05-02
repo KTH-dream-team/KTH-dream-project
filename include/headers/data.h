@@ -13,3 +13,12 @@ typedef struct datapos
     int from;
 } DataPos;
 
+
+typedef struct blockpos
+{
+    float x;
+    float y;
+    int from;
+    int z;
+} BlockPos;
+

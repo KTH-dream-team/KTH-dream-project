@@ -152,7 +152,7 @@ void warriorEventHandle(void *self)
             float vely = cubeY - pos->getY(pos);
             float xN =  velx / sqrt(velx*velx+vely*vely);
             float yN =  vely / sqrt(velx*velx+vely*vely);
-            SDL_FPoint velN = {xN*5, yN*5};
+            SDL_FPoint velN = {xN*20, yN*20};
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
             lastTime = currentTime;

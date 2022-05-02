@@ -33,7 +33,7 @@ int main(int argc, char **argv)
         inputHandler->listen(inputHandler);
 
         network->listen(network);
-        printf("fps %d\n", fpsManager->getFrameRate(fpsManager));
+        // printf("fps %d\n", fpsManager->getFrameRate(fpsManager));
         Engine->handleEvents(Engine);
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);

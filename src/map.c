@@ -4,6 +4,8 @@
 #include "TextureManager.h"
 #include "map.h"
 #include "CollisionManager.h"
+#include "data.h"
+#include "networkClient.h"
 #define ROW 25
 #define COL 50
 #define PRIVET static 
@@ -71,7 +73,11 @@ void dig(void *self,int x, int y){//!dig when holding Q
     int blockCol = x/20;
     int blockRow = y/20;
     mapmanager->instance->map[blockRow][blockCol] = 0;
+    NetworkClient *network = getNetworkClient();
     
+    BlockPos blockSendPos ={blockCol, blockRow,1,0};//!
+    network->TCPbroadCast(network,&blockSendPos,sizeof(BlockPos));
+    printf("removed block x%d, y%d\n",blockCol,blockRow);
 }
 
 bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funktion kolla om block gör kontakt
@@ -142,7 +148,6 @@ void showMap(void *self)
     SDL_Rect srcRec = {0, 0, 20, 20};//!skapa 20x20 source rectangel
     for (int i = 0; i < ROW; i++)
     {   
-        //printf("{");
         for (int j = 0; j < COL; j++)
         {
             SDL_Rect destRect = {j * 20, i * 20, 20, 20};//! positionera rectangel enligt for loop

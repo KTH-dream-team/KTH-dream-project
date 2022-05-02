@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "tcpServer.h"
+#include "data.h"
 #define MAX_CLIENTS 4
 #define MAX_SIZE 512
 #define SERVER_PORT 3000
@@ -89,14 +90,24 @@ void readySocket(void *self){
         }
         else if (SDLNet_SocketReady(instance->clients[i].socket)) 
         {
-            if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(TCPServerData)) > 0)
+            if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(BlockPos)) == 16)
             {
-                printf("new package from tempClientID %d  (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
+                printf("package from ClientID %d removed block (x:%.1f, y:%.1f,removed from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
+                instance->nrOfRdy--;//! ready tempClient in main -1
+                //broadcast data to all tempClients exept sender
+                instance->clients[i].data.from = instance->clients[i].id;
+                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(BlockPos));
+            }
+          
+            
+            if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(DataPos)) == 12)
+            {
+                printf("package from ClientID %d positon (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
                 instance->nrOfRdy--;//! ready tempClient in main -1
 
                 //broadcast data to all tempClients exept sender
                 instance->clients[i].data.from = instance->clients[i].id;
-                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(TCPServerData));
+                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(DataPos));
             }
         }
     }
