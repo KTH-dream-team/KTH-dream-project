@@ -198,7 +198,7 @@ void destroyWarrior(void *self)
     printf("Warrior destroyed\n");
 }
 
-Warrior *createWarrior()
+Warrior *createWarrior(int clientID)
 {
     
     int warriorHight=32;
@@ -210,7 +210,7 @@ Warrior *createWarrior()
     TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
 
-    self->instance->netID; //! Add later network ID from network library
+    self->instance->netID = clientID; //! Add later network ID from network library
 
     self->instance->hitBox.x = 3;
     self->instance->hitBox.y = 7;

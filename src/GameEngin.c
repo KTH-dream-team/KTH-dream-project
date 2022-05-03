@@ -39,16 +39,41 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     // Warrior creation
     Warrior *warrior = createWarrior(client->TCPgetID(client));
 
-    static char string[10] = "Warrior-";
-    char ID =  '0' + client->TCPgetID(client);
-    printf("TCPgetID: %d, string: %s, charID: %c\n", client->TCPgetID(client), string, ID);
-    strncat(string,&ID,1);
+    static char myWarrior[10] = "Warrior-";
+    char clientID = '0' + client->TCPgetID(client);
+    printf("TCPgetID: %d, string: %s, charID: %c\n", client->TCPgetID(client), myWarrior, clientID);
+    strncat(myWarrior,&clientID,1);
 
-    entityManager->add(entityManager, string, warrior);//add to entity manager list
+    entityManager->add(entityManager, myWarrior, warrior);//add to entity manager list
 
     // Other warrior creation
-    OtherWarrior *otherwarrior = createOtherWarrior();
-    entityManager->add(entityManager, "OtherWarrior-1", otherwarrior);
+    for(int i=0;i<MAX_CLIENTS;i++)
+    {
+        if(i==client->TCPgetID(client)) continue;
+        if(i==0)
+        {
+            OtherWarrior *otherwarrior0 = createOtherWarrior(0, 0, 0);
+            entityManager->add(entityManager, "OtherWarrior-0", otherwarrior0);
+        }
+        else if(i==1)
+        {
+            OtherWarrior *otherwarrior1 = createOtherWarrior(1, 1, 1);
+            entityManager->add(entityManager, "OtherWarrior-1", otherwarrior1);
+        }
+        else if(i==2)
+        {
+            OtherWarrior *otherwarrior2 = createOtherWarrior(2, 2, 2);
+            entityManager->add(entityManager, "OtherWarrior-2", otherwarrior2);
+        }
+        else if(i==3)
+        {
+            OtherWarrior *otherwarrior3 = createOtherWarrior(3, 3, 3);
+            entityManager->add(entityManager, "OtherWarrior-3", otherwarrior3);
+        }
+    }
+
+
+
 
     //cube creation
     Cube *cube = newCube();

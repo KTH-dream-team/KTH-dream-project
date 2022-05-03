@@ -78,7 +78,7 @@ void destroyOtherWarrior(void *self)
     printf("OtherWarrior destroyed\n");
 }
 
-OtherWarrior *createOtherWarrior()
+OtherWarrior *createOtherWarrior(int clientID, int x, int y)
 {
     
     int warriorHight=32;
@@ -100,7 +100,7 @@ OtherWarrior *createOtherWarrior()
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);
 
     self->instance->position = newTransform();
-    self->instance->position->set(self->instance->position, 0,10);
+    self->instance->position->set(self->instance->position, x*20,y*20);
     
 
     self->update = updateOtherWarrior;
