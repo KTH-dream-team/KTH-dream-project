@@ -25,6 +25,7 @@ struct otherWarriorInstance
     Transform *position;
     DataPos *datapos;
     SDL_Rect hitBox;
+    int clientID;
 };
 
 void updateOtherWarrior(void *self, float dt)
@@ -40,8 +41,12 @@ void renderOtherWarrior(void *self)
     Transform *pos = ((OtherWarrior *)self)->instance->position;
     OtherWarriorInstance * instance = ((OtherWarrior *)self)->instance;
     NetworkClient *network = getNetworkClient();
+
+    printf("Before TCPresive\n");
     network->TCPresive(network,instance->datapos, 12); // pos warrior
-    anim->draw(anim, instance->datapos->x, instance->datapos->y, 1);
+    printf("After TCPresive\n");
+    
+    anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
     GameEngin *engin = getGameEngin();
 
     SDL_Rect box = {
@@ -95,6 +100,8 @@ OtherWarrior *createOtherWarrior(int clientID, int x, int y)
     self->instance->hitBox.y = 7;
     self->instance->hitBox.w = warriorWidth-10;
     self->instance->hitBox.h = warriorHight-7;
+
+    self->instance->clientID=0;
 
     self->instance->animation = newAnimation();
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);

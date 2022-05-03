@@ -221,7 +221,7 @@ Warrior *createWarrior(int clientID)
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);
 
     self->instance->position = newTransform();
-    self->instance->position->set(self->instance->position, 50,50);
+    self->instance->position->set(self->instance->position, clientID*10,clientID*10);
     
     self->instance->rigidBody = newRigidBody();
     self->instance->rigidBody->setForce(self->instance->rigidBody, 0 , 0);//!forces på gubben initialt

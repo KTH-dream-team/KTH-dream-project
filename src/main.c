@@ -22,17 +22,18 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
 
-
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
 
     while (Engine->isRunning(Engine))
     {
         fpsManager->listen(fpsManager);
+
         fpsManager->frameRateListen(fpsManager);
+
         inputHandler->listen(inputHandler);
 
-        network->listen(network);
+        network->listen(network);//! problem here
         // printf("fps %d\n", fpsManager->getFrameRate(fpsManager));
         Engine->handleEvents(Engine);
         Engine->handleUpdates(Engine);
