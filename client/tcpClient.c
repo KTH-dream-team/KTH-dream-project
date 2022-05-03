@@ -18,7 +18,7 @@ struct TCPclientInstance
     bool isRunning;
 };
 
-int TCPresive (void *self, void *dest);
+int TCPresive (void *self, void *dest, int desireInt);
 int TCPresiveID(void *self);
 
 bool TCPinitclient(void *self)
@@ -79,7 +79,6 @@ void TCPlisten (void *self)
 
 int TCPresiveID(void *self)
 {
-    printf("TCPresiveID\n");
     TCPClientInstance *instance = ((TCPClientInstance*)self);
 
     int nrOfsocket = SDLNet_CheckSockets(instance->socketSet, 0);
@@ -97,7 +96,7 @@ int TCPresiveID(void *self)
     return 1;
 }
 
-int TCPresive (void *self, void *dest)
+int TCPresive (void *self, void *dest, int desireInt)
 {
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
     while(SDLNet_CheckSockets(instance->socketSet,0) >0)
@@ -107,13 +106,12 @@ int TCPresive (void *self, void *dest)
         {
             int nrOfBytes = SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, MAX_SIZE);
             printf("NrOfBytes: %d", nrOfBytes);
-            if(nrOfBytes == 12)// DataPos
+            if(nrOfBytes == desireInt)// DataPos
             {
                 memcpy(dest, instance->packetReceived, sizeof(DataPos));
             }
         }
     }
-    printf("End of TCPresive\n");
     return -1;
 }
 
@@ -125,6 +123,11 @@ int TCPbroadCast(void *self, void *data, int dataSize)
     return amoutSent;
 }
 
+int TCPgetID(void *self)
+{
+    TCPClientInstance *instance = ((TCPclient*)self)->instance;
+    return instance->id;
+}
 
 void TCPClientdestroy(void *self){
     TCPclient *client = ((TCPclient *)self);
@@ -145,6 +148,7 @@ TCPclient *getTCPclient()
     
     self.init = TCPinitclient;
     self.broadCast = TCPbroadCast;
+    self.getID = TCPgetID;
     self.listen = TCPlisten;
     self.recive = TCPresive;
     self.destroy = TCPClientdestroy;

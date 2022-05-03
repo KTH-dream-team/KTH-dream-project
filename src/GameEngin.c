@@ -2,6 +2,7 @@
 #include "DataTypes.h"
 #include "TextureManager.h"
 #include <stdio.h>
+#include <string.h>
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Animation.h"
@@ -26,8 +27,9 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 {
     GameEngin *Engin = ((GameEngin *)self);
     bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
-    if (!isRenderSucced)
-        return 0;
+    if (!isRenderSucced){
+        return 0;}
+    NetworkClient *client = getNetworkClient();
     
     //init map
     MapManager *mapManager = getMapManager();
@@ -35,8 +37,16 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 
     EntityManager *entityManager = getEntityManager();
     // Warrior creation
-    Warrior *warrior = createWarrior();
-    entityManager->add(entityManager, "Warrior-1", warrior);//add to entity manager list
+    Warrior *warrior = createWarrior(client->TCPgetID(client));
+
+    char string[12] = "Warrior-";
+    char from[10];
+    char ID =  '0' + client->TCPgetID(client);
+    printf("TCPgetID: %d, string: %s, charID: %c\n", client->TCPgetID(client), string, ID);
+    strncat(string,&ID,1);
+    printf("%s\n",string);
+
+    entityManager->add(entityManager, string, warrior);//add to entity manager list
 
     // Other warrior creation
     OtherWarrior *otherwarrior = createOtherWarrior();

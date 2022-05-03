@@ -40,12 +40,8 @@ void renderOtherWarrior(void *self)
     Transform *pos = ((OtherWarrior *)self)->instance->position;
     OtherWarriorInstance * instance = ((OtherWarrior *)self)->instance;
     NetworkClient *network = getNetworkClient();
-    printf("Before resive\n");
-    printf("return: %d\n",network->TCPresive(network,instance->datapos)); // pos warrior is 12 bytes
-    printf("After init TCPresive\n");
+    network->TCPresive(network,instance->datapos, 12); // pos warrior
     anim->draw(anim, instance->datapos->x, instance->datapos->y, 1);
-    printf("After anim draw\n");
-    
     GameEngin *engin = getGameEngin();
 
     SDL_Rect box = {

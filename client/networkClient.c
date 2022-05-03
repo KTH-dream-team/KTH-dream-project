@@ -10,6 +10,8 @@ struct networkClientInstance
     TCPclient * TCP;
 };
 
+int networkTCPresive(void *self, void *dest, int desireInt);
+
 bool networkClientInnit(void *self)
 {
     NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
@@ -55,11 +57,16 @@ void networkClientDestory (void *self)
     instance->UDP->destroy(instance->UDP);
 }
 
-int networkTCPresive(void *self, void *dest)
+int networkTCPresive(void *self, void *dest, int desireInt)
 {
-    printf("Inside NetworkTCPresive\n");
     NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
-    return instance->TCP->recive(instance->TCP,dest);
+    return instance->TCP->recive(instance->TCP,dest, desireInt);
+}
+
+int networkTCPgetID(void *self)
+{
+    NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
+    return instance->TCP->getID(instance->TCP);
 }
 
 NetworkClient * getNetworkClient()
@@ -76,6 +83,7 @@ NetworkClient * getNetworkClient()
     self.init = networkClientInnit;
     self.listen = networkClientListen;
     self.TCPresive = networkTCPresive;
+    self.TCPgetID = networkTCPgetID;
     self.TCPbroadCast = networkTCPbroadcast;
     self.UDPbroadCast = networkUDPbroadcast;
     self.destroy = networkClientDestory;

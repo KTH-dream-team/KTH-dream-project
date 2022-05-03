@@ -14,17 +14,18 @@
 
 int main(int argc, char **argv)
 {
+    NetworkClient *network = getNetworkClient();
+    network->init(network);
 
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     if (!isInitSucceed)
         return 1;
+    
+    
 
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
-    NetworkClient *network = getNetworkClient();
-
-    network->init(network);
 
     while (Engine->isRunning(Engine))
     {
@@ -36,8 +37,7 @@ int main(int argc, char **argv)
         // printf("fps %d\n", fpsManager->getFrameRate(fpsManager));
         Engine->handleEvents(Engine);
         Engine->handleUpdates(Engine);
-        Engine->handleRenders(Engine); //! Problem in here
-        printf("After handlerenders\n");
+        Engine->handleRenders(Engine);
     }
     Engine->destroyEngine(Engine);
     

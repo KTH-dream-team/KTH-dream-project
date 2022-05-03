@@ -14,7 +14,8 @@ typedef struct {
     bool (*init)(void *self);
     bool (*isRunning)(void *self);
     void (*destroy)(void *self);
-    int (*recive)(void *self, void *dest);
+    int (*getID)(void *self);
+    int (*recive)(void *self, void *dest, int desireInt);
     void (*listen)(void *self);
     int (*broadCast)(void *self, void *data, int dataSize);
     TCPClientInstance *instance;
