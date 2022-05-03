@@ -92,13 +92,13 @@ void readySocket(void *self){
             if(packegeSize>0||packegeSize<50){//!OBS OM DU VILL SICKA DATA STÖRRE ÄN 50 ÄNDRA DENHÄR IF TILL NÅGOT HÖGRE
                     switch(packegeSize){
                         case 16:
-                            // printf("package from ClientID %d removed block (x:%.2f, y:%.2f,removed from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
+                            //!dena print krashar programmet då den går ut ur array printf("package from ClientID %d removed block (x:%.2f, y:%.2f,removed from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
                             instance->nrOfRdy--;//! ready tempClient in main -1
                             //broadcast data to all tempClients exept sender
                             instance->clients[i].data.from = instance->clients[i].id;
                             broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(BlockPos));break;
                         case 12:
-                            printf("package from ClientID %d positon (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
+                            //!dena print krashar programmet då den går ut ur array printf("package from ClientID %d positon (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
                             instance->nrOfRdy--;//! ready tempClient in main -1
                             //broadcast data to all tempClients exept sender
                             instance->clients[i].data.from = instance->clients[i].id;

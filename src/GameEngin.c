@@ -50,10 +50,6 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     OtherWarrior *otherwarrior = createOtherWarrior();
     entityManager->add(entityManager, "OtherWarrior-1", otherwarrior);
 
-    //cube creation
-    Cube *cube = newCube();
-    entityManager->add(entityManager, "Cube-1", cube);
-
     Engin->instance->isRunning = true;
 
     return 1;
