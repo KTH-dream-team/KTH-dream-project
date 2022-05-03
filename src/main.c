@@ -36,7 +36,8 @@ int main(int argc, char **argv)
         // printf("fps %d\n", fpsManager->getFrameRate(fpsManager));
         Engine->handleEvents(Engine);
         Engine->handleUpdates(Engine);
-        Engine->handleRenders(Engine);
+        Engine->handleRenders(Engine); //! Problem in here
+        printf("After handlerenders\n");
     }
     Engine->destroyEngine(Engine);
     

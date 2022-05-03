@@ -1,6 +1,7 @@
 #include "networkClient.h"
 #include "tcpClient.h"
 #include "udpClient.h"
+#include "data.h"
 
 
 struct networkClientInstance
@@ -54,6 +55,13 @@ void networkClientDestory (void *self)
     instance->UDP->destroy(instance->UDP);
 }
 
+int networkTCPresive(void *self, void *dest)
+{
+    printf("Inside NetworkTCPresive\n");
+    NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
+    return instance->TCP->recive(instance->TCP,dest);
+}
+
 NetworkClient * getNetworkClient()
 {
     static NetworkClient self;
@@ -67,6 +75,7 @@ NetworkClient * getNetworkClient()
     
     self.init = networkClientInnit;
     self.listen = networkClientListen;
+    self.TCPresive = networkTCPresive;
     self.TCPbroadCast = networkTCPbroadcast;
     self.UDPbroadCast = networkUDPbroadcast;
     self.destroy = networkClientDestory;

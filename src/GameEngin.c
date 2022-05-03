@@ -7,6 +7,7 @@
 #include "Animation.h"
 #include "InputHandler.h"
 #include "Warrior.h"
+#include "OtherWarrior.h"
 #include "FpsManager.h"
 #include "Cube.h"
 #include "map.h"
@@ -37,6 +38,10 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     Warrior *warrior = createWarrior();
     entityManager->add(entityManager, "Warrior-1", warrior);//add to entity manager list
 
+    // Other warrior creation
+    OtherWarrior *otherwarrior = createOtherWarrior();
+    entityManager->add(entityManager, "OtherWarrior-1", otherwarrior);
+
     //cube creation
     Cube *cube = newCube();
     entityManager->add(entityManager, "Cube-1", cube);
@@ -61,6 +66,7 @@ void handleUpdates(void *self)
     EntityManager *entityManager = getEntityManager();
     entityManager->updateAll(entityManager, dt);
 }
+
 void handleRenders(void *self)
 {//todo implemnt neew bakgrund
     GameEngin *Engin = ((GameEngin *)self);
@@ -77,10 +83,10 @@ void handleRenders(void *self)
     //render map
     MapManager *mapManger = getMapManager();
     mapManger->showMap(mapManger);
-
     EntityManager *entityManager = getEntityManager();
-    entityManager->renderAll(entityManager);
 
+    entityManager->renderAll(entityManager); //! Here inside segmentation fault
+    
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
 }

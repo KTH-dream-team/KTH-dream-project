@@ -5,10 +5,6 @@
 #include "SDL2/SDL_net.h"
 #include "tcpServer.h"
 #include "data.h"
-#define MAX_CLIENTS 4
-#define MAX_SIZE 512
-#define SERVER_PORT 3000
-#define SERVER_IP "127.0.0.1"
 
 
 
@@ -27,7 +23,7 @@ bool TCPinitServer (void *self)
 		printf("SDLNet_Init: %s\n", SDLNet_GetError());
 		return false;
 	}
-    if(SDLNet_ResolveHost(&(instance->serverAddress), NULL, SERVER_PORT))
+    if(SDLNet_ResolveHost(&(instance->serverAddress), NULL, TCP_SERVER_PORT))
     {
         printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 		return false;
@@ -76,7 +72,7 @@ void listenConnection (void *self)
         instance->clients[instance->numOfClients].id = instance->currentID++;
         SDLNet_TCP_AddSocket(instance->socketSet, tmpSock);
         instance->numOfClients++;
-        printf("---New Client Connected---\n");
+        printf("---TCPClient: %d---\n", instance->clients[instance->numOfClients].id);
     }
 }
 
@@ -93,7 +89,7 @@ void readySocket(void *self){
             if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(BlockPos)) == 16)
             {
                 printf("package from ClientID %d removed block (x:%.1f, y:%.1f,removed from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
-                instance->nrOfRdy--;//! ready tempClient in main -1
+                instance->nrOfRdy--;
                 //broadcast data to all tempClients exept sender
                 instance->clients[i].data.from = instance->clients[i].id;
                 broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(BlockPos));
@@ -103,7 +99,7 @@ void readySocket(void *self){
             if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(DataPos)) == 12)
             {
                 printf("package from ClientID %d positon (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
-                instance->nrOfRdy--;//! ready tempClient in main -1
+                instance->nrOfRdy--;
 
                 //broadcast data to all tempClients exept sender
                 instance->clients[i].data.from = instance->clients[i].id;
