@@ -13,7 +13,7 @@
 
 
 void TCPListen(void *self);
-void broadcastData(void *self, Client sender, TCPServerData *data, int dataSize);
+void broadcastData(void *self, Client sender, void *data, int dataSize);
 void listenConnection (void *self);
 void checkSockets(void *self);
 void readySocket(void *self);
@@ -83,40 +83,40 @@ void listenConnection (void *self)
 void readySocket(void *self){
     TCPServerInstance *instance = ((TCPserver*)self)->instance;
     //listen for incomming packages from all clients
+    int packegeSize;
     for (int i = 0; i < instance->numOfClients; i++)
     {
         if(instance->nrOfRdy<=0){
             break;
         }
         else if (SDLNet_SocketReady(instance->clients[i].socket)) 
-        {
-            if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(BlockPos)) == 16)
-            {
-                printf("package from ClientID %d removed block (x:%.1f, y:%.1f,removed from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
-                instance->nrOfRdy--;//! ready tempClient in main -1
-                //broadcast data to all tempClients exept sender
-                instance->clients[i].data.from = instance->clients[i].id;
-                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(BlockPos));
-            }
-          
-            
-            if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(DataPos)) == 12)
-            {
-                printf("package from ClientID %d positon (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
-                instance->nrOfRdy--;//! ready tempClient in main -1
-
-                //broadcast data to all tempClients exept sender
-                instance->clients[i].data.from = instance->clients[i].id;
-                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(DataPos));
-            }
+        {   
+            packegeSize =SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, MAX_SIZE);
+            if(packegeSize>0||packegeSize<50){//!OBS OM DU VILL SICKA DATA STÖRRE ÄN 50 ÄNDRA DENHÄR IF TILL NÅGOT HÖGRE
+                    switch(packegeSize){
+                        case 16:
+                            // printf("package from ClientID %d removed block (x:%.2f, y:%.2f,removed from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
+                            instance->nrOfRdy--;//! ready tempClient in main -1
+                            //broadcast data to all tempClients exept sender
+                            instance->clients[i].data.from = instance->clients[i].id;
+                            broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(BlockPos));break;
+                        case 12:
+                            printf("package from ClientID %d positon (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
+                            instance->nrOfRdy--;//! ready tempClient in main -1
+                            //broadcast data to all tempClients exept sender
+                            instance->clients[i].data.from = instance->clients[i].id;
+                            broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(DataPos));break;
+                    // default: printf("den gjorde defult\n ");break;
+                }
+            }         
         }
     }
 }
 
 
-void broadcastData(void *self, Client sender, TCPServerData *data, int dataSize){
+void broadcastData(void *self, Client sender, void *data, int dataSize){
     TCPServerInstance *instance = ((TCPserver*)self)->instance;
-
+    // printf("number of clients: %d\n", instance->clients);
     for (int i = 0; i < instance->numOfClients; i++)
     {
         if(sender.socket==instance->clients[i].socket) continue;

@@ -37,7 +37,6 @@ void updateWarrior(void *self, float dt)
     rig->update(rig, dt);
 
     //handle collision
-
      
     MapManager *mapManager = getMapManager();//MAP
     Transform *pos = ((Warrior *)self)->instance->position;
@@ -87,7 +86,7 @@ void renderWarrior(void *self)
 
     SDL_FPoint warriorPos = pos->get(pos);
     DataPos wariorSendPos ={warriorPos.x, warriorPos.y, 1};
-    network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//todo fixa size
+    network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//!send data pos
     
 }
 void warriorEventHandle(void *self)

@@ -63,7 +63,8 @@ void TCPlisten (void *self)
         {
             if(SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived,nrOfbytes) > 0)
             {
-                // printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived.from,instance->packetReceived.x,instance->packetReceived.y);
+                printf("client recived a packet from sever\n");
+                //   printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived.from,instance->packetReceived.x,instance->packetReceived.y);
             }
         }
 

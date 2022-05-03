@@ -21,4 +21,3 @@ typedef struct blockpos
     int from;
     int z;
 } BlockPos;
-

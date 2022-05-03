@@ -19,7 +19,7 @@ struct entityManagerInstance
 };
 
 void addInstance(void *self, char *id, void *entity)
-{
+{   
     EntityManager *EM = (EntityManager*)self;
     if(EM->getByID(EM, id) != NULL)
     {
