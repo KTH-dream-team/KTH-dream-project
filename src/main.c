@@ -21,8 +21,7 @@ int main(int argc, char **argv)
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     if (!isInitSucceed)
         return 1;
-    
-    
+
 
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
