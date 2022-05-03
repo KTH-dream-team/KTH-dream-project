@@ -11,6 +11,7 @@
 #include "Cube.h"
 #include "map.h"
 #include "Bullet.h"
+#include "networkClient.h"
 
 struct enginInstance
 {
@@ -26,15 +27,22 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
     if (!isRenderSucced)
         return 0;
-    
-    //init map
+
+    NetworkClient *network = getNetworkClient();
+    if (!network->init(network))
+    {
+        printf("failed to innit network\n");
+        return 0;
+    }
+
+    // init map
     MapManager *mapManager = getMapManager();
-    mapManager->initMap(mapManager);//! initializes map
+    mapManager->initMap(mapManager); //! initializes map
 
     EntityManager *entityManager = getEntityManager();
     // Warrior creation
     Warrior *warrior = createWarrior();
-    entityManager->add(entityManager, "Warrior-1", warrior);//add to entity manager list
+    entityManager->add(entityManager, "Warrior-1", warrior); // add to entity manager list
 
     Engin->instance->isRunning = true;
 
@@ -59,14 +67,14 @@ void handleUpdates(void *self)
 void handleRenders(void *self)
 {
     GameEngin *Engin = ((GameEngin *)self);
-    //render background
+    // render background
     TextureManager *textureManager = getTextureManager(textureManager);
-    textureManager->load(textureManager,"moon","./assets/moon.jpg");
+    textureManager->load(textureManager, "moon", "./assets/moon.jpg");
     SDL_Rect srcRect = {0, 0, 1000, 500};
     SDL_Rect destRect = {0, 0, 1000, 500};
-    textureManager->draw(textureManager,"moon",srcRect, destRect,1);//!draw bakgrundsbild
-    
-    //render map
+    textureManager->draw(textureManager, "moon", srcRect, destRect, 1); //! draw bakgrundsbild
+
+    // render map
     MapManager *mapManger = getMapManager();
     mapManger->showMap(mapManger);
 
@@ -84,22 +92,22 @@ bool destroyEngine(void *self)
     SDL_DestroyRenderer(Engin->instance->renderer);
     free(Engin->instance);
 
-    //destroy texture manager
+    // destroy texture manager
     TextureManager *texterManager = getTextureManager();
     texterManager->destroy(texterManager);
 
-    //destroy entityManager
+    // destroy entityManager
     EntityManager *entityManager = getEntityManager();
     entityManager->destroy(entityManager);
 
-    //destroy inputHandler
+    // destroy inputHandler
     InputHandler *inputHandler = getInputHandler();
     inputHandler->destroy(inputHandler);
 
-    //destroy mapManager
+    // destroy mapManager
     MapManager *mapManager = getMapManager();
     mapManager->destroyMap(mapManager);
-    
+
     // destroy all assets here !!!
 
     // destroy functions go here !!!
@@ -148,7 +156,7 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
         return false;
     }
 
-    Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,fullScreen);
+    Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, fullScreen);
     if (!Engin->instance->window)
     {
         printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());

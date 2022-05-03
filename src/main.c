@@ -5,6 +5,7 @@
 #include "InputHandler.h"
 #include "map.h"
 #include "hitBox.h"
+#include "networkClient.h"
 
 #define SDL_MAIN_HANDLED
 
@@ -21,13 +22,15 @@ int main(int argc, char **argv)
 
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
+    NetworkClient *network = getNetworkClient();
 
     while (Engine->isRunning(Engine))
     {
         fpsManager->listen(fpsManager);
         fpsManager->frameRateListen(fpsManager);
         inputHandler->listen(inputHandler);
-        
+        network->listen(network);
+
         Engine->handleEvents(Engine);
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);

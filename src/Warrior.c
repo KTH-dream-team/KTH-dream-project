@@ -12,6 +12,8 @@
 #include "math.h"
 #include "string.h"
 #include "CollisionManager.h"
+#include "networkClient.h"
+#include "data.h"
 static unsigned int currentTime;
 static unsigned int lastTime;
 #define accMan 0.5
@@ -27,28 +29,28 @@ struct warriorInstance
 
 void updateWarrior(void *self, float dt)
 {
-    //update animation
+    // update animation
     Animation *anim = ((Warrior *)self)->instance->animation;
     anim->update(anim);
-    
-    //update rigidBody
+
+    // update rigidBody
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
 
-    //handle collision
-    MapManager *mapManager = getMapManager();//MAP
+    // handle collision
+    MapManager *mapManager = getMapManager(); // MAP
     Transform *pos = ((Warrior *)self)->instance->position;
     SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
-    SDL_Rect dRect ={
-        pos->getX(pos)+hitBox.x,
-        pos->getY(pos)+hitBox.y,
+    SDL_Rect dRect = {
+        pos->getX(pos) + hitBox.x,
+        pos->getY(pos) + hitBox.y,
         hitBox.w,
         hitBox.h,
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
-    mapManager->checkColision(mapManager, dRect, vel, dt);//!warrior collision check
+    mapManager->checkColision(mapManager, dRect, vel, dt); //! warrior collision check
 
-    //update position
+    // update position
     SDL_FPoint PTranslate = rig->getPosition(rig);
     SDL_FPoint acc = rig->getAcceleration(rig);
     pos->translate(pos, PTranslate.x, PTranslate.y);
@@ -57,10 +59,10 @@ void renderWarrior(void *self)
 {
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
-    WarriorInstance * instance = ((Warrior *)self)->instance;
-    
+    WarriorInstance *instance = ((Warrior *)self)->instance;
+
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
-    
+
     GameEngin *engin = getGameEngin();
 
     SDL_Rect box = {
@@ -69,36 +71,41 @@ void renderWarrior(void *self)
         instance->hitBox.w,
         instance->hitBox.h,
     };
-    SDL_Renderer *ren =  engin->getRenderer(engin);
-   
-    //draw hitbox debugg
-    SDL_SetRenderDrawColor(ren, 200,20,20,255);
-    SDL_RenderDrawRect(engin->getRenderer(engin), &box);
+    SDL_Renderer *ren = engin->getRenderer(engin);
 
-    
+    // draw hitbox debugg
+    SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
+    SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 }
 void warriorEventHandle(void *self)
 {
     InputHandler *inputHandler = getInputHandler();
-    MapManager *mapManager = getMapManager();//MAP
+    MapManager *mapManager = getMapManager(); // MAP
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
-    EntityManager* entityManager=getEntityManager();//!entityManager
+    EntityManager *entityManager = getEntityManager(); //! entityManager
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
 
+    NetworkClient *network = getNetworkClient();
+    TestData test = {1, 10};
+    Data test1 = {2, 20, 200};
+
     rig->setVelocityX(rig, 0);
-    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT)){
-        rig->setVelocityX(rig,-130);
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT))
+    {
+        rig->setVelocityX(rig, -130);
+        network->UDPbroadCast(network, &test, sizeof(TestData));
     }
-    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT)){
-        rig->setVelocityX(rig,130);
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT))
+    {
+        rig->setVelocityX(rig, 130);
+        network->TCPbroadCast(network, &test1, sizeof(TestData));
     }
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
         anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0);
-        rig->setVelocityX(rig,-130);
-        
+        rig->setVelocityX(rig, -130);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
@@ -108,12 +115,11 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
     {
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
-        rig->setVelocityX(rig,130);
-
+        rig->setVelocityX(rig, 130);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
     {
-        
+
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
         rig->setVelocityY(rig, -100);
     }
@@ -124,41 +130,40 @@ void warriorEventHandle(void *self)
     }
     int mouse_x, mouse_y;
     char result[50];
-    char bulletId[50]="Bullet-";
-    static int bulletCount = 0;//!ongoing
-    if (inputHandler->getMouseState(&mouse_x,&mouse_y)==SDL_BUTTON_RMASK)//!right mouse button pressed
+    char bulletId[50] = "Bullet-";
+    static int bulletCount = 0;                                              //! ongoing
+    if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK) //! right mouse button pressed
     {
         static unsigned int currentTime;
         static unsigned int lastTime;
-        currentTime=SDL_GetTicks();//bullet cooldown 100ms
-        if (lastTime+100<currentTime){  
+        currentTime = SDL_GetTicks(); // bullet cooldown 100ms
+        if (lastTime + 100 < currentTime)
+        {
             int cubeX, cubeY;
             unsigned int buttons = inputHandler->getMouseState(&cubeX, &cubeY);
             float velx = cubeX - pos->getX(pos);
             float vely = cubeY - pos->getY(pos);
-            float xN =  velx / sqrt(velx*velx+vely*vely);
-            float yN =  vely / sqrt(velx*velx+vely*vely);
-            SDL_FPoint velN = {xN*15, yN*15};//!bullet velocity
+            float xN = velx / sqrt(velx * velx + vely * vely);
+            float yN = vely / sqrt(velx * velx + vely * vely);
+            SDL_FPoint velN = {xN * 15, yN * 15}; //! bullet velocity
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
-            entityManager->add(entityManager,"Bullet-1", bullet1);
+            entityManager->add(entityManager, "Bullet-1", bullet1);
             lastTime = currentTime;
-            
         }
     }
-    
-    if(inputHandler->getMouseState(&mouse_x,&mouse_y)==SDL_BUTTON_LEFT){
 
-            if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_E))
-            {
-                mapManager->build(mapManager,mouse_x,mouse_y,0);//!build hold E
-            }
-            if (inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_Q))
-            {
-                mapManager->dig(mapManager,mouse_x,mouse_y);//!dig hold Q
-            }
-            
+    if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_LEFT)
+    {
+
+        if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_E))
+        {
+            mapManager->build(mapManager, mouse_x, mouse_y, 0); //! build hold E
+        }
+        if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
+        {
+            mapManager->dig(mapManager, mouse_x, mouse_y); //! dig hold Q
+        }
     }
-       
 }
 void destroyWarrior(void *self)
 {
@@ -176,29 +181,29 @@ void destroyWarrior(void *self)
 
 Warrior *createWarrior()
 {
-    
-    int warriorHight=32;
-    int warriorWidth=32;
+
+    int warriorHight = 32;
+    int warriorWidth = 32;
 
     Warrior *self = malloc(sizeof(Warrior));
     self->instance = malloc(sizeof(WarriorInstance));
-   
+
     TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
 
     self->instance->hitBox.x = 3;
     self->instance->hitBox.y = 7;
-    self->instance->hitBox.w = warriorWidth-10;
-    self->instance->hitBox.h = warriorHight-7;
+    self->instance->hitBox.w = warriorWidth - 10;
+    self->instance->hitBox.h = warriorHight - 7;
 
     self->instance->animation = newAnimation();
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);
 
     self->instance->position = newTransform();
-    self->instance->position->set(self->instance->position, 0,10);
-    
+    self->instance->position->set(self->instance->position, 0, 10);
+
     self->instance->rigidBody = newRigidBody();
-    self->instance->rigidBody->setForce(self->instance->rigidBody, 0 , 0);//!forces på gubben initialt
+    self->instance->rigidBody->setForce(self->instance->rigidBody, 0, 0); //! forces på gubben initialt
 
     self->update = updateWarrior;
     self->events = warriorEventHandle;
