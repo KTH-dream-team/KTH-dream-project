@@ -14,6 +14,8 @@
 #include "map.h"
 #include "Bullet.h"
 #include "networkClient.h"
+#include "audio.h"
+
 
 struct enginInstance
 {
@@ -204,11 +206,13 @@ GameEngin *getGameEngin()
 // helper functions
 bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScreen)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
     {
         printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return false;
     }
+    initAudio();
+    playMusic("./assets/music1.wav", SDL_MIX_MAXVOLUME);
 
     Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,fullScreen);
     if (!Engin->instance->window)

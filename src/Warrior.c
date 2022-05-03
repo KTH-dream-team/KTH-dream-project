@@ -14,6 +14,8 @@
 #include "CollisionManager.h"
 #include "networkClient.h"
 #include "data.h"
+#include "audio.h"
+
 static unsigned int currentTime;
 static unsigned int lastTime;
 #define accMan 0.5
@@ -157,6 +159,7 @@ void warriorEventHandle(void *self)
             SDL_FPoint velN = {xN*20, yN*20};
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
+            playSound("./assets/sound1.wav", SDL_MIX_MAXVOLUME);
             lastTime = currentTime;
             
         }
