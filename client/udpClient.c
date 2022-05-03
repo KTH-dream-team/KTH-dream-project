@@ -94,7 +94,6 @@ void UDPclientListen(void *self)
             printf("len: %d\n", len);
             memcpy(&data, dataRecieved, len-1);
             printf("from: %d, x: %d, y: %d\n", data.from, data.x, data.y);
-            printf("hej");
         }
         
     }

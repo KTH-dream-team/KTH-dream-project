@@ -9,7 +9,7 @@
 
 
 void TCPListen(void *self);
-void broadcastData(void *self, Client sender, TCPServerData *data, int dataSize);
+void broadcastData(void *self, Client sender, void *data, int dataSize);
 void listenConnection (void *self);
 void checkSockets(void *self);
 void readySocket(void *self);
@@ -71,8 +71,9 @@ void listenConnection (void *self)
         instance->clients[instance->numOfClients].ip = *SDLNet_TCP_GetPeerAddress(tmpSock);
         instance->clients[instance->numOfClients].id = instance->currentID++;
         SDLNet_TCP_AddSocket(instance->socketSet, tmpSock);
+        SDLNet_TCP_Send(instance->clients[instance->numOfClients].socket, &instance->clients[instance->numOfClients].id, sizeof(int));
         instance->numOfClients++;
-        printf("---TCPClient: %d---\n", instance->clients[instance->numOfClients].id);
+        printf("CurrentID: %d, NumOfClients: %d, TCPClient: %d\n", instance->currentID, instance->numOfClients, instance->clients[instance->numOfClients].id);
     }
 }
 
@@ -110,7 +111,7 @@ void readySocket(void *self){
 }
 
 
-void broadcastData(void *self, Client sender, TCPServerData *data, int dataSize){
+void broadcastData(void *self, Client sender, void *data, int dataSize){
     TCPServerInstance *instance = ((TCPserver*)self)->instance;
 
     for (int i = 0; i < instance->numOfClients; i++)
