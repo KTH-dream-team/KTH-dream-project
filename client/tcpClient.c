@@ -58,21 +58,36 @@ bool TCPinitclient(void *self)
 
 void TCPlisten (void *self)
 {
+    printf("1\n");
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
-
-    while(SDLNet_CheckSockets(instance->socketSet,0) >0)
+    printf("2\n");
+    int checkNrSocket = SDLNet_CheckSockets(instance->socketSet,0);
+    while(checkNrSocket >0)
     {
+        printf("3\n");
         int nrOfready = SDLNet_SocketReady(instance->serverSocket);
+        printf("4\n");
         if(nrOfready>0)
         {
+            printf("5\n");
             int nrOfbytes = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
-            if(nrOfbytes == 12) // position of other players
+            printf("nrOfBytes: %d\n", nrOfbytes);
+            printf("6\n");
+            if(nrOfbytes>0 && nrOfbytes<50)
             {
-                printf("inside ready == 12\n");
-                DataPos otherWarrior = *(DataPos*)instance->packetReceived;
-                printf("from: %d, x:%.2f, y:%.2f\n", otherWarrior.from, otherWarrior.x, otherWarrior.y);
-                //printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived,instance->packetReceived,instance->packetReceived);
+                if(nrOfbytes == 12) // position of other players
+                {
+                    printf("7\n");
+                    printf("inside ready == 12\n");
+                    printf("8\n");
+                    DataPos otherWarrior = *(DataPos*)instance->packetReceived;
+                    printf("9\n");
+                    printf("from: %d, x:%.2f, y:%.2f\n", otherWarrior.from, otherWarrior.x, otherWarrior.y);
+                    printf("10\n");
+                    //printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived,instance->packetReceived,instance->packetReceived);
+                }
             }
+            return;
         }
     }
 }
@@ -87,7 +102,7 @@ int TCPresiveID(void *self)
         int nrOfready = SDLNet_SocketReady(instance->serverSocket);
         if(nrOfready>0)
         {
-            SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, sizeof(int));
+            SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, sizeof(int));
             memcpy(&instance->id, &instance->packetReceived, sizeof(int));
             printf("ID: %d\n", instance->id);
             return 0 ;
@@ -104,13 +119,18 @@ int TCPresive (void *self, void *dest, int desireInt)
         int nrOfready = SDLNet_SocketReady(instance->serverSocket);
         if(nrOfready>0)
         {
-            int nrOfBytes = SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, MAX_SIZE);
-            printf("NrOfBytes: %d", nrOfBytes);
-            if(nrOfBytes == desireInt)// DataPos
+            int nrOfBytes = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
+            printf("NrOfBytes: %d\n", nrOfBytes);
+            if(nrOfBytes>0 && nrOfBytes<50)
             {
-                memcpy(dest, instance->packetReceived, sizeof(DataPos));
+                if(nrOfBytes == desireInt)// DataPos
+                {
+                    memcpy(dest, instance->packetReceived, sizeof(DataPos));
+                }
             }
+            return -1;
         }
+        return -1;
     }
     return -1;
 }
