@@ -39,12 +39,10 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     // Warrior creation
     Warrior *warrior = createWarrior(client->TCPgetID(client));
 
-    char string[12] = "Warrior-";
-    char from[10];
+    static char string[10] = "Warrior-";
     char ID =  '0' + client->TCPgetID(client);
     printf("TCPgetID: %d, string: %s, charID: %c\n", client->TCPgetID(client), string, ID);
     strncat(string,&ID,1);
-    printf("%s\n",string);
 
     entityManager->add(entityManager, string, warrior);//add to entity manager list
 
