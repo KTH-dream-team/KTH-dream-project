@@ -4,18 +4,22 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "tcpClient.h"
+#include "data.h"
 
 struct TCPclientInstance
 {
     TCPsocket serverSocket;
     SDLNet_SocketSet socketSet;
-    void* packetReceived;
+    void *packetReceived;
     int numOfClients; // includeing it self
     IPaddress serverAddress;
     int port;
     int id;
     bool isRunning;
 };
+
+int TCPresive (void *self, void *dest, int desireInt);
+int TCPresiveID(void *self);
 
 bool TCPinitclient(void *self)
 {
@@ -25,7 +29,7 @@ bool TCPinitclient(void *self)
 		printf("SDLNet_Init: %s\n", SDLNet_GetError());
 		return false;
 	}
-    if(SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP, SERVER_PORT))
+    if(SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP, TCP_SERVER_PORT))
     {
         printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 		return false;
@@ -46,30 +50,72 @@ bool TCPinitclient(void *self)
         printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
         return false;
     }
-
+    while(TCPresiveID(instance));
     instance->isRunning = true;
     instance->numOfClients=1;//todo fix ++
     return true;
 }
+
 void TCPlisten (void *self)
 {
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
 
-    int a;
-    while(a = SDLNet_CheckSockets(instance->socketSet,0) >0)
+    while(SDLNet_CheckSockets(instance->socketSet,0) >0)
     {
-        int nrOfbytes=SDLNet_SocketReady(instance->serverSocket);
-        if(nrOfbytes>0)
+        int nrOfready = SDLNet_SocketReady(instance->serverSocket);
+        if(nrOfready>0)
         {
-            if(SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived,nrOfbytes) > 0)
+            int nrOfbytes = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
+            if(nrOfbytes == 12) // position of other players
             {
-                printf("client recived a packet from sever\n");
-                //   printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived.from,instance->packetReceived.x,instance->packetReceived.y);
+                printf("inside ready == 12\n");
+                DataPos otherWarrior = *(DataPos*)instance->packetReceived;
+                printf("from: %d, x:%.2f, y:%.2f\n", otherWarrior.from, otherWarrior.x, otherWarrior.y);
+                //printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived,instance->packetReceived,instance->packetReceived);
             }
         }
-
     }
 }
+
+int TCPresiveID(void *self)
+{
+    TCPClientInstance *instance = ((TCPClientInstance*)self);
+
+    int nrOfsocket = SDLNet_CheckSockets(instance->socketSet, 0);
+    while(nrOfsocket>0)
+    {
+        int nrOfready = SDLNet_SocketReady(instance->serverSocket);
+        if(nrOfready>0)
+        {
+            SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, sizeof(int));
+            memcpy(&instance->id, &instance->packetReceived, sizeof(int));
+            printf("ID: %d\n", instance->id);
+            return 0 ;
+        }
+    }
+    return 1;
+}
+
+int TCPresive (void *self, void *dest, int desireInt)
+{
+    TCPClientInstance *instance = ((TCPclient*)self)->instance;
+    while(SDLNet_CheckSockets(instance->socketSet,0) >0)
+    {
+        int nrOfready = SDLNet_SocketReady(instance->serverSocket);
+        if(nrOfready>0)
+        {
+            int nrOfBytes = SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, MAX_SIZE);
+            printf("NrOfBytes: %d", nrOfBytes);
+            if(nrOfBytes == desireInt)// DataPos
+            {
+                memcpy(dest, instance->packetReceived, sizeof(DataPos));
+            }
+        }
+    }
+    return -1;
+}
+
+
 int TCPbroadCast(void *self, void *data, int dataSize)
 {
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
@@ -77,13 +123,10 @@ int TCPbroadCast(void *self, void *data, int dataSize)
     return amoutSent;
 }
 
-int setRand(void *self){
-    TCPclient *client = ((TCPclient*)self);
-    // client->instance->packetSent->x=rand()%10+1;
-    // client->instance->packetSent->y=rand()%10+1;
-    // client->instance->packetSent->from=rand()%10+1;
-    // printf("from:%d x:%d y:%d\n",client->instance->packetSent->from,client->instance->packetSent->x,client->instance->packetSent->y);
-    return 0;
+int TCPgetID(void *self)
+{
+    TCPClientInstance *instance = ((TCPclient*)self)->instance;
+    return instance->id;
 }
 
 void TCPClientdestroy(void *self){
@@ -105,7 +148,9 @@ TCPclient *getTCPclient()
     
     self.init = TCPinitclient;
     self.broadCast = TCPbroadCast;
+    self.getID = TCPgetID;
     self.listen = TCPlisten;
+    self.recive = TCPresive;
     self.destroy = TCPClientdestroy;
 
     self.instance->numOfClients=0;

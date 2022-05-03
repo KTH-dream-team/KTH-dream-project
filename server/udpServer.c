@@ -4,11 +4,8 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "udpServer.h"
-//#include"data.h"
-#define MAX_CLIENTS 4
-#define MAX_SIZE 512
-#define SERVER_PORT 3000
-#define SERVER_IP "127.0.0.1"
+#include "data.h"
+
 
 bool sendUdpPacageToClient(void *self, void *data, IPaddress destIP, UDPsocket destSoc, unsigned long len);
 bool isClientExit(void *self, IPaddress address);
@@ -60,7 +57,7 @@ bool UDPinitServer(void *self)
         fprintf(stderr, "UDP_Open error: %s", SDLNet_GetError());
         return false;
     }
-    if (SDLNet_ResolveHost(&(instance->IP_Adress), NULL, SERVER_PORT) == -1)
+    if (SDLNet_ResolveHost(&(instance->IP_Adress), NULL, UDP_SERVER_PORT) == -1)
     {
         fprintf(stderr, "SDLNet_ResolveHost(192.0.0.1 3000): %s\n", SDLNet_GetError());
         return false;
@@ -170,7 +167,7 @@ UDPserver *getUDPserver()
     self.listen = UDPlisten;
     self.isRunning = serverIsRunning;
     self.destroy = UDPdestroy;
-    self.instance->serverPort = SERVER_PORT;
+    self.instance->serverPort = UDP_SERVER_PORT;
     self.instance->serverSocket = NULL;
     self.instance->numOfClients = 0;
     self.instance->currentID = 0;

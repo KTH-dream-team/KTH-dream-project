@@ -4,17 +4,7 @@ mgame:
 	gcc -Iinclude/headers src/*.c client/*.c -o game.exe -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 mserver: 
 	gcc -Iinclude/headers -o S.exe  server/server.c server/networkServer.c  server/udpServer.c server/tcpServer.c -lsdl2 -lsdl2_net
-mclient: 
-	gcc -Iinclude/headers -o C.exe  client/networkClient.c client/networkClientMain.c client/tcpClient.c client/udpClient.c -lsdl2 -lsdl2_net
-mtcp:
-	gcc -Iinclude/headers -o CT.exe  client/tcpClient.c client/tcpClientMain.c -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
-mudp:
-	gcc -Iinclude/headers -o CU.exe  client/udpClient.c client/udpClientMain.c -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 wserver:
 	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o S.exe  server/server.c server/networkServer.c  server/udpServer.c server/tcpServer.c -lsdl2 -lsdl2_net -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
 clear:
 	rm *.o *.exe
-wtcp:
-	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o CT.exe  client/tcpClient.c client/tcpClientMain.c -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer
-wudp:
-	gcc -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o CU.exe  client/udpClient.c client/udpClientMain.c -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_net -lSDL2_mixer

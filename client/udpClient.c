@@ -6,12 +6,6 @@
 #include "udpClient.h"
 #include "data.h"
 
-#define MAX_CLIENTS 4
-#define MAX_SIZE 512
-#define CLIENT_PORT 0
-#define CLIENT_IP "127.0.0.1"
-#define SERVER_PORT 3000
-#define SERVER_IP "127.0.0.1"
 
 bool sendUdpPacageToServer(void *self, void* data, unsigned long len);
 
@@ -41,7 +35,7 @@ bool UDPinit(void *self)
         fprintf(stderr, "Init error: %s\n", SDLNet_GetError());
         return false;
     }
-    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP, SERVER_PORT) == -1)
+    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP, UDP_SERVER_PORT) == -1)
     {
         fprintf(stderr, "SDLNet_ResolveHost(192.0.0.1 3000): %s\n", SDLNet_GetError());
         return false;
@@ -100,7 +94,6 @@ void UDPclientListen(void *self)
             printf("len: %d\n", len);
             memcpy(&data, dataRecieved, len-1);
             printf("from: %d, x: %d, y: %d\n", data.from, data.x, data.y);
-            printf("hej");
         }
         
     }

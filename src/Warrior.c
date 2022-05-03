@@ -25,6 +25,7 @@ struct warriorInstance
     Transform *position;
     Rigidbody *rigidBody;
     SDL_Rect hitBox;
+    int netID;
 };
 
 void updateWarrior(void *self, float dt)
@@ -70,6 +71,7 @@ void renderWarrior(void *self)
     Transform *pos = ((Warrior *)self)->instance->position;
     WarriorInstance * instance = ((Warrior *)self)->instance;
     NetworkClient *network = getNetworkClient();
+
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
     
     GameEngin *engin = getGameEngin();
@@ -85,8 +87,8 @@ void renderWarrior(void *self)
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
     SDL_FPoint warriorPos = pos->get(pos);
-    DataPos wariorSendPos ={warriorPos.x, warriorPos.y, 1};
-    network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//!send data pos
+    DataPos wariorSendPos ={warriorPos.x, warriorPos.y, network->TCPgetID(network)};
+    network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//todo fixa size
     
 }
 void warriorEventHandle(void *self)
@@ -207,6 +209,8 @@ Warrior *createWarrior()
     TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
 
+    self->instance->netID; //! Add later network ID from network library
+
     self->instance->hitBox.x = 3;
     self->instance->hitBox.y = 7;
     self->instance->hitBox.w = warriorWidth-10;
@@ -216,7 +220,7 @@ Warrior *createWarrior()
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);
 
     self->instance->position = newTransform();
-    self->instance->position->set(self->instance->position, 0,10);
+    self->instance->position->set(self->instance->position, 50,50);
     
     self->instance->rigidBody = newRigidBody();
     self->instance->rigidBody->setForce(self->instance->rigidBody, 0 , 0);//!forces på gubben initialt

@@ -1,7 +1,8 @@
 #pragma once
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
-#define MAX_CLIENTS 4
+#include "data.h"
+
 
 typedef struct tcpserverdata
 {

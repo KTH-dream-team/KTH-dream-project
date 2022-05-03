@@ -2,11 +2,13 @@
 #include "DataTypes.h"
 #include "TextureManager.h"
 #include <stdio.h>
+#include <string.h>
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Animation.h"
 #include "InputHandler.h"
 #include "Warrior.h"
+#include "OtherWarrior.h"
 #include "FpsManager.h"
 #include "Cube.h"
 #include "map.h"
@@ -25,8 +27,9 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 {
     GameEngin *Engin = ((GameEngin *)self);
     bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
-    if (!isRenderSucced)
-        return 0;
+    if (!isRenderSucced){
+        return 0;}
+    NetworkClient *client = getNetworkClient();
     
     //init map
     MapManager *mapManager = getMapManager();
@@ -34,8 +37,18 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 
     EntityManager *entityManager = getEntityManager();
     // Warrior creation
-    Warrior *warrior = createWarrior();
-    entityManager->add(entityManager, "Warrior-1", warrior);//add to entity manager list
+    Warrior *warrior = createWarrior(client->TCPgetID(client));
+
+    static char string[10] = "Warrior-";
+    char ID =  '0' + client->TCPgetID(client);
+    printf("TCPgetID: %d, string: %s, charID: %c\n", client->TCPgetID(client), string, ID);
+    strncat(string,&ID,1);
+
+    entityManager->add(entityManager, string, warrior);//add to entity manager list
+
+    // Other warrior creation
+    OtherWarrior *otherwarrior = createOtherWarrior();
+    entityManager->add(entityManager, "OtherWarrior-1", otherwarrior);
 
     //cube creation
     Cube *cube = newCube();
@@ -61,6 +74,7 @@ void handleUpdates(void *self)
     EntityManager *entityManager = getEntityManager();
     entityManager->updateAll(entityManager, dt);
 }
+
 void handleRenders(void *self)
 {//todo implemnt neew bakgrund
     GameEngin *Engin = ((GameEngin *)self);
@@ -77,10 +91,10 @@ void handleRenders(void *self)
     //render map
     MapManager *mapManger = getMapManager();
     mapManger->showMap(mapManger);
-
     EntityManager *entityManager = getEntityManager();
-    entityManager->renderAll(entityManager);
 
+    entityManager->renderAll(entityManager); //! Here inside segmentation fault
+    
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
 }
