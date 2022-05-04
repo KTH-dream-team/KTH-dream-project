@@ -146,11 +146,11 @@ bool ResolveBulletVSRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, float 
         printf("bullet collision\n");
         printf("normal: x: %f,y:%f \n", normal.x, normal.y);
         if(normal.y == -1 || normal.y == 1){
-            // dir->y = 0;
+             dir->y = 0;
 
         }
         if(normal.x == -1 || normal.x == 1){
-            // dir->x =0;
+             dir->x =0;
         }
 
         return true;

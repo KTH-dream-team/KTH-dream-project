@@ -172,7 +172,7 @@ void checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                 case 2://! 2 bullet collison
                     if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
                     {
-                        map->dig(map,dRect.x, dRect.y);
+                        map->dig(map,mapBlock.x, mapBlock.y);
                         printf("Bullet collision\n");
 
                     }
