@@ -85,13 +85,6 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
         }
     }
 
-
-
-
-    //cube creation
-    //Cube *cube = newCube();
-    //entityManager->add(entityManager, "Cube-1", cube);
-
     Engin->instance->isRunning = true;
 
     return 1;

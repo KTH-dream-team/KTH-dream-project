@@ -39,9 +39,7 @@ void updateWarrior(void *self, float dt)
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
 
-    //handle collision
-
-     
+    //handle collision   
     MapManager *mapManager = getMapManager();//MAP
     Transform *pos = ((Warrior *)self)->instance->position;
     SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
@@ -52,9 +50,8 @@ void updateWarrior(void *self, float dt)
         hitBox.h,
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
-
     //printf("=========================\n");
-    mapManager->checkColision(mapManager, dRect, vel, dt);//!warrior collision check
+    mapManager->checkColision(mapManager, dRect, vel, dt,1);//!warrior collision check 1 betyder warrior
 
 
     //update position
@@ -146,6 +143,7 @@ void warriorEventHandle(void *self)
     static int bulletCount = 0;//!ongoing
     if (inputHandler->getMouseState(&mouse_x,&mouse_y)==SDL_BUTTON_RMASK)
     {
+        printf("x %d y%d \n",mouse_x,mouse_y);
         static unsigned int currentTime;
         static unsigned int lastTime;
         currentTime=SDL_GetTicks();//bullet cooldown 100ms

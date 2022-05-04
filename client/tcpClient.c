@@ -59,32 +59,32 @@ bool TCPinitclient(void *self)
 
 void TCPlisten (void *self)
 {
-    printf("1\n");
+    // printf("1\n");
     TCPClientInstance *instance = ((TCPclient*)self)->instance;
-    printf("2\n");
+    // printf("2\n");
     int checkNrSocket = SDLNet_CheckSockets(instance->socketSet,0);
     while(checkNrSocket >0)
     {
-        printf("3\n");
+        // printf("3\n");
         int nrOfready = SDLNet_SocketReady(instance->serverSocket);
-        printf("4\n");
+        // printf("4\n");
         if(nrOfready>0)
         {
-            printf("5\n");
+            // printf("5\n");
             int nrOfbytes = SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, MAX_SIZE);
             printf("nrOfBytes: %d\n", nrOfbytes);
-            printf("6\n");
+            // printf("6\n");
             if(nrOfbytes>0 && nrOfbytes<50)
             {
                 if(nrOfbytes == 12) // position of other players
                 {
-                    printf("7\n");
+                    // printf("7\n");
                     printf("inside ready == 12\n");
-                    printf("8\n");
+                    // printf("8\n");
                     DataPos otherWarrior = *(DataPos*)instance->packetReceived;
-                    printf("9\n");
+                    // printf("9\n");
                     printf("from: %d, x:%.2f, y:%.2f\n", otherWarrior.from, otherWarrior.x, otherWarrior.y);
-                    printf("10\n");
+                    // printf("10\n");
                     //printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived,instance->packetReceived,instance->packetReceived);
                 }
             }

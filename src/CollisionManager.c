@@ -136,6 +136,28 @@ bool ResolveDynamicRectVsRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, f
     return false;
 }
 
+bool ResolveBulletVSRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, float dt)
+{
+    SDL_FPoint normal;
+    
+    float t;
+    if (DynamicRectVsRect(DRect, *dir, SRect, &normal, &t, dt))
+    {   
+        printf("bullet collision\n");
+        printf("normal: x: %f,y:%f \n", normal.x, normal.y);
+        if(normal.y == -1 || normal.y == 1){
+            // dir->y = 0;
+
+        }
+        if(normal.x == -1 || normal.x == 1){
+            // dir->x =0;
+        }
+
+        return true;
+    }
+    return false;
+}
+
 CollisionManager *GetCollisionManager()
 {
     static CollisionManager self;
@@ -148,6 +170,7 @@ CollisionManager *GetCollisionManager()
     self.RayVsRect = RayVsRect;
     self.DynamicRectVsRect = DynamicRectVsRect;
     self.ResolveDynamicRectVsRect = ResolveDynamicRectVsRect;
+    self.ResolveBulletVSRect = ResolveBulletVSRect;
 
     return &self;
 }

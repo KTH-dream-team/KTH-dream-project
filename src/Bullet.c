@@ -12,7 +12,7 @@
 #include "Warrior.h"
 #include "string.h"
 #include "TextureManager.h"
-
+#include "map.h"
 void destroyBullet(void *self);
 
 struct bulletInstance
@@ -29,7 +29,7 @@ void renderBullet(void *self)
     GameEngin *engin = getGameEngin();
     TextureManager *textureManager = getTextureManager();
     textureManager->load(textureManager, "bullet", "./assets/bullet.png");//!if not null ta befintlig
-    SDL_Rect srcRec = {0, 0, 32, 32};//!skapa 32x32 source rectangel
+    SDL_Rect srcRec = {0, 0, 32, 33};//!skapa 32x32 source rectangel
 
 
     SDL_Rect box = {
@@ -53,6 +53,20 @@ void updateBullet(void *self, float dt)
         EM->drop(EM,instance->id);
         ((Bullet *)self)->destroy(self);
     }
+
+    MapManager *mapManager = getMapManager();//MAP
+    SDL_Rect hitBox = ((Bullet *)self)->instance->hitBox;
+    SDL_Rect dRect ={
+        instance->position->getX(instance->position) + instance->hitBox.x,
+        instance->position->getY(instance->position) + instance->hitBox.y,
+        instance->hitBox.w,
+        instance->hitBox.h,
+    };
+  
+    // SDL_FPoint *vel = instance->vel;
+    mapManager->checkColision(mapManager, dRect, &instance->vel, dt,2);//!warrior collision check 1 betyder warrior
+
+
 }
 void destroyBullet(void *self)
 {
@@ -62,7 +76,7 @@ void destroyBullet(void *self)
 
 Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
 {
-    Bullet *self = malloc(sizeof(Bullet));
+  us  Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
     self->instance->id = malloc(sizeof(char)*30);
 
@@ -74,7 +88,7 @@ Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
     self->instance->vel.y = vel.y;
 
     self->instance->hitBox.x = 10;
-    self->instance->hitBox.y = 15;
+    self->instance->hitBox.y = 10;
     self->instance->hitBox.w = 10;
     self->instance->hitBox.h = 10;
 

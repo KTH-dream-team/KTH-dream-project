@@ -42,9 +42,9 @@ void renderOtherWarrior(void *self)
     OtherWarriorInstance * instance = ((OtherWarrior *)self)->instance;
     NetworkClient *network = getNetworkClient();
 
-    printf("Before TCPresive\n");
+    // printf("Before TCPresive\n");
     network->TCPresive(network,instance->datapos, 12); // pos warrior
-    printf("After TCPresive\n");
+    // printf("After TCPresive\n");
     
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
     GameEngin *engin = getGameEngin();
