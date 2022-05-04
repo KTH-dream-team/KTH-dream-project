@@ -70,7 +70,7 @@ void TCPlisten (void *self)
         if(nrOfready>0)
         {
             printf("5\n");
-            int nrOfbytes = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
+            int nrOfbytes = SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, MAX_SIZE);
             printf("nrOfBytes: %d\n", nrOfbytes);
             printf("6\n");
             if(nrOfbytes>0 && nrOfbytes<50)
@@ -95,14 +95,14 @@ void TCPlisten (void *self)
 int TCPresiveID(void *self)
 {
     TCPClientInstance *instance = ((TCPClientInstance*)self);
-
-    int nrOfsocket = SDLNet_CheckSockets(instance->socketSet, 0);
+    int nrOfsocket = SDLNet_CheckSockets(instance->socketSet, 3000);
     while(nrOfsocket>0)
     {
         int nrOfready = SDLNet_SocketReady(instance->serverSocket);
         if(nrOfready>0)
         {
-            SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, sizeof(int));
+            printf("before set id %d\n",instance->id);
+            SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, sizeof(int));
             memcpy(&instance->id, &instance->packetReceived, sizeof(int));
             printf("ID: %d\n", instance->id);
             return 0 ;
@@ -119,13 +119,13 @@ int TCPresive (void *self, void *dest, int desireInt)
         int nrOfready = SDLNet_SocketReady(instance->serverSocket);
         if(nrOfready>0)
         {
-            int nrOfBytes = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
+            int nrOfBytes = SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, MAX_SIZE);
             printf("NrOfBytes: %d\n", nrOfBytes);
             if(nrOfBytes>0 && nrOfBytes<50)
             {
                 if(nrOfBytes == desireInt)// DataPos
                 {
-                    memcpy(dest, instance->packetReceived, sizeof(DataPos));
+                    memcpy(dest, &instance->packetReceived, sizeof(DataPos));
                 }
             }
             return -1;
