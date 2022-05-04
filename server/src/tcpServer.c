@@ -15,7 +15,7 @@ typedef struct client
     int id;
     IPaddress ip;
     TCPsocket socket;
-    Data data;
+    void* data;
 } Client;
 
 struct tcpServerInstance
@@ -29,7 +29,7 @@ struct tcpServerInstance
     bool isRunning;
 };
 
-void broadcastData(void *self, Client sender, Data *data, int dataSize);
+void broadcastData(void *self, Client sender, void *data, int dataSize);
 
 bool TCPinitServer(void *self)
 {
@@ -85,20 +85,18 @@ void TCPlisten(void *self)
             if (SDLNet_SocketReady(instance->clients[i].socket))
             {
                 Client *client = &instance->clients[i];
-                if (SDLNet_TCP_Recv(instance->clients[i].socket, &client->data, sizeof(Data)))
+                int size = SDLNet_TCP_Recv(instance->clients[i].socket, &client->data, MAX_SIZE);
+                if (size > 0)
                 {
-                    printf("new package from clientID %d  (x:%d, y:%d, from:%d)\n", client->id, client->data.x, client->data.y, client->data.from);
-
-                    // broadcast data to all clients exept sender
-                    client->data.from = client->id;
-                    broadcastData(self, *client, &client->data, sizeof(Data));
+                    printf("new package from clientID %d\n", client->id);
+                    broadcastData(self, *client, &client->data, size);
                 }
             }
         }
     }
 }
 
-void broadcastData(void *self, Client sender, Data *data, int dataSize)
+void broadcastData(void *self, Client sender, void *data, int dataSize)
 {
     TCPServerInstance *instance = ((TCPserver *)self)->instance;
 
