@@ -50,6 +50,7 @@ bool TCPinitclient(void *self)
         printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
         return false;
     }
+
     while(TCPresiveID(instance));
     instance->isRunning = true;
     instance->numOfClients=1;//todo fix ++
@@ -96,17 +97,19 @@ int TCPresiveID(void *self)
 {
     TCPClientInstance *instance = ((TCPClientInstance*)self);
 
-    int nrOfsocket = SDLNet_CheckSockets(instance->socketSet, 0);
+    int nrOfsocket = SDLNet_CheckSockets(instance->socketSet, 3000);
     while(nrOfsocket>0)
     {
         int nrOfready = SDLNet_SocketReady(instance->serverSocket);
         if(nrOfready>0)
         {
-            SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, sizeof(int));
+            printf("Before ID: %d\n", instance->id);
+            SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, sizeof(int));
             memcpy(&instance->id, &instance->packetReceived, sizeof(int));
             printf("ID: %d\n", instance->id);
             return 0 ;
         }
+        return 1;
     }
     return 1;
 }

@@ -211,8 +211,9 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
         printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return false;
     }
-    initAudio();
-    playMusic("./assets/music1.wav", SDL_MIX_MAXVOLUME);
+    Audio *audio = newAudio();
+    audio->init();
+    audio->backgroud(audio, "assets/back.wav", 10);
 
     Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,fullScreen);
     if (!Engin->instance->window)

@@ -6,6 +6,7 @@
 #include "map.h"
 #include "hitBox.h"
 #include "networkClient.h"
+#include "audio.h"
 
 #define SDL_MAIN_HANDLED
 
@@ -40,6 +41,8 @@ int main(int argc, char **argv)
         Engine->handleRenders(Engine);
     }
     Engine->destroyEngine(Engine);
+    Audio *audio = newAudio();
+    audio->destroy(audio);
     
     return 0;
 }

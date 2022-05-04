@@ -159,7 +159,9 @@ void warriorEventHandle(void *self)
             SDL_FPoint velN = {xN*20, yN*20};
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
-            playSound("./assets/sound1.wav", SDL_MIX_MAXVOLUME);
+            //playSound("./assets/sound1.wav", SDL_MIX_MAXVOLUME);
+            Audio *audio = newAudio();
+            audio->playSound(audio, "assets/jump.wav", 10);
             lastTime = currentTime;
             
         }
