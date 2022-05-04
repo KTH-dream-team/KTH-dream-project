@@ -99,6 +99,7 @@ void warriorEventHandle(void *self)
     EntityManager* entityManager=getEntityManager();//!entityManager
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
+    Audio *audio = newAudio();
     // CollisionManager *collisionManager = getCollisionManager(collisionManager);//!collisionManager
 
     rig->setVelocityX(rig, 0);
@@ -128,7 +129,7 @@ void warriorEventHandle(void *self)
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
     {
-        
+        audio->playSound(audio, "assets/jump.wav", 10);
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
         rig->setVelocityY(rig, -100);
     }
@@ -158,8 +159,7 @@ void warriorEventHandle(void *self)
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
             //playSound("./assets/sound1.wav", SDL_MIX_MAXVOLUME);
-            Audio *audio = newAudio();
-            audio->playSound(audio, "assets/jump.wav", 10);
+            audio->playSound(audio, "assets/gunshot2.wav", 20);
             lastTime = currentTime;
             
         }
