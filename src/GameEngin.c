@@ -213,7 +213,7 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
     }
     Audio *audio = newAudio();
     audio->init();
-    audio->backgroud(audio, "assets/back.wav", 10);
+    audio->backgroud(audio, "assets/back.wav", 5);
 
     Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,fullScreen);
     if (!Engin->instance->window)
