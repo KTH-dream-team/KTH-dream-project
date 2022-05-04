@@ -76,7 +76,7 @@ void destroyBullet(void *self)
 
 Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
 {
-  us  Bullet *self = malloc(sizeof(Bullet));
+    Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
     self->instance->id = malloc(sizeof(char)*30);
 
