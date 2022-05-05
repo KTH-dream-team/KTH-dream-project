@@ -41,10 +41,10 @@ int networkTCPbroadcast(void *self, Data *data, int dataSize, int dataType)
     return instance->TCP->broadCast(instance->TCP, data, dataSize, dataType);
 }
 
-void networkUDPbroadcast(void *self, void *data, int dataSize)
+void networkUDPbroadcast(void *self, void *data, int dataSize, int dataType)
 {
     NetworkClientInstance *instance = ((NetworkClient *)self)->instance;
-    instance->UDP->broadCast(instance->UDP, data, dataSize);
+    instance->UDP->broadCast(instance->UDP, data, dataSize, dataType);
 }
 
 void connect(void*self)
@@ -53,7 +53,7 @@ void connect(void*self)
 
     UDPclient * UDP = instance->UDP;
     TCPclient * TCP = instance->TCP;
-    while(TCP->getNrOfClients(TCP) < 3)
+    while(TCP->getNrOfClients(TCP) < 3 && UDP->getNrOfClients(UDP) < 3)
     {
         networkClientListen(self);
     }

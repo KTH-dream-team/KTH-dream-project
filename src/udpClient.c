@@ -12,7 +12,7 @@
 #define SERVER_PORT 7000
 #define SERVER_IP "127.0.0.1"
 
-bool sendUdpPacageToServer(void *self, void *data, unsigned long len);
+bool sendUdpPacageToServer(void *self, void *data, unsigned long len, int dataType);
 
 struct clientInstance
 {
@@ -70,15 +70,10 @@ void UDPdestroy(void *self)
     printf("Client Has been Destroyed!\n");
 }
 
-void UDPbroadCast(void *self, void *data, unsigned long length)
+void UDPbroadCast(void *self, void *data, unsigned long length, int dataType)
 {
-    UDPclient *client = ((UDPclient *)self);
-    client->instance->packetSent->address.host = client->instance->serverAddress.host;
-    client->instance->packetSent->address.port = client->instance->serverAddress.port;
-    memcpy((char *)client->instance->packetSent->data, data, length);
-    client->instance->packetSent->len = length;
-    SDLNet_UDP_Send(client->instance->serverSocket, -1, client->instance->packetSent);
-    printf("Sent UDP packet to server\n");
+    sendUdpPacageToServer(self, data, length, dataType);
+    printf("Sent UDP packet to server(broadcast)\n");
 }
 
 void UDPclientListen(void *self)
@@ -86,26 +81,24 @@ void UDPclientListen(void *self)
     ClientInstance *instance = ((UDPclient *)self)->instance;
     if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
     {
-        if (instance->packetReceived->len == sizeof(int))
+        if (((char *)instance->packetReceived->data)[0] == (char)1)
         {
-            int id = *((int *)instance->packetReceived->data);
-            printf("UDP connection created successfully, client id: %d\n", id);
+            Connection *data = (Connection*)(instance->packetReceived->data+1); 
+            if(instance->numOfClients < data->totalClient)
+                instance->numOfClients = data->totalClient;
+            printf("UDP Client id: %d, total Client:%d\n", data->myId, data->totalClient);
         }
-        else if (instance->packetReceived->len == sizeof(Data))
+        else if (((char *)instance->packetReceived->data)[0] == (char)2)
         {
-            Data data;
-            char *dataRecieved = (char *)instance->packetReceived->data;
-            int len = instance->packetReceived->len;
-            memcpy(&data, dataRecieved, len);
-            printf("got new UDP package from: %d, x: %d, y: %d\n", data.from, data.x, data.y);
+            printf("got new UDP package with flag: %d (%d)\n", 2, ((int *)instance->packetReceived->data)[0]);
         }
-        else if (instance->packetReceived->len == sizeof(TestData))
+        else if (((char *)instance->packetReceived->data)[0] == (char)3)
         {
-            TestData data;
-            char *dataRecieved = (char *)instance->packetReceived->data;
-            int len = instance->packetReceived->len;
-            memcpy(&data, dataRecieved, len);
-            printf("got new UDP package from: %d, a: %d\n", data.from, data.a);
+            printf("got new UDP package with flag: %d (%d)\n", 3, ((int *)instance->packetReceived->data)[0]);
+        }
+        else
+        {
+            printf("!got new UDP package with flag: %d\n",((int*)instance->packetReceived->data)[0]);
         }
     }
 }
@@ -113,9 +106,9 @@ void UDPclientListen(void *self)
 void UDPmakeHandShake(void *self)
 {
     UDPclient *client = ((UDPclient *)self);
-    int flag = 1;
+    Connection data = {3,6};
 
-    if (!sendUdpPacageToServer(self, &flag, sizeof(int)))
+    if (!sendUdpPacageToServer(self, &data, sizeof(Connection), 1))
         printf("failed to connection request\n");
     else
         printf("sent connection request!\n");
@@ -125,10 +118,15 @@ void UDPcloseConnection(void *self)
     UDPclient *client = ((UDPclient *)self);
     int flag = 0;
 
-    if (!sendUdpPacageToServer(self, &flag, sizeof(int)))
+    if (!sendUdpPacageToServer(self, &flag, sizeof(int),2))
         printf("failed to disconnect request\n");
     else
         printf("Packge sent disconnect request!\n");
+}
+
+int getUDPNrOfClients(void*self)
+{
+    return ((UDPclient *)self)->instance->numOfClients;
 }
 
 UDPclient *getUDPclient()
@@ -145,6 +143,7 @@ UDPclient *getUDPclient()
     self.closeConnection = UDPcloseConnection;
     self.broadCast = UDPbroadCast;
     self.listen = UDPclientListen;
+    self.getNrOfClients = getUDPNrOfClients;
 
     self.instance->numOfClients = 1;
     self.instance->isRunning = false;
@@ -153,13 +152,15 @@ UDPclient *getUDPclient()
     return &self;
 }
 
-bool sendUdpPacageToServer(void *self, void *data, unsigned long len)
+bool sendUdpPacageToServer(void *self, void *data, unsigned long len, int dataType)
 {
     UDPclient *client = ((UDPclient *)self);
     client->instance->packetSent->address.host = client->instance->serverAddress.host;
     client->instance->packetSent->address.port = client->instance->serverAddress.port;
-    memcpy((char *)client->instance->packetSent->data, data, len);
-    client->instance->packetSent->len = len;
+
+    ((char *)client->instance->packetSent->data)[0] = (char)dataType;
+    memcpy((char *)(client->instance->packetSent->data+1), data, len);
+    client->instance->packetSent->len = len+1;
 
     if (!SDLNet_UDP_Send(client->instance->serverSocket, -1, client->instance->packetSent))
         return false;

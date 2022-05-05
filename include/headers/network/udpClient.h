@@ -13,7 +13,8 @@ typedef struct {
     void (*makeHandShake)(void *self);
     void (*closeConnection)(void *self);
     void (*listen)(void *self);
-    void (*broadCast)(void *self, void *data, unsigned long length);
+    void (*broadCast)(void *self, void *data, unsigned long length, int dataType);
+    int (*getNrOfClients)(void*self);
     ClientInstance *instance;
 } UDPclient;
 

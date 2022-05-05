@@ -94,12 +94,12 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT))
     {
         rig->setVelocityX(rig, -130);
-        network->UDPbroadCast(network, &test, sizeof(TestData));
+        network->UDPbroadCast(network, &test, sizeof(TestData), 3);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT))
     {
         rig->setVelocityX(rig, 130);
-        network->TCPbroadCast(network, &test1, sizeof(Data), 1);
+        network->TCPbroadCast(network, &test1, sizeof(Data), 2);
     }
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))

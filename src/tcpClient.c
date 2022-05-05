@@ -68,15 +68,19 @@ void TCPlisten(void *self)
                 Connection* a = (Connection*)(instance->packetReceived+1);
                 if(instance->numOfClients < a->totalClient)
                     instance->numOfClients = a->totalClient;
-                printf("My ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
+                printf("My TCP ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
             }
-            else if(size == sizeof(Data))
+            else if (((char*)instance->packetReceived)[0] == (char)2)
             {
-                printf("got TCP packet from client (Data).\n");
+                printf("got TCP packet with flag: %d, (%d).\n", 2, ((int*)instance->packetReceived)[0]);
+            }
+            else if (((char*)instance->packetReceived)[0] == (char)2)
+            {
+                printf("got TCP packet with flag: %d, (%d).\n", 3, ((int*)instance->packetReceived)[0]);
             }
             else
             {
-                printf("!got TCP packet with flag: %s.\n", ((char*)instance->packetReceived));
+                printf("!got TCP packet with flag: %d.\n", ((int*)instance->packetReceived)[0]);
             }
         }
     }

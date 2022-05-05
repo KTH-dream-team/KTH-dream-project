@@ -10,7 +10,7 @@
 #define SERVER_PORT 7000
 #define SERVER_IP "127.0.0.1"
 
-bool sendUdpPacageToClient(void *self, void *data, IPaddress destIP, UDPsocket destSoc, unsigned long len);
+bool sendUdpPacageToClient(void *self, void *data, IPaddress destIP, UDPsocket destSoc, unsigned long len, int dataType);
 bool isClientExit(void *self, IPaddress address);
 
 typedef struct client
@@ -79,32 +79,20 @@ void UDPlisten(void *self)
     UDPServerInstance *instance = ((UDPserver *)self)->instance;
     if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
     {
-        if (instance->packetReceived->len == sizeof(int))
+        if (instance->packetReceived->data[0] == (char)1)
         {
-            if (*((int *)instance->packetReceived->data) == 1)
-            {
-                Client *client = &(instance->clients[instance->numOfClients]);
+            Client *client = &(instance->clients[instance->numOfClients]);
+            
+            client->ip = instance->packetReceived->address;
+            client->socket = SDLNet_UDP_Open(client->ip.port);
+            SDLNet_UDP_AddSocket(instance->socketSet, client->socket);
+            client->id = instance->currentID++;
+            instance->numOfClients++;
 
-                client->ip = instance->packetReceived->address;
-                client->socket = SDLNet_UDP_Open(client->ip.port);
-                SDLNet_UDP_AddSocket(instance->socketSet, client->socket);
-                client->id = instance->currentID++;
-                instance->numOfClients++;
-
-                if (!sendUdpPacageToClient(self, &(client->id), client->ip, client->socket, sizeof(int)))
-                    printf("faied to send package\n");
-                else
-                {
-                    printf("new connection created\n");
-                    for (int i = 0; i < instance->numOfClients; i++)
-                    {
-                        printf("client: %d, port: %d, ip: %d\n", instance->clients[i].id, instance->clients[i].ip.port, instance->clients[i].ip.host);
-                    }
-                }
-            }
-            else if (*((int *)instance->packetReceived->data) == 0)
+            for (int i = 0; i < instance->numOfClients; i++)
             {
-                printf("closed\n");
+                Connection cdata = {instance->numOfClients, instance->clients[i].id};
+                sendUdpPacageToClient(self, &cdata, instance->clients[i].ip, instance->clients[i].socket, sizeof(Connection),1);
             }
         }
         else
@@ -117,7 +105,7 @@ void UDPlisten(void *self)
                 {
                     if (instance->clients[i].ip.host == instance->packetReceived->address.host && instance->clients[i].ip.port == instance->packetReceived->address.port)
                         continue;
-                    if (sendUdpPacageToClient(self, instance->packetReceived->data, instance->clients[i].ip, instance->clients[i].socket, instance->packetReceived->len))
+                    if (sendUdpPacageToClient(self, instance->packetReceived->data, instance->clients[i].ip, instance->clients[i].socket, instance->packetReceived->len, -1))
                         printf("send package to %d\n", instance->clients[i].id);
                 }
             }
@@ -159,14 +147,24 @@ UDPserver *getUDPserver()
     return &self;
 }
 
-bool sendUdpPacageToClient(void *self, void *data, IPaddress destIP, UDPsocket destSoc, unsigned long len)
+bool sendUdpPacageToClient(void *self, void *data, IPaddress destIP, UDPsocket destSoc, unsigned long len, int dataType)
 {
     UDPServerInstance *instance = ((UDPserver *)self)->instance;
     instance->packetSent->address.host = destIP.host;
     instance->packetSent->address.port = destIP.port;
-    memcpy((char *)instance->packetSent->data, data, len);
-    instance->packetSent->len = len;
-
+    
+    if(dataType != -1)
+    {
+        ((char *)instance->packetSent->data)[0] = (char)dataType;
+        memcpy((char *)(instance->packetSent->data+1), data, len);
+        instance->packetSent->len = len+1;
+    }
+    else
+    {
+        memcpy((char *)(instance->packetSent->data), data, len);
+        instance->packetSent->len = len;
+    }
+    
     if (!SDLNet_UDP_Send(destSoc, -1, instance->packetSent))
         return false;
     return true;
