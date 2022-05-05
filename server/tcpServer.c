@@ -46,7 +46,7 @@ bool TCPinitServer (void *self)
 
 void checkSockets(void *self){
     TCPServerInstance *instance = ((TCPserver*)self)->instance;
-    instance->nrOfRdy+=SDLNet_CheckSockets(instance->socketSet,1000);
+    instance->nrOfRdy+=SDLNet_CheckSockets(instance->socketSet,0);
 }
 
 void TCPlisten(void *self)

@@ -26,31 +26,50 @@ struct enginInstance
 bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScreen);
 bool init(void *self, char *title, int width, int height, int fullScreen)
 {
+    printf("Engin_init_1\n");
     GameEngin *Engin = ((GameEngin *)self);
     bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
     if (!isRenderSucced){
         return 0;}
+    printf("Engin_init_2\n");
 
     NetworkClient *client = getNetworkClient();
+    printf("Engin_init_3\n");
 
     Audio *audio = newAudio();
+    printf("Engin_init_4\n");
+
     audio->init();
+    printf("Engin_init_5\n");
+
     audio->backgroud(audio, "assets/back.wav", 5);
+    printf("Engin_init_6\n");
+
     
     //init map
     MapManager *mapManager = getMapManager();
+    printf("Engin_init_7\n");
+
     mapManager->initMap(mapManager);//! initializes map
+    printf("Engin_init_8\n");
+
 
     EntityManager *entityManager = getEntityManager();
+    printf("Engin_init_9\n");
+
     // Warrior creation
     Warrior *warrior = createWarrior(client->TCPgetID(client));
+    printf("Engin_init_10\n");
+
 
     static char myWarrior[10] = "Warrior-";
     char clientID = '0' + client->TCPgetID(client);
     printf("TCPgetID: %d, string: %s, charID: %c\n", client->TCPgetID(client), myWarrior, clientID);
     strncat(myWarrior,&clientID,1);
+    printf("Engin_init_11\n");
 
     entityManager->add(entityManager, myWarrior, warrior);//add to entity manager list
+    printf("Engin_init_12\n");
 
     // Other warrior creation
     for(int i=0;i<MAX_CLIENTS;i++)
@@ -77,8 +96,10 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
             entityManager->add(entityManager, "OtherWarrior-3", otherwarrior3);
         }
     }
+    printf("Engin_init_13\n");
 
     Engin->instance->isRunning = true;
+    printf("Engin_init_14\n");
 
     return 1;
 }

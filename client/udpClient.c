@@ -69,15 +69,18 @@ void UDPClientdestroy(void *self)
     printf("Client Has been Destroyed!\n");
 }
 
-void UDPbroadCast(void *self, DataClient *data, unsigned long length)
+void UDPbroadCast(void *self, UDPStruct *data, unsigned long length)
 {
     UDPclient *client = ((UDPclient *)self);
     client->instance->packetSent->address.host = client->instance->serverAddress.host;
     client->instance->packetSent->address.port = client->instance->serverAddress.port;
-    memcpy((char *)client->instance->packetSent->data, data, length);
+    memcpy(client->instance->packetSent->data, data, length);
     client->instance->packetSent->len = length;
     SDLNet_UDP_Send(client->instance->serverSocket, -1, client->instance->packetSent);
-    printf("Data has been sent!\n");
+    printf("UDP data has been sent!\n");
+    printf("From: %d\n", data->from);
+    printf("WarriorPos: x:%.2f y:%.2f\n",data->warrior.x,data->warrior.y);
+
 }
 
 void UDPclientListen(void *self)
@@ -89,14 +92,16 @@ void UDPclientListen(void *self)
         {
             instance->id = *((int*)instance->packetReceived->data);
             printf("UDPid: %d\n", instance->id );
-        }else if(instance->packetReceived->len == sizeof(DataClient))
+        }else if(instance->packetReceived->len == sizeof(UDPStruct))
         {
-            DataClient data;
+            /*
+            UDPStruct data;
             char * dataRecieved = (char *)instance->packetReceived->data;
             int len = instance->packetReceived->len;
             printf("len: %d\n", len);
-            memcpy(&data, dataRecieved, len);
-            printf("from: %d, x: %d, y: %d\n", data.from, data.x, data.y);
+            memcpy(&data, &dataRecieved, len);
+            printf("from: %d\nWarriorPos: x:%.2f, y:%.2f\n", data.from, data.warrior.x , data.warrior.y);
+            */
         }
         
     }

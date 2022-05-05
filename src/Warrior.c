@@ -89,6 +89,12 @@ void renderWarrior(void *self)
     // SDL_FPoint warriorPos = pos->get(pos);
     // DataPos wariorSendPos ={warriorPos.x, warriorPos.y, network->TCPgetID(network)};
     // network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//todo fixa size
+    //! UDP send start here
+    UDPStruct sendData;
+    sendData.from = network->UDPgetID(network);
+    sendData.warrior.x=instance->position->getX(instance->position);
+    sendData.warrior.y=instance->position->getY(instance->position);
+    network->UDPbroadCast(network,&sendData,sizeof(UDPStruct));
     
 }
 void warriorEventHandle(void *self)

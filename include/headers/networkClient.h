@@ -14,6 +14,7 @@ typedef struct {
     int (*TCPresive)(void *self, void *dest, int desireInt);
     //void (*UDPresive)(void *self);
     int (*TCPgetID)(void *self);
+    int (*UDPgetID)(void *self);
     int (*TCPbroadCast)(void *self, void *data, int dataSize);
     void (*UDPbroadCast)(void *self, void *data, int dataSize);
     void (*destroy)(void *self);
