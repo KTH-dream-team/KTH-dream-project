@@ -96,16 +96,15 @@ void TCPlisten (void *self)
 int TCPresiveID(void *self)
 {
     TCPClientInstance *instance = ((TCPClientInstance*)self);
-    int nrOfsocket = SDLNet_CheckSockets(instance->socketSet, 3000);
+    int nrOfsocket = SDLNet_CheckSockets(instance->socketSet, 2500);
     while(nrOfsocket>0)
     {
         int nrOfready = SDLNet_SocketReady(instance->serverSocket);
         if(nrOfready>0)
         {
-            printf("before set id %d\n",instance->id);
             SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, sizeof(int));
             memcpy(&instance->id, &instance->packetReceived, sizeof(int));
-            printf("ID: %d\n", instance->id);
+            printf("TCPid: %d\n", instance->id);
             return 0 ;
         }
         return 1;

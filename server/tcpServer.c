@@ -72,8 +72,12 @@ void listenConnection (void *self)
         instance->clients[instance->numOfClients].id = instance->currentID++;
         SDLNet_TCP_AddSocket(instance->socketSet, tmpSock);
         SDLNet_TCP_Send(instance->clients[instance->numOfClients].socket, &instance->clients[instance->numOfClients].id, sizeof(int));
-        printf("CurrentID: %d, NumOfClients: %d, TCPClient: %d\n", instance->currentID, instance->numOfClients, instance->clients[instance->numOfClients].id);
         instance->numOfClients++;
+        printf("Nr of Clients: %d: ", instance->numOfClients);
+        for(int i=0;i<instance->numOfClients;i++)
+        {
+            printf("TCPclient%d, ",  instance->clients[i].id);
+        }printf("\n");
     }
 }
 

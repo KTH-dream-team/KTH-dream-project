@@ -85,7 +85,7 @@ void UDPlisten(void *self)
     if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
     {
 
-        if (instance->packetReceived->len == sizeof(int) + 1)
+        if (instance->packetReceived->len == sizeof(int))
         {
             if (*((int *)instance->packetReceived->data) == 1)
             {
@@ -97,7 +97,7 @@ void UDPlisten(void *self)
                 client->id = instance->currentID++;
                 instance->numOfClients++;
 
-                if (!sendUdpPacageToClient(self, &(client->id), client->ip, client->socket, sizeof(int) + 1))
+                if (!sendUdpPacageToClient(self, &(client->id), client->ip, client->socket, sizeof(int)))
                     printf("faied to send package\n");
                 else
                 {
@@ -113,7 +113,7 @@ void UDPlisten(void *self)
                 printf("closed\n");
             }
         }
-        else if (instance->packetReceived->len == sizeof(Data) + 1)
+        else if (instance->packetReceived->len == sizeof(Data))
         {
 
             if (isClientExit(self, instance->packetReceived->address))

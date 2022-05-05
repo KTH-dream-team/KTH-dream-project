@@ -7,6 +7,7 @@
 #include "hitBox.h"
 #include "networkClient.h"
 #include "audio.h"
+#include <stdlib.h>
 
 #define SDL_MAIN_HANDLED
 
@@ -15,6 +16,7 @@
 
 int main(int argc, char **argv)
 {
+    system("clear");
     NetworkClient *network = getNetworkClient();
     network->init(network);
 
@@ -29,9 +31,7 @@ int main(int argc, char **argv)
     while (Engine->isRunning(Engine))
     {
         fpsManager->listen(fpsManager);
-
         fpsManager->frameRateListen(fpsManager);
-
         inputHandler->listen(inputHandler);
 
         network->listen(network);//! problem here

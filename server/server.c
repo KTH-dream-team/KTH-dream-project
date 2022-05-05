@@ -4,9 +4,11 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "networkServer.h"
+#include <stdlib.h>
 
 int main(int argc, char **argv)
 {
+    system("clear"); // remove this for windows
     NetworkServer *server =  getNetworkServer();
 
     server->init(server);

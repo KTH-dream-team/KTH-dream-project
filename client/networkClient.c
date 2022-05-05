@@ -26,7 +26,6 @@ bool networkClientInnit(void *self)
         printf("Failed to init UDP client\n");
         return false;
     }
-    instance->UDP->makeHandShake(instance->UDP);
     
     return true;
 }
@@ -34,7 +33,7 @@ bool networkClientInnit(void *self)
 void networkClientListen (void *self)
 {
     NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
-    instance->TCP->listen(instance->TCP); //! THIS BLOCKS game very hard!!!
+    //instance->TCP->listen(instance->TCP); //! THIS BLOCKS game very hard!!!
     instance->UDP->listen(instance->UDP);
 }
 

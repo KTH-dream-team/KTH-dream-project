@@ -78,7 +78,7 @@ void dig(void *self,int x, int y){//!dig when holding Q
     NetworkClient *network = getNetworkClient();
     
     BlockPos blockSendPos ={blockCol, blockRow,1,0};//!
-    network->TCPbroadCast(network,&blockSendPos,sizeof(BlockPos));
+    //network->TCPbroadCast(network,&blockSendPos,sizeof(BlockPos));
     // printf("removed block x%d, y%d\n",blockCol,blockRow);
 }
 
