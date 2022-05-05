@@ -23,6 +23,7 @@ typedef struct transform
     void (*translateX)(void *self, float x);
     void (*translateY)(void *self, float y);
     void (*translate)(void *self, float x, float y);
+    
 
     SDL_FPoint (*getNormalized)(void *self);
 

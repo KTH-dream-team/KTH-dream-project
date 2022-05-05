@@ -97,16 +97,18 @@ void UDPlisten(void *self)
         }
         else
         {
-            memcpy(&instance->clients[0].data, (char *)instance->packetReceived->data, instance->packetReceived->len);
+            memcpy((char*)instance->clients[0].data, (char *)instance->packetReceived->data, instance->packetReceived->len);
 
             if (isClientExit(self, instance->packetReceived->address))
             {
+
                 for (int i = 0; i < instance->numOfClients; i++)
                 {
                     if (instance->clients[i].ip.host == instance->packetReceived->address.host && instance->clients[i].ip.port == instance->packetReceived->address.port)
                         continue;
-                    if (sendUdpPacageToClient(self, instance->packetReceived->data, instance->clients[i].ip, instance->clients[i].socket, instance->packetReceived->len, -1))
-                        printf("send package to %d\n", instance->clients[i].id);
+                    
+                    sendUdpPacageToClient(self, instance->packetReceived->data, instance->clients[i].ip, instance->clients[i].socket, instance->packetReceived->len, -1);
+                    //printf("send package to %d\n", instance->clients[i].id);
                 }
             }
             else
@@ -133,7 +135,14 @@ UDPserver *getUDPserver()
     static UDPserver self;
     if (self.instance != NULL)
         return &self;
+
     self.instance = malloc(sizeof(UDPServerInstance));
+
+    for (int i = 0; i < MAX_CLIENTS; i++)
+    {
+        self.instance->clients[i].data = malloc(MAX_SIZE);
+    }
+
     self.init = UDPinitServer;
     self.listen = UDPlisten;
     self.isRunning = serverIsRunning;
@@ -175,6 +184,7 @@ bool isClientExit(void *self, IPaddress adress)
     UDPServerInstance *instance = ((UDPserver *)self)->instance;
     for (int i = 0; i < instance->numOfClients; i++)
     {
+        //printf("host: %d, %d, port: %d, %d\n", adress.host, instance->clients[i].ip.host, adress.port, instance->clients[i].ip.port);
         if (adress.host == instance->clients[i].ip.host && adress.port == instance->clients[i].ip.port)
             return 1;
     }

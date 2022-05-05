@@ -53,7 +53,7 @@ void connect(void*self)
 
     UDPclient * UDP = instance->UDP;
     TCPclient * TCP = instance->TCP;
-    while(TCP->getNrOfClients(TCP) < 2 && UDP->getNrOfClients(UDP) < 2)
+    while(TCP->getNrOfClients(TCP) < 2 || UDP->getNrOfClients(UDP) < 2)
     {
         networkClientListen(self);
     }

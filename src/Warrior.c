@@ -62,6 +62,10 @@ void updateWarrior(void *self, float dt)
     SDL_FPoint PTranslate = rig->getPosition(rig);
     SDL_FPoint acc = rig->getAcceleration(rig);
     pos->translate(pos, PTranslate.x, PTranslate.y);
+
+    NetworkClient *network = getNetworkClient();
+    WarriorSnapshot wa = {network->getTCPID(network),pos->getX(pos), pos->getY(pos)};
+    network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
 }
 void renderWarrior(void *self)
 {
@@ -85,15 +89,11 @@ void renderWarrior(void *self)
     SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
-    NetworkClient *network = getNetworkClient();
-    WarriorSnapshot wa = {network->getTCPID(network),100, 0};
-    network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
-
 }
 void warriorEventHandle(void *self)
 {
     if(!((Warrior*)self)->instance->isLocal)
-    return;
+        return;
 
     InputHandler *inputHandler = getInputHandler();
     MapManager *mapManager = getMapManager(); // MAP
@@ -102,20 +102,19 @@ void warriorEventHandle(void *self)
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
 
-    //NetworkClient *network = getNetworkClient();
-    //TestData test = {1, 10};
-    //Data test1 = {2, 20, 125, 7};
+    NetworkClient *network = getNetworkClient();
+    WarriorSnapshot test = {2, 32, 134};
 
     rig->setVelocityX(rig, 0);
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT))
     {
         rig->setVelocityX(rig, -130);
-        //network->UDPbroadCast(network, &test, sizeof(TestData), 3);
+        //network->UDPbroadCast(network, &test, sizeof(WarriorSnapshot), 3);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT))
     {
         rig->setVelocityX(rig, 130);
-        //network->TCPbroadCast(network, &test1, sizeof(Data), 2);
+        //network->TCPbroadCast(network, &test, sizeof(WarriorSnapshot), 3);
     }
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
@@ -195,6 +194,12 @@ void destroyWarrior(void *self)
     printf("Warrior destroyed\n");
 }
 
+void updateWarriorPosition(void *self, float x, float y)
+{
+    WarriorInstance *instance = ((Warrior *)self)->instance;
+    instance->position->set(instance->position, x, y);
+}
+
 Warrior *createWarrior(float x, float y, char * id, int networkId, bool isLocal)
 {
 
@@ -227,6 +232,7 @@ Warrior *createWarrior(float x, float y, char * id, int networkId, bool isLocal)
     self->update = updateWarrior;
     self->events = warriorEventHandle;
     self->destroy = destroyWarrior;
+    self->updatePossition = updateWarriorPosition;
     self->render = renderWarrior;
 
     return self;

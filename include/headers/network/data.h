@@ -13,7 +13,7 @@ typedef struct // datatype: 2
     int y;
 } WarriorCreation;
 
-typedef struct
+typedef struct //datatype: 3
 {
     int from;
     int x;

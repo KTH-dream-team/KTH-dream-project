@@ -76,6 +76,7 @@ void TCPlisten(void *self)
                     if(instance->numOfClients < a->totalClient)
                         instance->numOfClients = a->totalClient;
                     printf("My TCP ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
+                    instance->id = a->myId;
                     offset += sizeof(Connection);
                 }
                 else if (((char*)instance->packetReceived)[offset] == (char)2)

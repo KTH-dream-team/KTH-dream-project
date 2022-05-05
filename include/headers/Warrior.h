@@ -13,6 +13,7 @@ typedef struct warrior
     void (*render)(void *self);
     void (*events)(void *self);
     void (*destroy)(void *self);
+    void (*updatePossition)(void *self, float x, float y);
 
     WarriorInstance *instance;
 } Warrior;

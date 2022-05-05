@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "udpClient.h"
+#include "EntityManager.h"
+#include "Warrior.h"
 
 #define MAX_CLIENTS 16
 #define MAX_SIZE 512
@@ -73,7 +75,7 @@ void UDPdestroy(void *self)
 void UDPbroadCast(void *self, void *data, unsigned long length, int dataType)
 {
     sendUdpPacageToServer(self, data, length, dataType);
-    printf("Sent UDP packet to server(broadcast)\n");
+    //printf("Sent UDP packet to server(broadcast)\n");
 }
 
 void UDPclientListen(void *self)
@@ -94,7 +96,11 @@ void UDPclientListen(void *self)
         }
         else if (((char *)instance->packetReceived->data)[0] == (char)3)
         {
-            printf("got new UDP package with flag: %d (%d)\n", 3, ((int *)instance->packetReceived->data)[0]);
+            WarriorSnapshot * ws = (WarriorSnapshot*)(instance->packetReceived->data+1); 
+            //printf("Update Warrior from: %d (x:%d, y:%d) size: %d, %d\n", ws->from, ws->x, ws->y, instance->packetReceived->len, (int)sizeof(WarriorSnapshot));
+            EntityManager *entityManager = getEntityManager();
+            Warrior* wa = entityManager->getByID(entityManager, "Warrior-2");
+            wa->updatePossition(wa, ws->x, ws->y);
         }
         else
         {
