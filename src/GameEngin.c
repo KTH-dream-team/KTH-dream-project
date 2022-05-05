@@ -31,7 +31,12 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
     if (!isRenderSucced){
         return 0;}
+
     NetworkClient *client = getNetworkClient();
+
+    Audio *audio = newAudio();
+    audio->init();
+    audio->backgroud(audio, "assets/back.wav", 5);
     
     //init map
     MapManager *mapManager = getMapManager();
@@ -48,17 +53,6 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 
     entityManager->add(entityManager, myWarrior, warrior);//add to entity manager list
 
-/*
-    entityManager->add(entityManager, "OtherWarrior-0", otherwarrior0);
-    entityManager->add(entityManager, "OtherWarrior-1", otherwarrior1);
-    entityManager->add(entityManager, "OtherWarrior-2", otherwarrior2);
-    entityManager->add(entityManager, "OtherWarrior-3", otherwarrior3);
-
-    OtherWarrior *otherwarrior0 =  createOtherWarrior(0, 0, 0);
-    OtherWarrior *otherwarrior1 =  createOtherWarrior(1, 1, 1);
-    OtherWarrior *otherwarrior2 =  createOtherWarrior(2, 2, 2);
-    OtherWarrior *otherwarrior3 =  createOtherWarrior(3, 3, 3);
-*/
     // Other warrior creation
     for(int i=0;i<MAX_CLIENTS;i++)
     {
@@ -156,6 +150,10 @@ bool destroyEngine(void *self)
     //destroy networkClient
     NetworkClient *network = getNetworkClient();
     network->destroy(network);
+
+    //destroy audio
+    Audio *audio = newAudio();
+    audio->destroy(audio);
     
     // destroy all assets here !!!
 
@@ -204,9 +202,7 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
         printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return false;
     }
-    Audio *audio = newAudio();
-    audio->init();
-    audio->backgroud(audio, "assets/back.wav", 5);
+
 
     Engin->instance->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,fullScreen);
     if (!Engin->instance->window)

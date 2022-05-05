@@ -29,28 +29,31 @@ bool clientIsRunning(void *self)
 
 bool UDPinit(void *self)
 {
-    UDPClientInstance *instance = ((UDPclient *)self)->instance;
+    UDPclient *client = ((UDPclient *)self);
     if (SDLNet_Init() < 0)
     {
         fprintf(stderr, "Init error: %s\n", SDLNet_GetError());
         return false;
     }
-    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP, UDP_SERVER_PORT) == -1)
+    if (SDLNet_ResolveHost(&(client->instance->serverAddress), SERVER_IP, UDP_SERVER_PORT) == -1)
     {
         fprintf(stderr, "SDLNet_ResolveHost(192.0.0.1 3000): %s\n", SDLNet_GetError());
         return false;
     }
-    if (!(instance->serverSocket = SDLNet_UDP_Open(instance->port)))
+    if (!(client->instance->serverSocket = SDLNet_UDP_Open(client->instance->port)))
     {
         fprintf(stderr, "UDP_Open error: %s", SDLNet_GetError());
         return false;
     }
-    if (!((instance->packetReceived = SDLNet_AllocPacket(MAX_SIZE)) && (instance->packetSent = SDLNet_AllocPacket(MAX_SIZE))))
+    if (!((client->instance->packetReceived = SDLNet_AllocPacket(MAX_SIZE)) && (client->instance->packetSent = SDLNet_AllocPacket(MAX_SIZE))))
     {
         fprintf(stderr, "UDP_Alloc error: %s\n", SDLNet_GetError());
         return false;
     }
-    instance->isRunning = true;
+    client->makeHandShake(client);
+    SDL_Delay(2500);
+    client->listen(client);
+    client->instance->isRunning = true;
 
     return true;
 }
@@ -82,17 +85,17 @@ void UDPclientListen(void *self)
     UDPClientInstance *instance = ((UDPclient *)self)->instance;   
     if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
     {
-        if(instance->packetReceived->len == sizeof(int)+1)
+        if(instance->packetReceived->len == sizeof(int))
         {
             instance->id = *((int*)instance->packetReceived->data);
-            printf("id: %d\n", instance->id );
-        }else if(instance->packetReceived->len == sizeof(DataClient)+1)
+            printf("UDPid: %d\n", instance->id );
+        }else if(instance->packetReceived->len == sizeof(DataClient))
         {
             DataClient data;
             char * dataRecieved = (char *)instance->packetReceived->data;
             int len = instance->packetReceived->len;
             printf("len: %d\n", len);
-            memcpy(&data, dataRecieved, len-1);
+            memcpy(&data, dataRecieved, len);
             printf("from: %d, x: %d, y: %d\n", data.from, data.x, data.y);
         }
         
@@ -108,7 +111,7 @@ void UDPmakeHandShake(void *self)
     UDPclient *client = ((UDPclient *)self);
     int flag = 1;
 
-    if(!sendUdpPacageToServer(self, &flag, sizeof(int)+1))
+    if(!sendUdpPacageToServer(self, &flag, sizeof(int)))
         printf("failed to connection request\n");
     else
         printf("sent connection request!\n");
@@ -118,7 +121,7 @@ void UDPcloseConnection(void *self)
     UDPclient *client = ((UDPclient *)self);
     int flag = 0;
 
-    if(!sendUdpPacageToServer(self, &flag, sizeof(int)+1))
+    if(!sendUdpPacageToServer(self, &flag, sizeof(int)))
         printf("failed to disconnect request\n");
     else
         printf("Packge sent disconnect request!\n");
@@ -137,7 +140,6 @@ UDPclient *getUDPclient()
     self.makeHandShake = UDPmakeHandShake;
     self.closeConnection = UDPcloseConnection;
     self.broadCast = UDPbroadCast;
-    self.listen = UDPclientListen;
     self.listen = UDPclientListen;
     self.getID = getID;
     self.instance->numOfClients = 1;
