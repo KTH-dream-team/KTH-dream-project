@@ -68,7 +68,7 @@ void initMap(void *self)
 
 }
 
-
+//!function can bradcast data with udp
 void dig(void *self,int x, int y){//!dig when holding Q
     MapManager *mapmanager = (MapManager *)self;
     int intBlockCol = x/20;
@@ -83,14 +83,12 @@ void dig(void *self,int x, int y){//!dig when holding Q
     network->UDPbroadCast(network,&blockSendPos,sizeof(BlockPos));
     //send whith tcp
     //network->TCPbroadCast(network,&blockSendPos,sizeof(BlockPos));
-    printf("remove block x%.2f y%.2f\n",blockCol,blockRow);//?debuging
+    // printf("remove block x%.2f y%.2f\n",blockCol,blockRow);//?debugings
 }
-void digNoSend(void *self,int x, int y){//!dig when holding Q
+void digNoSend(void *self,int x, int y){//!
     MapManager *mapmanager = (MapManager *)self;
 
-    mapmanager->instance->map[y][x] = 0;//!brig make 0
-    
-    printf("dig no send digd x%d y%d\n",x,y);//?debuging
+    mapmanager->instance->map[y][x] = 0;//!brig make 0    
 }
 
 bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funktion kolla om block gör kontakt

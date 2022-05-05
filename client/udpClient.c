@@ -103,6 +103,7 @@ void UDPclientListen(void *self)
             int x = data.x;
             int y = data.y;
             printf("int convert x%d y%d\n",x,y);
+            
             mapManager->digNoSend(mapManager,data.x,data.y);//!diging the map
             //  mapManager->dig(mapManager,5,8);//test dig
         }
