@@ -36,7 +36,7 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 
     Audio *audio = newAudio();
     audio->init();
-    audio->backgroud(audio, "assets/back.wav", 5);
+    // audio->backgroud(audio, "assets/back.wav", 5);//!backgroud music
     
     //init map
     MapManager *mapManager = getMapManager();
@@ -101,7 +101,7 @@ void handleUpdates(void *self)
 }
 
 void handleRenders(void *self)
-{//todo implemnt neew bakgrund
+{
     GameEngin *Engin = ((GameEngin *)self);
     SDL_RenderClear(Engin->instance->renderer);
     // SDL_SetRenderDrawColor(Engin->instance->renderer, 135, 206, 235, 255);//färg bakgrund

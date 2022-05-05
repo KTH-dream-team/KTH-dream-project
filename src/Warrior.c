@@ -144,7 +144,7 @@ void warriorEventHandle(void *self)
     static int bulletCount = 0;//!ongoing
     if (inputHandler->getMouseState(&mouse_x,&mouse_y)==SDL_BUTTON_RMASK)
     {
-        printf("x %d y%d \n",mouse_x,mouse_y);
+        // printf("x %d y%d \n",mouse_x,mouse_y);
         static unsigned int currentTime;
         static unsigned int lastTime;
         currentTime=SDL_GetTicks();//bullet cooldown 100ms

@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-    system("clear"); // remove this for windows
+    // system("clear"); // remove this for windows
     NetworkServer *server =  getNetworkServer();
 
     server->init(server);

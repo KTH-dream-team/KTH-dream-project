@@ -33,7 +33,7 @@ void playSound(void *self, char *path, int volume){
     //initAudio();
     audio->instance->sound = Mix_LoadWAV(path);
     if(Mix_PlayChannel(3, audio->instance->sound, 0)){
-        printf("Cant play sound %s, %s\n", path , Mix_GetError());
+        // printf("Cant play sound %s, %s\n", path , Mix_GetError());//!error messege of
     }
     Mix_Volume(3,volume);
 }

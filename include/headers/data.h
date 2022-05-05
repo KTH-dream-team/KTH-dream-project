@@ -10,8 +10,8 @@
 
 typedef struct dataclient
 {
-    int x;
-    int y;
+    float x;
+    float y;
     int from;
 } DataClient;
 
@@ -26,8 +26,7 @@ typedef struct datapos
 typedef struct blockpos
 {
     float x;
-    float y;
+    float y; 
     int from;
-    int z;
 } BlockPos;
 

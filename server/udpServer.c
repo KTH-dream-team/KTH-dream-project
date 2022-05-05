@@ -12,8 +12,8 @@ bool isClientExit(void *self, IPaddress address);
 
 typedef struct data
 {
-    int x;
-    int y;
+    float x;
+    float y;
     int from;
 } Data;
 
@@ -23,6 +23,7 @@ typedef struct client
     IPaddress ip;
     UDPsocket socket;
     Data data;
+    BlockPos blockPosData;
 } Client;
 
 struct udpServerInstance
@@ -79,12 +80,13 @@ bool UDPinitServer(void *self)
 
 void UDPlisten(void *self)
 {
+    // printf("in udp listen 0\n");
     // listen to new connections
     UDPServerInstance *instance = ((UDPserver *)self)->instance;
 
     if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
     {
-
+        printf("udp server recived somthing 1\n");
         if (instance->packetReceived->len == sizeof(int))
         {
             if (*((int *)instance->packetReceived->data) == 1)
@@ -119,15 +121,16 @@ void UDPlisten(void *self)
             if (isClientExit(self, instance->packetReceived->address))
             {
                 for (int i = 0; i < instance->numOfClients; i++)
-                {
+                {   
+                    //om host adress matchar med addres på client  sickar inte datan till den client för den är sig själv
                     if (instance->clients[i].ip.host == instance->packetReceived->address.host && instance->clients[i].ip.port == instance->packetReceived->address.port)
                     {
                         memcpy(&instance->clients[i].data, (char *)instance->packetReceived->data, instance->packetReceived->len);
                         instance->clients[i].data.from = instance->clients[i].id;
-                        printf("Data sent to all clients is: %d %d\n", instance->clients[i].data.x, instance->clients[i].data.y);
+                        printf("Data sent to all clients is: %.2f %.2f\n", instance->clients[i].data.x, instance->clients[i].data.y);
                         continue;
                     }
-
+                    //sickar datan till alla andra clients
                     if (sendUdpPacageToClient(self, instance->packetReceived->data, instance->clients[i].ip, instance->clients[i].socket, instance->packetReceived->len))
                         printf("send package to %d\n", instance->clients[i].id);
                 }
@@ -184,8 +187,12 @@ bool sendUdpPacageToClient(void *self, void *data, IPaddress destIP, UDPsocket d
     memcpy((char *)instance->packetSent->data, data, len);
     instance->packetSent->len = len;
 
-    if (!SDLNet_UDP_Send(destSoc, -1, instance->packetSent))
+    if (!SDLNet_UDP_Send(destSoc, -1, instance->packetSent)){
+        printf("SendUdpToClient false\n");
         return false;
+
+    }
+        printf("SendUdpToClient true\n");
     return true;
 }
 

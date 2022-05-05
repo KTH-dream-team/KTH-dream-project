@@ -71,15 +71,26 @@ void initMap(void *self)
 
 void dig(void *self,int x, int y){//!dig when holding Q
     MapManager *mapmanager = (MapManager *)self;
-    int blockCol = x/20;
-    int blockRow = y/20;
-    mapmanager->instance->map[blockRow][blockCol] = 0;
-    printf("after remove block x%d y%d\n",blockCol,blockRow);
+    int intBlockCol = x/20;
+    int intBlockRow = y/20;
+    float blockCol = intBlockCol;
+    float blockRow = intBlockRow;
+    mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
     NetworkClient *network = getNetworkClient();
     
-    BlockPos blockSendPos ={blockCol, blockRow,1,0};//!
+    BlockPos blockSendPos ={blockCol, blockRow,1};
+    //send whith udp
+    network->UDPbroadCast(network,&blockSendPos,sizeof(BlockPos));
+    //send whith tcp
     //network->TCPbroadCast(network,&blockSendPos,sizeof(BlockPos));
-    // printf("removed block x%d, y%d\n",blockCol,blockRow);
+    printf("remove block x%.2f y%.2f\n",blockCol,blockRow);//?debuging
+}
+void digNoSend(void *self,int x, int y){//!dig when holding Q
+    MapManager *mapmanager = (MapManager *)self;
+
+    mapmanager->instance->map[y][x] = 0;//!brig make 0
+    
+    printf("dig no send digd x%d y%d\n",x,y);//?debuging
 }
 
 bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funktion kolla om block gör kontakt
@@ -126,7 +137,7 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                     if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
                     {
                         map->dig(map,mapBlock.x, mapBlock.y);
-                        printf("Bullet collision\n");
+                        // printf("Bullet collision\n");
                         return true;
                     }  
                     break;
@@ -143,7 +154,7 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
     blockType = 1; //defult dirt
     int blockCol = x/20;
     int blockRow = y/20;
-    printf("x %d y%d",x,y);
+    // printf("x %d y%d",x,y);
     if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
     {
         mapmanager->instance->map[blockRow][blockCol] = blockType;
@@ -213,6 +224,7 @@ MapManager *getMapManager(){
     self.showMap = showMap;
     self.initMap = initMap;
     self.dig = dig;
+    self.digNoSend = digNoSend;
     self.build = build;
     self.destroyMap = destroyMap;
     self.checkColision = checkColision;

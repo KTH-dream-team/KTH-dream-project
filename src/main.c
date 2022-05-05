@@ -16,7 +16,7 @@
 
 int main(int argc, char **argv)
 {
-    system("clear");
+    // system("clear");
     NetworkClient *network = getNetworkClient();
     network->init(network);
 

@@ -5,6 +5,7 @@
 #include "SDL2/SDL_net.h"
 #include "udpClient.h"
 #include "data.h"
+#include "map.h"
 
 
 bool sendUdpPacageToServer(void *self, void* data, unsigned long len);
@@ -82,6 +83,8 @@ void UDPbroadCast(void *self, DataClient *data, unsigned long length)
 
 void UDPclientListen(void *self)
 {
+    MapManager *mapManager = getMapManager();//!
+
     UDPClientInstance *instance = ((UDPclient *)self)->instance;   
     if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
     {
@@ -94,9 +97,14 @@ void UDPclientListen(void *self)
             DataClient data;
             char * dataRecieved = (char *)instance->packetReceived->data;
             int len = instance->packetReceived->len;
-            printf("len: %d\n", len);
+            // printf("len: %d\n", len);
             memcpy(&data, dataRecieved, len);
-            printf("from: %d, x: %d, y: %d\n", data.from, data.x, data.y);
+            printf("from: %d, x: %.2f, y: %.2f\n", data.from, data.x, data.y);
+            int x = data.x;
+            int y = data.y;
+            printf("int convert x%d y%d\n",x,y);
+            mapManager->digNoSend(mapManager,data.x,data.y);//!diging the map
+            //  mapManager->dig(mapManager,5,8);//test dig
         }
         
     }

@@ -23,7 +23,6 @@ bool networkServerInnit(void *self)
         printf("Failed to init TCP server\n");
         return false;
     }
-    
     return true;
 }
 
