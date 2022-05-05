@@ -22,7 +22,7 @@ typedef struct client
     int id;
     IPaddress ip;
     UDPsocket socket;
-    Data data;
+    UDPStruct data;
 } Client;
 
 struct udpServerInstance
@@ -113,18 +113,19 @@ void UDPlisten(void *self)
                 printf("closed\n");
             }
         }
-        else if (instance->packetReceived->len == sizeof(Data))
+        else if (instance->packetReceived->len == sizeof(UDPStruct))
         {
-
             if (isClientExit(self, instance->packetReceived->address))
             {
                 for (int i = 0; i < instance->numOfClients; i++)
                 {
                     if (instance->clients[i].ip.host == instance->packetReceived->address.host && instance->clients[i].ip.port == instance->packetReceived->address.port)
                     {
-                        memcpy(&instance->clients[i].data, (char *)instance->packetReceived->data, instance->packetReceived->len);
+                        memcpy(&instance->clients[i].data, instance->packetReceived->data, instance->packetReceived->len);
                         instance->clients[i].data.from = instance->clients[i].id;
-                        printf("Data sent to all clients is: %d %d\n", instance->clients[i].data.x, instance->clients[i].data.y);
+                        printf("Broadcast to all clients!\n");
+                        printf("UDP client: %d\n", instance->clients[i].data.from);
+                        printf("WarriorPos: x:%.2f, y:%.2f\n", instance->clients[i].data.warrior.x,instance->clients[i].data.warrior.y);
                         continue;
                     }
 
@@ -134,7 +135,7 @@ void UDPlisten(void *self)
             }
             else
             {
-                printf("client not exist\n");
+                printf("client does not exist\n");
             }
         }
         //check clients data
