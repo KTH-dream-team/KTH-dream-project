@@ -13,6 +13,7 @@
 #include "string.h"
 #include "TextureManager.h"
 #include "map.h"
+
 void destroyBullet(void *self);
 
 struct bulletInstance
@@ -64,9 +65,13 @@ void updateBullet(void *self, float dt)
     };
   
     // SDL_FPoint *vel = instance->vel;
-    mapManager->checkColision(mapManager, dRect, &instance->vel, dt,2);//!warrior collision check 1 betyder warrior
-
-
+    //!warrior collision check 2 betyder att det är en bullet colision
+    if (mapManager->checkColision(mapManager, dRect, &instance->vel, dt,2))
+    {
+        EntityManager * EM = getEntityManager();
+        EM->drop(EM,instance->id);
+        ((Bullet *)self)->destroy(self);
+    }
 }
 void destroyBullet(void *self)
 {
@@ -76,6 +81,7 @@ void destroyBullet(void *self)
 
 Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
 {
+  
     Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
     self->instance->id = malloc(sizeof(char)*30);

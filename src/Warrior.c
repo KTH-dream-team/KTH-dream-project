@@ -86,9 +86,9 @@ void renderWarrior(void *self)
     SDL_SetRenderDrawColor(ren, 200,20,20,255);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
-    SDL_FPoint warriorPos = pos->get(pos);
-    DataPos wariorSendPos ={warriorPos.x, warriorPos.y, network->TCPgetID(network)};
-    network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//todo fixa size
+    // SDL_FPoint warriorPos = pos->get(pos);
+    // DataPos wariorSendPos ={warriorPos.x, warriorPos.y, network->TCPgetID(network)};
+    // network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//todo fixa size
     
 }
 void warriorEventHandle(void *self)

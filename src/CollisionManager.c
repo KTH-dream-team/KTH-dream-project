@@ -90,7 +90,6 @@ bool RayVsRect(SDL_FPoint origin, SDL_FPoint dir, SDL_Rect r, SDL_FPoint *normal
 
 bool DynamicRectVsRect(SDL_Rect DRect, SDL_FPoint dir, SDL_Rect SRect, SDL_FPoint *normal, float *t, float dt)
 {
-
     if (dir.x == 0 && dir.y == 0)
         return false;
 

@@ -6,6 +6,7 @@
 #include "CollisionManager.h"
 #include "data.h"
 #include "networkClient.h"
+#include <stdbool.h>
 #define ROW 25
 #define COL 50
 #define PRIVET static 
@@ -142,7 +143,7 @@ bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funk
 
 // }
 
-void checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType){//
+bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType){//
 
     CollisionManager *colisionManager = GetCollisionManager();
     MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance; 
@@ -161,35 +162,29 @@ void checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
 
                 SDL_Rect mapBlock = {j * 20, i * 20, 20, 20};
                 int blockType = mapManagerInstance->map[i][j];
-                
                 if (blockType==0)continue;
                 
                 switch (collisionType)
                 {
                 case 1://! 1 warrior collison
                     colisionManager->ResolveDynamicRectVsRect(dRect,dir,mapBlock,dt);
+                    // return true;
                     break;
                 case 2://! 2 bullet collison
                     if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
                     {
                         map->dig(map,mapBlock.x, mapBlock.y);
                         printf("Bullet collision\n");
-
-                    }
-                    
+                        return true;
+                    }  
                     break;
-                
                 default:printf("den gjorde defult\n");
                     break;
                 }
-            
             }
-        }
-        
-    //printf("l=%d r=%d u=%d d=%d\n",leftBounce,rightBounce, upperBounce, lowerBounce);
-
+        }        
+        return false;
 }
-
 void build(void *self, int x,int y, int blockType){//!builds when holding E
     MapManager *mapmanager = (MapManager *)self;
 
