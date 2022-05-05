@@ -15,13 +15,11 @@ typedef struct dataclient
     int from;
 } DataClient;
 
-typedef struct datapos
+typedef struct warriorpos
 {
     float x;
     float y;
-    int from;
-} DataPos; // 12 bytes
-
+} WarriorPos;
 
 typedef struct blockpos
 {
@@ -30,3 +28,19 @@ typedef struct blockpos
     int from;
 } BlockPos;
 
+typedef struct bulletpos
+{
+    float x;
+    float y;
+    float z;
+} BulletPos;
+
+
+typedef struct udpstruct //! send this using udp
+{
+    int from;
+    WarriorPos warrior;
+    BlockPos block;
+    BulletPos bullet;
+}UDPStruct;
+//int a = sizeof(UDPStruct); // check size of struct with this

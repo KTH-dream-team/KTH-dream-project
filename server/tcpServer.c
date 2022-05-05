@@ -101,14 +101,14 @@ void readySocket(void *self){
             }
           
             
-            else if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(DataPos)) == 12)
+            else if(SDLNet_TCP_Recv(instance->clients[i].socket, &instance->clients[i].data, sizeof(WarriorPos)) == 12)
             {
                 printf("package from ClientID %d positon (x:%.2f, y:%.2f, from:%d)\n", instance->clients[i].id, instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
                 instance->nrOfRdy--;
 
                 //broadcast data to all tempClients exept sender
                 instance->clients[i].data.from = instance->clients[i].id;
-                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(DataPos));
+                broadcastData(self, instance->clients[i], &instance->clients[i].data, sizeof(WarriorPos));
             }
         }
     }

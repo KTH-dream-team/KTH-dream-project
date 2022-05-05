@@ -14,6 +14,7 @@
 #include "CollisionManager.h"
 #include "networkClient.h"
 #include "data.h"
+
 static unsigned int currentTime;
 static unsigned int lastTime;
 #define accMan 0.5
@@ -23,7 +24,7 @@ struct otherWarriorInstance
 {
     Animation *animation;
     Transform *position;
-    DataPos *datapos;
+    WarriorPos *datapos;
     SDL_Rect hitBox;
     int clientID;
 };
@@ -91,7 +92,7 @@ OtherWarrior *createOtherWarrior(int clientID, int x, int y)
 
     OtherWarrior *self = malloc(sizeof(OtherWarrior));
     self->instance = malloc(sizeof(OtherWarriorInstance));
-    self->instance->datapos = malloc(sizeof(DataPos));
+    self->instance->datapos = malloc(sizeof(WarriorPos));
    
     TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");

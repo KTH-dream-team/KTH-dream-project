@@ -19,14 +19,16 @@ int main(int argc, char **argv)
     // system("clear");
     NetworkClient *network = getNetworkClient();
     network->init(network);
-
+    printf("Main_1\n");
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     if (!isInitSucceed)
         return 1;
+    printf("Main_2\n");
 
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
+    printf("Main_3\n");
 
     while (Engine->isRunning(Engine))
     {
@@ -41,8 +43,7 @@ int main(int argc, char **argv)
         Engine->handleRenders(Engine);
     }
     Engine->destroyEngine(Engine);
-    Audio *audio = newAudio();
-    audio->destroy(audio);
+
     
     return 0;
 }

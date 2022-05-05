@@ -18,7 +18,7 @@ struct mapManagerInstance {
 
 void initMap(void *self)
 {    
-    printf("in initMap\n");
+    //printf("in initMap\n");
     TextureManager *textureManager = getTextureManager();//! hämta befintlig textureManger instant obs inte en new
     textureManager->load(textureManager, "dirt", "./assets/dirt.png");//1 //!load texture function sicka id och fil namn 
     textureManager->load(textureManager, "grass", "./assets/grass.png");//2
@@ -139,7 +139,7 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                         return true;
                     }  
                     break;
-                default:printf("den gjorde defult\n");
+                default://printf("den gjorde defult\n");
                     break;
                 }
             }
@@ -159,7 +159,7 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
     }else{
         printf("\ncant build on exiisting block\n");
     }
-       printf("build on x %d y %d\n",blockCol,blockRow);
+       //printf("build on x %d y %d\n",blockCol,blockRow);
 }
 
 

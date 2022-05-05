@@ -117,7 +117,6 @@ void UDPlisten(void *self)
         }
         else if (instance->packetReceived->len == sizeof(Data))
         {
-
             if (isClientExit(self, instance->packetReceived->address))
             {
                 for (int i = 0; i < instance->numOfClients; i++)
@@ -125,7 +124,7 @@ void UDPlisten(void *self)
                     //om host adress matchar med addres på client  sickar inte datan till den client för den är sig själv
                     if (instance->clients[i].ip.host == instance->packetReceived->address.host && instance->clients[i].ip.port == instance->packetReceived->address.port)
                     {
-                        memcpy(&instance->clients[i].data, (char *)instance->packetReceived->data, instance->packetReceived->len);
+                        memcpy(&instance->clients[i].data, instance->packetReceived->data, instance->packetReceived->len);
                         instance->clients[i].data.from = instance->clients[i].id;
                         printf("Data sent to all clients is: %.2f %.2f\n", instance->clients[i].data.x, instance->clients[i].data.y);
                         continue;
@@ -137,7 +136,7 @@ void UDPlisten(void *self)
             }
             else
             {
-                printf("client not exist\n");
+                printf("client does not exist\n");
             }
         }
         //check clients data

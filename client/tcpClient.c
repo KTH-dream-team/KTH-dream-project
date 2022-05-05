@@ -81,9 +81,8 @@ void TCPlisten (void *self)
                     // printf("7\n");
                     printf("inside ready == 12\n");
                     // printf("8\n");
-                    DataPos otherWarrior = *(DataPos*)instance->packetReceived;
+                    WarriorPos otherWarrior = *(WarriorPos*)instance->packetReceived;
                     // printf("9\n");
-                    printf("from: %d, x:%.2f, y:%.2f\n", otherWarrior.from, otherWarrior.x, otherWarrior.y);
                     // printf("10\n");
                     //printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived,instance->packetReceived,instance->packetReceived);
                 }
@@ -126,7 +125,7 @@ int TCPresive (void *self, void *dest, int desireInt)
             {
                 if(nrOfBytes == desireInt)// DataPos
                 {
-                    memcpy(dest, &instance->packetReceived, sizeof(DataPos));
+                    memcpy(dest, &instance->packetReceived, sizeof(WarriorPos));
                 }
             }
             return -1;

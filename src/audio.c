@@ -10,11 +10,21 @@ struct audioInstance
 };
 
 void initAudio(){
-    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) != 0){
+    printf("Audio_init_1\n");
+    int a = Mix_OpenAudio(24100, MIX_DEFAULT_FORMAT, 2, 2048);//! lower frequency if crash here
+    printf("initAudio: %d\n", a);
+    if(a != 0)
+    {
+        printf("Audio_init_2\n");
         printf("Initialising audio Error, %s\n", Mix_GetError());
-    } else{
+    } 
+    else
+    {
+        printf("Audio_init_3\n");
         printf("Audio initialised\n");
     }
+    printf("Audio_init_4\n");
+
 }
 
 void backgroundMusic(void *self, char *path, int volume){
