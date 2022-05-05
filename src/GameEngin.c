@@ -1,11 +1,10 @@
+#include <stdio.h>
+#include <string.h>
 #include "GameEngin.h"
 #include "DataTypes.h"
 #include "TextureManager.h"
-#include <stdio.h>
-#include <string.h>
 #include "Animation.h"
 #include "EntityManager.h"
-#include "Animation.h"
 #include "InputHandler.h"
 #include "Warrior.h"
 #include "OtherWarrior.h"

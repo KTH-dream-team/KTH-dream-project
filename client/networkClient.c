@@ -33,7 +33,7 @@ bool networkClientInnit(void *self)
 void networkClientListen (void *self)
 {
     NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
-    //instance->TCP->listen(instance->TCP); //! THIS BLOCKS game very hard!!!
+    instance->TCP->listen(instance->TCP); //! THIS BLOCKS game very hard!!!
     instance->UDP->listen(instance->UDP);
 }
 
