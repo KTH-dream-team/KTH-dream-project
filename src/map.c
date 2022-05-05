@@ -95,54 +95,6 @@ bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funk
     return false;
 }
 
-// void checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType){//
-
-//     CollisionManager *colisionManager = GetCollisionManager();
-//     MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance; 
-//     MapManager *map = ((MapManager *)self);
-//     int lowerBounce = ((dRect.y+dRect.h)/20)+2;
-//     int upperBounce = (dRect.y/20)-1;    
-//     int rightBounce = ((dRect.x+dRect.w)/20)+2;
-//     int leftBounce = (dRect.x/20)-1;
-//    // int rightBounce = (dRect.x+dRect.w/20)+2;//!optimize collision detection
-//     for (int i = 0; i < ROW; i++)
-//         {   
-//             for (int j = leftBounce; j < rightBounce; j++)
-//             {
-//                 if(i<0 && i>ROW)continue;
-//                 if(j<0 && j>COL)continue;
-
-//                 SDL_Rect mapBlock = {j * 20, i * 20, 20, 20};
-//                 int blockType = mapManagerInstance->map[i][j];
-                
-//                 if (blockType==0)continue;
-                
-//                 switch (collisionType)
-//                 {
-//                 case 1://! 1 warrior collison
-//                     colisionManager->ResolveDynamicRectVsRect(dRect,dir,mapBlock,dt);
-//                     break;
-//                 case 2://! 2 bullet collison
-//                     if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
-//                     {
-//                         map->dig(map,dRect.x, dRect.y);
-//                         printf("Bullet collision\n");
-
-//                     }
-                    
-//                     break;
-                
-//                 default:printf("den gjorde defult\n");
-//                     break;
-//                 }
-            
-//             }
-//         }
-        
-//     //printf("l=%d r=%d u=%d d=%d\n",leftBounce,rightBounce, upperBounce, lowerBounce);
-
-// }
-
 bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType){//
 
     CollisionManager *colisionManager = GetCollisionManager();
