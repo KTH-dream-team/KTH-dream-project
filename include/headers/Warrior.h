@@ -14,8 +14,9 @@ typedef struct warrior
     void (*events)(void *self);
     void (*destroy)(void *self);
     void (*updatePossition)(void *self, float x, float y);
+    char *(*getID)(void*self);
 
     WarriorInstance *instance;
 } Warrior;
 
-Warrior *createWarrior(float x, float y, char * id, int networkId, bool isLocal);
+Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal);

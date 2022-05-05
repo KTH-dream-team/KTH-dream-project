@@ -63,6 +63,7 @@ void updateWarrior(void *self, float dt)
     SDL_FPoint acc = rig->getAcceleration(rig);
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
+    //broadcast data;
     NetworkClient *network = getNetworkClient();
     WarriorSnapshot wa = {network->getTCPID(network),pos->getX(pos), pos->getY(pos)};
     network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
@@ -200,7 +201,12 @@ void updateWarriorPosition(void *self, float x, float y)
     instance->position->set(instance->position, x, y);
 }
 
-Warrior *createWarrior(float x, float y, char * id, int networkId, bool isLocal)
+char *getWarriorID(void*self)
+{
+    return ((Warrior *)self)->instance->id;
+}
+
+Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
 {
 
     int warriorHight = 32;
@@ -218,7 +224,16 @@ Warrior *createWarrior(float x, float y, char * id, int networkId, bool isLocal)
     self->instance->hitBox.h = warriorHight - 7;
     self->instance->isLocal = isLocal;
     self->instance->networkId = networkId;
-    strcpy(self->instance->id, id);
+    strcpy(self->instance->id, "Warrior-000");
+
+    int a = 100;
+    for (int i = 8; i < 11; i++)
+    {
+        self->instance->id[i] += (int)(id/a);
+        id %= a;
+        a /= 10;
+    }
+
 
     self->instance->animation = newAnimation();
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);
@@ -234,6 +249,7 @@ Warrior *createWarrior(float x, float y, char * id, int networkId, bool isLocal)
     self->destroy = destroyWarrior;
     self->updatePossition = updateWarriorPosition;
     self->render = renderWarrior;
+    self->getID = getWarriorID;
 
     return self;
 }

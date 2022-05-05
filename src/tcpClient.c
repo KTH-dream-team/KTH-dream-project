@@ -86,9 +86,9 @@ void TCPlisten(void *self)
                     printf("Warrior Created by: %d, (x:%d, y:%d), package size: %d, data size:%d.\n",wa->from, wa->x, wa->y, size, (int)sizeof(WarriorCreation));
                     
                     EntityManager *entityManager = getEntityManager();
-                    Warrior *warrior = createWarrior(wa->x, wa->y, "Warrior-2", 23, false);
-
-                    entityManager->add(entityManager, "Warrior-2", warrior); // add to entity manager list
+                    Warrior *warrior = createWarrior(wa->x, wa->y, wa->from, 23, false);
+                    char * id = warrior->getID(warrior);
+                    entityManager->add(entityManager, id, warrior); // add to entity manager list
                     offset += sizeof(WarriorCreation);
                 }
                 else if (((char*)instance->packetReceived)[offset] == (char)3)

@@ -6,6 +6,7 @@
 #include "udpClient.h"
 #include "EntityManager.h"
 #include "Warrior.h"
+#include "string.h"
 
 #define MAX_CLIENTS 16
 #define MAX_SIZE 512
@@ -96,11 +97,25 @@ void UDPclientListen(void *self)
         }
         else if (((char *)instance->packetReceived->data)[0] == (char)3)
         {
-            WarriorSnapshot * ws = (WarriorSnapshot*)(instance->packetReceived->data+1); 
             //printf("Update Warrior from: %d (x:%d, y:%d) size: %d, %d\n", ws->from, ws->x, ws->y, instance->packetReceived->len, (int)sizeof(WarriorSnapshot));
+            WarriorSnapshot * ws = (WarriorSnapshot*)(instance->packetReceived->data+1); 
             EntityManager *entityManager = getEntityManager();
-            Warrior* wa = entityManager->getByID(entityManager, "Warrior-2");
-            wa->updatePossition(wa, ws->x, ws->y);
+            
+            int idInt = ws->from;
+            char id[15];
+            strcpy(id, "Warrior-000");
+
+            int a = 100;
+            for (int i = 8; i < 11; i++)
+            {
+                id[i] += (int)(idInt/a);
+                idInt %= a;
+                a /= 10;
+            }
+
+            Warrior* wa = entityManager->getByID(entityManager, id);
+            if(wa != NULL)
+                wa->updatePossition(wa, ws->x, ws->y);
         }
         else
         {
