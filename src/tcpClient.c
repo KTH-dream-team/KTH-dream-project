@@ -61,7 +61,8 @@ void TCPlisten(void *self)
     {
         if (SDLNet_SocketReady(instance->serverSocket))
         {
-            int size = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, sizeof(Data));
+            int size = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
+            printf("size: %d, %d\n", size, (int)sizeof(Data));
             if (size == sizeof(int))
             {
                 int a = *(int*)instance->packetReceived;
@@ -73,6 +74,14 @@ void TCPlisten(void *self)
             {
                 printf("got TCP packet from client (Data).\n");
             }
+            else if(((char*)instance->packetReceived)[0] == (char)0)
+            {
+                printf("got TCP packet with flag: %d.\n", 0);
+            }
+            else if(((char*)instance->packetReceived)[0] == (char)1)
+            {
+                printf("got TCP packet with flag: %d.\n", 1);
+            }
         }
     }
 }
@@ -82,11 +91,16 @@ int getNrOfTCPClients(void *self)
     return ((TCPclient *)self)->instance->numOfClients;
 }
 
-int TCPbroadCast(void *self, void *data, int dataSize)
+int TCPbroadCast(void *self, void *data, int dataSize, int dataType)
 {
     TCPClientInstance *instance = ((TCPclient *)self)->instance;
-    int amoutSent = SDLNet_TCP_Send(instance->serverSocket, data, dataSize);
-    printf("Sent TCP packet to server\n");
+
+    char buffer[MAX_SIZE];
+    buffer[0] = (char)dataType;
+    memcpy(buffer+1, data, dataSize);
+
+    int amoutSent = SDLNet_TCP_Send(instance->serverSocket, buffer, dataSize+1);
+    printf("Sent TCP packet to server, amount: %d\n", amoutSent);
     return amoutSent;
 }
 

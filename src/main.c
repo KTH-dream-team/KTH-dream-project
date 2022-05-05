@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     if (!network->init(network))
         return 1;
     
-    network->connect(network);
+    //network->connect(network);
 
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();

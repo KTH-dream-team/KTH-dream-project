@@ -88,7 +88,7 @@ void warriorEventHandle(void *self)
 
     NetworkClient *network = getNetworkClient();
     TestData test = {1, 10};
-    Data test1 = {2, 20, 125};
+    Data test1 = {2, 20, 125, 7};
 
     rig->setVelocityX(rig, 0);
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT))
@@ -99,7 +99,7 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT))
     {
         rig->setVelocityX(rig, 130);
-        network->TCPbroadCast(network, &test1, sizeof(Data));
+        network->TCPbroadCast(network, &test1, sizeof(Data), 1);
     }
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))

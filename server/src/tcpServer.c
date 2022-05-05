@@ -91,7 +91,7 @@ void TCPlisten(void *self)
                 int size = SDLNet_TCP_Recv(instance->clients[i].socket, client->data, MAX_SIZE);
                 if (size > 0)
                 {
-                    printf("new package from clientID %d\n", client->id);
+                    printf("new package from clientID %d, size: %d\n", client->id, size);
                     broadcastData(self, *client, client->data, size);
                 }
             }

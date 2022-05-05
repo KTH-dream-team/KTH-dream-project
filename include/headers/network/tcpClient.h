@@ -16,7 +16,7 @@ typedef struct
     void (*destroy)(void *self);
     void (*listen)(void *self);
     int (*getNrOfClients)(void *self);
-    int (*broadCast)(void *self, void *data, int dataSize);
+    int (*broadCast)(void *self, void *data, int dataSize, int datatype);
     TCPClientInstance *instance;
 } TCPclient;
 

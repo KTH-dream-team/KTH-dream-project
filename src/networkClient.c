@@ -34,10 +34,10 @@ void networkClientListen(void *self)
     instance->UDP->listen(instance->UDP);
 }
 
-int networkTCPbroadcast(void *self, Data *data, int dataSize)
+int networkTCPbroadcast(void *self, Data *data, int dataSize, int dataType)
 {
     NetworkClientInstance *instance = ((NetworkClient *)self)->instance;
-    return instance->TCP->broadCast(instance->TCP, data, dataSize);
+    return instance->TCP->broadCast(instance->TCP, data, dataSize, dataType);
 }
 
 void networkUDPbroadcast(void *self, void *data, int dataSize)
