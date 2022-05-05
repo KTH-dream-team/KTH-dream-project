@@ -46,6 +46,17 @@ void networkUDPbroadcast(void *self, void *data, int dataSize)
     instance->UDP->broadCast(instance->UDP, data, dataSize);
 }
 
+void connect(void*self)
+{
+    UDPclient * UDP = ((NetworkClient *)self)->instance->UDP;
+    TCPclient * TCP = ((NetworkClient *)self)->instance->TCP;
+    while(TCP->getNrOfClients(TCP) < 3)
+    {
+        networkClientListen(self);
+    }
+    printf("All client joined!\n");
+}
+
 NetworkClient *getNetworkClient()
 {
     static NetworkClient self;
@@ -60,6 +71,7 @@ NetworkClient *getNetworkClient()
     self.listen = networkClientListen;
     self.TCPbroadCast = networkTCPbroadcast;
     self.UDPbroadCast = networkUDPbroadcast;
+    self.connect = connect;
 
     return &self;
 }

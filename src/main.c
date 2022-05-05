@@ -20,9 +20,14 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
 
+    NetworkClient *network = getNetworkClient();
+    if (!network->init(network))
+        return 1;
+    
+    network->connect(network);
+
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
-    NetworkClient *network = getNetworkClient();
 
     while (Engine->isRunning(Engine))
     {

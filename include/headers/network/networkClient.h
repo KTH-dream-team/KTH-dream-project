@@ -11,6 +11,7 @@ typedef struct {
     void (*listen)(void *self);
     int (*TCPbroadCast)(void *self, Data *data, int dataSize);
     void (*UDPbroadCast)(void *self, void *data, int dataSize);
+    void (*connect)(void*self);
     
     NetworkClientInstance *instance;
 } NetworkClient;

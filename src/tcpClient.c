@@ -67,6 +67,7 @@ void TCPlisten(void *self)
                 int a = *(int*)instance->packetReceived;
                 if(instance->numOfClients < a)
                     instance->numOfClients = a;
+                printf("nOc:%d\n",instance->numOfClients);
             }
             else if(size == sizeof(Data))
             {

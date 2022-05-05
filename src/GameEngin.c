@@ -28,13 +28,6 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     if (!isRenderSucced)
         return 0;
 
-    NetworkClient *network = getNetworkClient();
-    if (!network->init(network))
-    {
-        printf("failed to innit network\n");
-        return 0;
-    }
-
     // init map
     MapManager *mapManager = getMapManager();
     mapManager->initMap(mapManager); //! initializes map
