@@ -62,25 +62,21 @@ void TCPlisten(void *self)
         if (SDLNet_SocketReady(instance->serverSocket))
         {
             int size = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
-            printf("size: %d, %d\n", size, (int)sizeof(Data));
-            if (size == sizeof(int))
+            printf("new TCP packet size: %d\n", size);
+            if (((char*)instance->packetReceived)[0] == (char)1)
             {
-                int a = *(int*)instance->packetReceived;
-                if(instance->numOfClients < a)
-                    instance->numOfClients = a;
-                printf("nOc:%d\n",instance->numOfClients);
+                Connection* a = (Connection*)(instance->packetReceived+1);
+                if(instance->numOfClients < a->totalClient)
+                    instance->numOfClients = a->totalClient;
+                printf("My ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
             }
             else if(size == sizeof(Data))
             {
                 printf("got TCP packet from client (Data).\n");
             }
-            else if(((char*)instance->packetReceived)[0] == (char)0)
+            else
             {
-                printf("got TCP packet with flag: %d.\n", 0);
-            }
-            else if(((char*)instance->packetReceived)[0] == (char)1)
-            {
-                printf("got TCP packet with flag: %d.\n", 1);
+                printf("!got TCP packet with flag: %s.\n", ((char*)instance->packetReceived));
             }
         }
     }

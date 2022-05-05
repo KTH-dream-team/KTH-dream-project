@@ -7,3 +7,8 @@ typedef struct data
     int from;
 } Data;
 
+typedef struct // datatype: 1
+{
+    int totalClient;
+    int myId;
+} Connection;

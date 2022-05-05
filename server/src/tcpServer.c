@@ -30,7 +30,7 @@ struct tcpServerInstance
 };
 
 void broadcastData(void *self, Client sender, void *data, int dataSize);
-void sendAll(void *self, void *data, int dataSize);
+void sendDataTo(Client clients, void *data, int dataSize, int dataType);
 
 
 bool TCPinitServer(void *self)
@@ -77,8 +77,13 @@ void TCPlisten(void *self)
         instance->clients[instance->numOfClients].id = instance->currentID++;
         instance->clients[instance->numOfClients].socket = tmpSock;
         SDLNet_TCP_AddSocket(instance->socketSet, tmpSock);
-        instance->numOfClients = instance->numOfClients +1;
-        sendAll(self, &instance->numOfClients, sizeof(int));
+        instance->numOfClients ++;
+
+        for (int i = 0; i < instance->numOfClients; i++)
+        {
+            Connection data = {instance->numOfClients, instance->clients[i].id};
+            sendDataTo(instance->clients[i], &data, sizeof(Connection),1);
+        }
     }
     // listen for incomming packages from all clients
     while (SDLNet_CheckSockets(instance->socketSet, 0) > 0)
@@ -99,15 +104,15 @@ void TCPlisten(void *self)
     }
 }
 
-void sendAll(void *self, void *data, int dataSize)
+void sendDataTo(Client clients, void *data, int dataSize, int dataType)
 {
-    TCPServerInstance *instance = ((TCPserver *)self)->instance;
+    char buffer[MAX_SIZE];
+    buffer[0] = (char)dataType;
+    memcpy(buffer+1, data, dataSize);
 
-    for (int i = 0; i < instance->numOfClients; i++)
-    {
-        int r = SDLNet_TCP_Send(instance->clients[i].socket, data, dataSize);
-        printf("Sent %d bite tO client %d\n", r, instance->clients[i].id);
-    }
+    int r = SDLNet_TCP_Send(clients.socket, buffer, dataSize+1);
+    printf("Sent %d bite tO client %d\n", r, clients.id);
+    
 }
 
 void broadcastData(void *self, Client sender, void *data, int dataSize)
