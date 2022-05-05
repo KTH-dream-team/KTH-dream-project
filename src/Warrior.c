@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "Rigidbody.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <map.h>
 #include "Cube.h"
 #include "EntityManager.h"
@@ -14,6 +15,7 @@
 #include "CollisionManager.h"
 #include "networkClient.h"
 #include "data.h"
+
 static unsigned int currentTime;
 static unsigned int lastTime;
 #define accMan 0.5
@@ -25,6 +27,9 @@ struct warriorInstance
     Transform *position;
     Rigidbody *rigidBody;
     SDL_Rect hitBox;
+    bool isLocal;
+    int networkId;
+    char id[20];
 };
 
 void updateWarrior(void *self, float dt)
@@ -32,6 +37,9 @@ void updateWarrior(void *self, float dt)
     // update animation
     Animation *anim = ((Warrior *)self)->instance->animation;
     anim->update(anim);
+
+    if(! ((Warrior*)self)->instance->isLocal )
+        return;
 
     // update rigidBody
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
@@ -76,9 +84,17 @@ void renderWarrior(void *self)
     // draw hitbox debugg
     SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
+
+    NetworkClient *network = getNetworkClient();
+    WarriorSnapshot wa = {network->getTCPID(network),100, 0};
+    network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
+
 }
 void warriorEventHandle(void *self)
 {
+    if(!((Warrior*)self)->instance->isLocal)
+    return;
+
     InputHandler *inputHandler = getInputHandler();
     MapManager *mapManager = getMapManager(); // MAP
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
@@ -86,20 +102,20 @@ void warriorEventHandle(void *self)
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
 
-    NetworkClient *network = getNetworkClient();
-    TestData test = {1, 10};
-    Data test1 = {2, 20, 125, 7};
+    //NetworkClient *network = getNetworkClient();
+    //TestData test = {1, 10};
+    //Data test1 = {2, 20, 125, 7};
 
     rig->setVelocityX(rig, 0);
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT))
     {
         rig->setVelocityX(rig, -130);
-        network->UDPbroadCast(network, &test, sizeof(TestData), 3);
+        //network->UDPbroadCast(network, &test, sizeof(TestData), 3);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT))
     {
         rig->setVelocityX(rig, 130);
-        network->TCPbroadCast(network, &test1, sizeof(Data), 2);
+        //network->TCPbroadCast(network, &test1, sizeof(Data), 2);
     }
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
@@ -179,7 +195,7 @@ void destroyWarrior(void *self)
     printf("Warrior destroyed\n");
 }
 
-Warrior *createWarrior()
+Warrior *createWarrior(float x, float y, char * id, int networkId, bool isLocal)
 {
 
     int warriorHight = 32;
@@ -195,12 +211,15 @@ Warrior *createWarrior()
     self->instance->hitBox.y = 7;
     self->instance->hitBox.w = warriorWidth - 10;
     self->instance->hitBox.h = warriorHight - 7;
+    self->instance->isLocal = isLocal;
+    self->instance->networkId = networkId;
+    strcpy(self->instance->id, id);
 
     self->instance->animation = newAnimation();
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);
 
     self->instance->position = newTransform();
-    self->instance->position->set(self->instance->position, 0, 10);
+    self->instance->position->set(self->instance->position, x, y);
 
     self->instance->rigidBody = newRigidBody();
     self->instance->rigidBody->setForce(self->instance->rigidBody, 0, 0); //! forces på gubben initialt

@@ -17,6 +17,7 @@ typedef struct
     void (*listen)(void *self);
     int (*getNrOfClients)(void *self);
     int (*broadCast)(void *self, void *data, int dataSize, int datatype);
+    int (*getID) (void *self);
     TCPClientInstance *instance;
 } TCPclient;
 

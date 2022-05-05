@@ -129,6 +129,11 @@ int getUDPNrOfClients(void*self)
     return ((UDPclient *)self)->instance->numOfClients;
 }
 
+int getUDPID(void*self)
+{
+    return ((UDPclient *)self)->instance->id;
+}
+
 UDPclient *getUDPclient()
 {
     static UDPclient self;
@@ -144,6 +149,7 @@ UDPclient *getUDPclient()
     self.broadCast = UDPbroadCast;
     self.listen = UDPclientListen;
     self.getNrOfClients = getUDPNrOfClients;
+    self.getID = getUDPID;
 
     self.instance->numOfClients = 1;
     self.instance->isRunning = false;

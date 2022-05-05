@@ -5,6 +5,8 @@
 #include "SDL2/SDL_net.h"
 #include "tcpClient.h"
 #include "data.h"
+#include "EntityManager.h"
+#include "Warrior.h"
 
 #define MAX_SIZE 512
 #define CLIENT_PORT 0
@@ -63,24 +65,44 @@ void TCPlisten(void *self)
         {
             int size = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
             printf("new TCP packet size: %d\n", size);
-            if (((char*)instance->packetReceived)[0] == (char)1)
+            int offset=0;
+            while(size > offset)
             {
-                Connection* a = (Connection*)(instance->packetReceived+1);
-                if(instance->numOfClients < a->totalClient)
-                    instance->numOfClients = a->totalClient;
-                printf("My TCP ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
-            }
-            else if (((char*)instance->packetReceived)[0] == (char)2)
-            {
-                printf("got TCP packet with flag: %d, (%d).\n", 2, ((int*)instance->packetReceived)[0]);
-            }
-            else if (((char*)instance->packetReceived)[0] == (char)2)
-            {
-                printf("got TCP packet with flag: %d, (%d).\n", 3, ((int*)instance->packetReceived)[0]);
-            }
-            else
-            {
-                printf("!got TCP packet with flag: %d.\n", ((int*)instance->packetReceived)[0]);
+
+                if (((char*)instance->packetReceived)[offset] == (char)1)
+                {
+                    offset ++;
+                    Connection* a = (Connection*)(instance->packetReceived+1);
+                    if(instance->numOfClients < a->totalClient)
+                        instance->numOfClients = a->totalClient;
+                    printf("My TCP ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
+                    offset += sizeof(Connection);
+                }
+                else if (((char*)instance->packetReceived)[offset] == (char)2)
+                {
+                    offset ++;
+                    WarriorCreation * wa = (WarriorCreation*)(instance->packetReceived+offset);
+                    printf("Warrior Created by: %d, (x:%d, y:%d), package size: %d, data size:%d.\n",wa->from, wa->x, wa->y, size, (int)sizeof(WarriorCreation));
+                    
+                    EntityManager *entityManager = getEntityManager();
+                    Warrior *warrior = createWarrior(wa->x, wa->y, "Warrior-2", 23, false);
+
+                    entityManager->add(entityManager, "Warrior-2", warrior); // add to entity manager list
+                    offset += sizeof(WarriorCreation);
+                }
+                else if (((char*)instance->packetReceived)[offset] == (char)3)
+                {
+                    offset ++;
+                    printf("got TCP packet with flag: %d, (%d).\n", 3, ((int*)instance->packetReceived)[0]);
+                    offset = size;
+                }
+                else
+                {
+                    offset ++;
+                    printf("!got TCP packet with flag: %d.\n", ((int*)instance->packetReceived)[0]);
+                    offset = size;
+                }
+
             }
         }
     }
@@ -104,6 +126,11 @@ int TCPbroadCast(void *self, void *data, int dataSize, int dataType)
     return amoutSent;
 }
 
+int getTCPID (void *self)
+{
+    return ((TCPclient *)self)->instance->id;
+}
+
 TCPclient *getTCPclient()
 {
     static TCPclient self;
@@ -115,6 +142,7 @@ TCPclient *getTCPclient()
     self.broadCast = TCPbroadCast;
     self.listen = TCPlisten;
     self.getNrOfClients = getNrOfTCPClients;
+    self.getID = getTCPID;
 
     self.instance->serverSocket = NULL;
     self.instance->numOfClients = 0;

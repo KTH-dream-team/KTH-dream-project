@@ -12,6 +12,7 @@
 #include "map.h"
 #include "Bullet.h"
 #include "networkClient.h"
+#include<time.h>
 
 struct enginInstance
 {
@@ -34,7 +35,12 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 
     EntityManager *entityManager = getEntityManager();
     // Warrior creation
-    Warrior *warrior = createWarrior();
+
+    NetworkClient *network = getNetworkClient();
+    WarriorCreation wa = {network->getTCPID(network),100, 0};
+    network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
+
+    Warrior *warrior = createWarrior(100, 0, "Warrior-1", -1,true);
     entityManager->add(entityManager, "Warrior-1", warrior); // add to entity manager list
 
     Engin->instance->isRunning = true;

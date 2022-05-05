@@ -15,6 +15,7 @@ typedef struct {
     void (*listen)(void *self);
     void (*broadCast)(void *self, void *data, unsigned long length, int dataType);
     int (*getNrOfClients)(void*self);
+    int (*getID)(void*self);
     ClientInstance *instance;
 } UDPclient;
 

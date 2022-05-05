@@ -6,23 +6,16 @@ typedef struct // datatype: 1
     int myId;
 } Connection;
 
-typedef struct data // datatype: 2
+typedef struct // datatype: 2
 {
+    int from;
     int x;
     int y;
-    int from;
-    int a;
-} Data; // size 16;
+} WarriorCreation;
 
-typedef struct position
+typedef struct
 {
+    int from;
     int x;
     int y;
-    int from;
-} Position;
-
-typedef struct test
-{
-    int a;
-    int from;
-} TestData;
+} WarriorSnapshot;

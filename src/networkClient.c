@@ -35,7 +35,7 @@ void networkClientListen(void *self)
     instance->UDP->listen(instance->UDP);
 }
 
-int networkTCPbroadcast(void *self, Data *data, int dataSize, int dataType)
+int networkTCPbroadcast(void *self, void *data, int dataSize, int dataType)
 {
     NetworkClientInstance *instance = ((NetworkClient *)self)->instance;
     return instance->TCP->broadCast(instance->TCP, data, dataSize, dataType);
@@ -53,7 +53,7 @@ void connect(void*self)
 
     UDPclient * UDP = instance->UDP;
     TCPclient * TCP = instance->TCP;
-    while(TCP->getNrOfClients(TCP) < 3 && UDP->getNrOfClients(UDP) < 3)
+    while(TCP->getNrOfClients(TCP) < 2 && UDP->getNrOfClients(UDP) < 2)
     {
         networkClientListen(self);
     }
@@ -64,6 +64,12 @@ void connect(void*self)
 bool getIsAllClientJoined (void*self)
 {
     return ((NetworkClient *)self)->instance->isAllClientJoined;
+}
+
+int networkGetTCPID (void *self)
+{
+    TCPclient *TCP = ((NetworkClient *)self)->instance->TCP;
+    return TCP->getID(TCP);
 }
 
 NetworkClient *getNetworkClient()
@@ -82,6 +88,7 @@ NetworkClient *getNetworkClient()
     self.TCPbroadCast = networkTCPbroadcast;
     self.UDPbroadCast = networkUDPbroadcast;
     self.connect = connect;
+    self.getTCPID = networkGetTCPID;
     self.getIsAllClientJoined = getIsAllClientJoined;
 
     return &self;
