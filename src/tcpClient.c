@@ -7,6 +7,7 @@
 #include "data.h"
 #include "EntityManager.h"
 #include "Warrior.h"
+#include "Bullet.h"
 
 #define MAX_SIZE 512
 #define CLIENT_PORT 0
@@ -91,10 +92,18 @@ void TCPlisten(void *self)
                     entityManager->add(entityManager, id, warrior); // add to entity manager list
                     offset += sizeof(WarriorCreation);
                 }
-                else if (((char*)instance->packetReceived)[offset] == (char)3)
+                else if (((char*)instance->packetReceived)[offset] == (char)4)
                 {
                     offset ++;
-                    printf("got TCP packet with flag: %d, (%d).\n", 3, ((int*)instance->packetReceived)[0]);
+                    ShootBullet * bullet = (ShootBullet*)(instance->packetReceived+offset);
+                    printf("fire Bullet from: %d.\n", bullet->from);
+
+                    SDL_FPoint velN = {bullet->velX, bullet->velY}; //! bullet velocity
+                    SDL_FPoint pos = {bullet->x, bullet->y};
+                    Bullet *bullet1 = newBullet(pos, velN, false);
+                    char * id = bullet1->getID(bullet1);
+                    EntityManager *entityManager = getEntityManager();
+                    entityManager->add(entityManager, id, bullet1);
                     offset = size;
                 }
                 else

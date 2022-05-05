@@ -21,6 +21,7 @@ struct bulletInstance
     SDL_FPoint vel;
     SDL_Rect hitBox;
     char *id;
+    bool isLocal;
 };
 
 void renderBullet(void *self)
@@ -60,7 +61,12 @@ void destroyBullet(void *self)
     free(((Bullet *)self)->instance);
 }
 
-Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
+char * getBulletID(void *self)
+{
+    return ((Bullet *)self)->instance->id;
+}
+
+Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal)
 {
     Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
@@ -68,9 +74,18 @@ Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
 
     self->instance->position = newTransform();//!positon
     self->instance->position->set(self->instance->position, pos.x, pos.y);//!position
-    strcpy(self->instance->id, id);
+
+    //randomize bullet id;
+    strcpy(self->instance->id, "Bullet-000");
+    for (int i = 8; i < 11; i++)
+    {
+        int r = rand()%10;
+        self->instance->id[i] += r;
+    }
+
     self->instance->vel.x = vel.x;
     self->instance->vel.y = vel.y;
+    self->instance->isLocal = isLocal;
 
     self->instance->hitBox.x = 10;
     self->instance->hitBox.y = 15;
@@ -80,6 +95,7 @@ Bullet *newBullet(char *id, SDL_FPoint pos, SDL_FPoint vel)
     self->render = renderBullet;
     self->update = updateBullet;
     self->destroy = destroyBullet;
+    self->getID = getBulletID;
 
     return self;
 }

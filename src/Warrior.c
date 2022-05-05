@@ -15,6 +15,7 @@
 #include "CollisionManager.h"
 #include "networkClient.h"
 #include "data.h"
+#include "SDL2/SDL.h"
 
 static unsigned int currentTime;
 static unsigned int lastTime;
@@ -162,9 +163,22 @@ void warriorEventHandle(void *self)
             float xN = velx / sqrt(velx * velx + vely * vely);
             float yN = vely / sqrt(velx * velx + vely * vely);
             SDL_FPoint velN = {xN * 15, yN * 15}; //! bullet velocity
-            Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
-            entityManager->add(entityManager, "Bullet-1", bullet1);
+            Bullet *bullet1 = newBullet(pos->get(pos), velN, true);
+            char * id = bullet1->getID(bullet1);
+            entityManager->add(entityManager, id, bullet1);
             lastTime = currentTime;
+
+            //broadcast bullet1
+            NetworkClient *network = getNetworkClient();
+            SDL_FPoint p = pos->get(pos);
+            ShootBullet dataToSend = {
+                network->getTCPID(network),
+                p.x,
+                p.y,
+                velN.x,
+                velN.y
+            };
+            network->TCPbroadCast(network, &dataToSend, sizeof(ShootBullet), 4);
         }
     }
 

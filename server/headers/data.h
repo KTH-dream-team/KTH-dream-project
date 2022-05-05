@@ -21,3 +21,11 @@ typedef struct //datatype: 3
     
 } WarriorSnapshot;
 
+typedef struct // datatype: 4
+{
+    int from;
+    float x;
+    float y;
+    float velX;
+    float velY;
+} ShootBullet;
