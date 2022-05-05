@@ -67,6 +67,11 @@ int networkTCPgetID(void *self)
     NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
     return instance->TCP->getID(instance->TCP);
 }
+int networkUDPgetID(void *self)
+{
+    NetworkClientInstance *instance = ((NetworkClient*)self)->instance;
+    return instance->UDP->getID(instance->UDP);
+}
 
 NetworkClient * getNetworkClient()
 {
@@ -83,6 +88,7 @@ NetworkClient * getNetworkClient()
     self.listen = networkClientListen;
     self.TCPresive = networkTCPresive;
     self.TCPgetID = networkTCPgetID;
+    self.UDPgetID = networkUDPgetID;
     self.TCPbroadCast = networkTCPbroadcast;
     self.UDPbroadCast = networkUDPbroadcast;
     self.destroy = networkClientDestory;

@@ -75,7 +75,6 @@ void renderWarrior(void *self)
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
     
     GameEngin *engin = getGameEngin();
-
     SDL_Rect box = {
         instance->position->getX(instance->position) + instance->hitBox.x,
         instance->position->getY(instance->position) + instance->hitBox.y,
@@ -86,9 +85,14 @@ void renderWarrior(void *self)
     SDL_SetRenderDrawColor(ren, 200,20,20,255);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
+
+    SDL_FPoint warriorPos = pos->get(pos);
+    DataPos posToSend ={warriorPos.x, warriorPos.y, network->TCPgetID(network)};
+    network->UDPbroadCast(network, &posToSend, sizeof(DataPos));
     // SDL_FPoint warriorPos = pos->get(pos);
     // DataPos wariorSendPos ={warriorPos.x, warriorPos.y, network->TCPgetID(network)};
     //network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//todo fixa size
+
     
 }
 void warriorEventHandle(void *self)

@@ -4,10 +4,14 @@
 #include <stdbool.h>
 #include "SDL2/SDL_net.h"
 #include "udpClient.h"
+#include "Otherwarrior.h"
+#include "Transform.h"
+#include "EntityManager.h"
+
+
 #include "data.h"
 
-
-bool sendUdpPacageToServer(void *self, void* data, unsigned long len);
+bool sendUdpPacageToServer(void *self, void *data, unsigned long len);
 
 struct udpClientInstance
 {
@@ -20,7 +24,6 @@ struct udpClientInstance
     int id;
     bool isRunning;
 };
-
 
 bool clientIsRunning(void *self)
 {
@@ -82,27 +85,48 @@ void UDPbroadCast(void *self, DataClient *data, unsigned long length)
 
 void UDPclientListen(void *self)
 {
-    UDPClientInstance *instance = ((UDPclient *)self)->instance;   
+    UDPClientInstance *instance = ((UDPclient *)self)->instance;
     if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
     {
-        if(instance->packetReceived->len == sizeof(int))
+        if (instance->packetReceived->len == sizeof(int))
         {
-            instance->id = *((int*)instance->packetReceived->data);
-            printf("UDPid: %d\n", instance->id );
-        }else if(instance->packetReceived->len == sizeof(DataClient))
-        {
-            DataClient data;
-            char * dataRecieved = (char *)instance->packetReceived->data;
-            int len = instance->packetReceived->len;
-            printf("len: %d\n", len);
-            memcpy(&data, dataRecieved, len);
-            printf("from: %d, x: %d, y: %d\n", data.from, data.x, data.y);
+            instance->id = *((int *)instance->packetReceived->data);
+            printf("UDPid: %d\n", instance->id);
         }
-        
+        else if (instance->packetReceived->len == sizeof(DataPos))
+        {
+            DataPos data;
+            char *dataRecieved = (char *)instance->packetReceived->data;
+            int len = instance->packetReceived->len;
+            memcpy(&data, dataRecieved, len);            
+            printf("from: %d, x: %.2f, y: %.2f\n", data.from, data.x, data.y);
+            printf("len: %d\n", len);
+
+
+
+            // if (data.from == 0)
+            // {
+            // }
+            
+            // OtherWarrior *otherWarroir = createOtherWarrior();
+            // int ClientID = otherWarroir->getID;
+            // memcpy(&data, dataRecieved, len);
+            // Transform *transform = otherWarroir->getPos;
+
+            // for (int i = 0; i < MAX_CLIENTS; i++)
+            // {
+            //     if (ClientID == data.from)
+            //     {
+            //         transform->setX(transform, data.x);
+            //         transform->setY(transform, data.y);
+            //     }
+            // }
+        }
     }
 }
 
-int getID(void *self){
+int getID(void *self)
+{
     return ((UDPclient *)self)->instance->id;
 }
 
@@ -111,7 +135,7 @@ void UDPmakeHandShake(void *self)
     UDPclient *client = ((UDPclient *)self);
     int flag = 1;
 
-    if(!sendUdpPacageToServer(self, &flag, sizeof(int)))
+    if (!sendUdpPacageToServer(self, &flag, sizeof(int)))
         printf("failed to connection request\n");
     else
         printf("sent connection request!\n");
@@ -121,7 +145,7 @@ void UDPcloseConnection(void *self)
     UDPclient *client = ((UDPclient *)self);
     int flag = 0;
 
-    if(!sendUdpPacageToServer(self, &flag, sizeof(int)))
+    if (!sendUdpPacageToServer(self, &flag, sizeof(int)))
         printf("failed to disconnect request\n");
     else
         printf("Packge sent disconnect request!\n");
@@ -149,7 +173,7 @@ UDPclient *getUDPclient()
     return &self;
 }
 
-bool sendUdpPacageToServer(void *self, void*data, unsigned long len)
+bool sendUdpPacageToServer(void *self, void *data, unsigned long len)
 {
     UDPclient *client = ((UDPclient *)self);
     client->instance->packetSent->address.host = client->instance->serverAddress.host;
@@ -157,7 +181,7 @@ bool sendUdpPacageToServer(void *self, void*data, unsigned long len)
     memcpy((char *)client->instance->packetSent->data, data, len);
     client->instance->packetSent->len = len;
 
-    if(!SDLNet_UDP_Send(client->instance->serverSocket, -1, client->instance->packetSent))
+    if (!SDLNet_UDP_Send(client->instance->serverSocket, -1, client->instance->packetSent))
         return false;
     return true;
 }

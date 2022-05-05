@@ -47,8 +47,8 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     Warrior *warrior = createWarrior(client->TCPgetID(client));
 
     static char myWarrior[10] = "Warrior-";
-    char clientID = '0' + client->TCPgetID(client);
-    printf("TCPgetID: %d, string: %s, charID: %c\n", client->TCPgetID(client), myWarrior, clientID);
+    char clientID = '0' + client->UDPgetID(client);
+    printf("TCPgetID: %d, string: %s, charID: %c\n", client->UDPgetID(client), myWarrior, clientID);
     strncat(myWarrior,&clientID,1);
 
     entityManager->add(entityManager, myWarrior, warrior);//add to entity manager list
@@ -56,25 +56,25 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     // Other warrior creation
     for(int i=0;i<MAX_CLIENTS;i++)
     {
-        if(i==client->TCPgetID(client)) continue;
+        if(i==client->UDPgetID(client)) continue;
         if(i==0)
         {
-            OtherWarrior *otherwarrior0 =  createOtherWarrior(i, i, i);
+            OtherWarrior *otherwarrior0 =  createOtherWarrior0(i);
             entityManager->add(entityManager, "OtherWarrior-0", otherwarrior0);
         }
         else if(i==1)
         {
-            OtherWarrior *otherwarrior1 =  createOtherWarrior(i, i, i);
+            OtherWarrior *otherwarrior1 =  createOtherWarrior1(i);
             entityManager->add(entityManager, "OtherWarrior-1", otherwarrior1);
         }
         else if(i==2)
         {
-            OtherWarrior *otherwarrior2 =  createOtherWarrior(i, i, i);
+            OtherWarrior *otherwarrior2 =  createOtherWarrio2(i);
             entityManager->add(entityManager, "OtherWarrior-2", otherwarrior2);
         }
         else if(i==3)
         {
-            OtherWarrior *otherwarrior3 = createOtherWarrior(i, i, i);
+            OtherWarrior *otherwarrior3 = createOtherWarrio3(i);
             entityManager->add(entityManager, "OtherWarrior-3", otherwarrior3);
         }
     }
@@ -98,6 +98,8 @@ void handleUpdates(void *self)
 
     EntityManager *entityManager = getEntityManager();
     entityManager->updateAll(entityManager, dt);
+
+
 }
 
 void handleRenders(void *self)

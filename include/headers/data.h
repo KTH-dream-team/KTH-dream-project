@@ -10,8 +10,8 @@
 
 typedef struct dataclient
 {
-    int x;
-    int y;
+    float x;
+    float y;
     int from;
 } DataClient;
 

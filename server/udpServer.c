@@ -12,8 +12,8 @@ bool isClientExit(void *self, IPaddress address);
 
 typedef struct data
 {
-    int x;
-    int y;
+    float x;
+    float y;
     int from;
 } Data;
 
@@ -124,7 +124,7 @@ void UDPlisten(void *self)
                     {
                         memcpy(&instance->clients[i].data, (char *)instance->packetReceived->data, instance->packetReceived->len);
                         instance->clients[i].data.from = instance->clients[i].id;
-                        printf("Data sent to all clients is: %d %d\n", instance->clients[i].data.x, instance->clients[i].data.y);
+                        printf("Data sent to all clients is: %.2f %.2f from client: %d\n", instance->clients[i].data.x, instance->clients[i].data.y, instance->clients[i].data.from);
                         continue;
                     }
 

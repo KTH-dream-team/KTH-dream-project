@@ -6,6 +6,7 @@
 
     translate functions used to translate x,y values. 
 */
+#pragma once
 #include "SDL2/SDL.h"
 
 typedef struct transformInstance TransformInstance;
