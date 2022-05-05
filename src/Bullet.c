@@ -29,9 +29,8 @@ void renderBullet(void *self)
     BulletInstance *instance = ((Bullet *)self)->instance;
     GameEngin *engin = getGameEngin();
     TextureManager *textureManager = getTextureManager();
-    textureManager->load(textureManager, "bullet", "./assets/bullet.png");//!if not null ta befintlig
-    SDL_Rect srcRec = {0, 0, 32, 32};//!skapa 32x32 source rectangel
-
+    textureManager->load(textureManager, "bullet", "./assets/bullet.png"); //! if not null ta befintlig
+    SDL_Rect srcRec = {0, 0, 32, 32};                                      //! skapa 32x32 source rectangel
 
     SDL_Rect box = {
         instance->position->getX(instance->position) + instance->hitBox.x,
@@ -48,12 +47,12 @@ void updateBullet(void *self, float dt)
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 
     Transform *pos = instance->position;
-    if(pos->getX(pos) > 1100 || pos->getY(pos) > 1100 || pos->getY(pos) < 0 || pos->getX(pos) < 0){
-        EntityManager * EM = getEntityManager();
-        EM->drop(EM,instance->id);
+    if (pos->getX(pos) > 1100 || pos->getY(pos) > 1100 || pos->getY(pos) < 0 || pos->getX(pos) < 0)
+    {
+        EntityManager *EM = getEntityManager();
+        EM->drop(EM, instance->id);
         ((Bullet *)self)->destroy(self);
     }
-
 }
 void destroyBullet(void *self)
 {
@@ -61,7 +60,7 @@ void destroyBullet(void *self)
     free(((Bullet *)self)->instance);
 }
 
-char * getBulletID(void *self)
+char *getBulletID(void *self)
 {
     return ((Bullet *)self)->instance->id;
 }
@@ -70,18 +69,19 @@ Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal)
 {
     Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
-    self->instance->id = malloc(sizeof(char)*30);
+    self->instance->id = malloc(sizeof(char) * 11);
 
-    self->instance->position = newTransform();//!positon
-    self->instance->position->set(self->instance->position, pos.x, pos.y);//!position
+    self->instance->position = newTransform();                             //! positon
+    self->instance->position->set(self->instance->position, pos.x, pos.y); //! position
 
-    //randomize bullet id;
+    // randomize bullet id;
     strcpy(self->instance->id, "Bullet-000");
-    for (int i = 8; i < 11; i++)
+    for (int i = 7; i < 10; i++)
     {
-        int r = rand()%10;
+        int r = rand() % 10;
         self->instance->id[i] += r;
     }
+    self->instance->id[11] = '\0';
 
     self->instance->vel.x = vel.x;
     self->instance->vel.y = vel.y;

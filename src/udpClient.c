@@ -76,7 +76,7 @@ void UDPdestroy(void *self)
 void UDPbroadCast(void *self, void *data, unsigned long length, int dataType)
 {
     sendUdpPacageToServer(self, data, length, dataType);
-    //printf("Sent UDP packet to server(broadcast)\n");
+    // printf("Sent UDP packet to server(broadcast)\n");
 }
 
 void UDPclientListen(void *self)
@@ -86,8 +86,8 @@ void UDPclientListen(void *self)
     {
         if (((char *)instance->packetReceived->data)[0] == (char)1)
         {
-            Connection *data = (Connection*)(instance->packetReceived->data+1); 
-            if(instance->numOfClients < data->totalClient)
+            Connection *data = (Connection *)(instance->packetReceived->data + 1);
+            if (instance->numOfClients < data->totalClient)
                 instance->numOfClients = data->totalClient;
             printf("UDP Client id: %d, total Client:%d\n", data->myId, data->totalClient);
         }
@@ -97,10 +97,10 @@ void UDPclientListen(void *self)
         }
         else if (((char *)instance->packetReceived->data)[0] == (char)3)
         {
-            //printf("Update Warrior from: %d (x:%d, y:%d) size: %d, %d\n", ws->from, ws->x, ws->y, instance->packetReceived->len, (int)sizeof(WarriorSnapshot));
-            WarriorSnapshot * ws = (WarriorSnapshot*)(instance->packetReceived->data+1); 
+            // printf("Update Warrior from: %d (x:%d, y:%d) size: %d, %d\n", ws->from, ws->x, ws->y, instance->packetReceived->len, (int)sizeof(WarriorSnapshot));
+            WarriorSnapshot *ws = (WarriorSnapshot *)(instance->packetReceived->data + 1);
             EntityManager *entityManager = getEntityManager();
-            
+
             int idInt = ws->from;
             char id[15];
             strcpy(id, "Warrior-000");
@@ -108,18 +108,18 @@ void UDPclientListen(void *self)
             int a = 100;
             for (int i = 8; i < 11; i++)
             {
-                id[i] += (int)(idInt/a);
+                id[i] += (int)(idInt / a);
                 idInt %= a;
                 a /= 10;
             }
 
-            Warrior* wa = entityManager->getByID(entityManager, id);
-            if(wa != NULL)
+            Warrior *wa = entityManager->getByID(entityManager, id);
+            if (wa != NULL)
                 wa->updatePossition(wa, ws->x, ws->y);
         }
         else
         {
-            printf("!got new UDP package with flag: %d\n",((int*)instance->packetReceived->data)[0]);
+            printf("!got new UDP package with flag: %d\n", ((int *)instance->packetReceived->data)[0]);
         }
     }
 }
@@ -127,7 +127,7 @@ void UDPclientListen(void *self)
 void UDPmakeHandShake(void *self)
 {
     UDPclient *client = ((UDPclient *)self);
-    Connection data = {3,6};
+    Connection data = {3, 6};
 
     if (!sendUdpPacageToServer(self, &data, sizeof(Connection), 1))
         printf("failed to connection request\n");
@@ -139,18 +139,18 @@ void UDPcloseConnection(void *self)
     UDPclient *client = ((UDPclient *)self);
     int flag = 0;
 
-    if (!sendUdpPacageToServer(self, &flag, sizeof(int),2))
+    if (!sendUdpPacageToServer(self, &flag, sizeof(int), 2))
         printf("failed to disconnect request\n");
     else
         printf("Packge sent disconnect request!\n");
 }
 
-int getUDPNrOfClients(void*self)
+int getUDPNrOfClients(void *self)
 {
     return ((UDPclient *)self)->instance->numOfClients;
 }
 
-int getUDPID(void*self)
+int getUDPID(void *self)
 {
     return ((UDPclient *)self)->instance->id;
 }
@@ -186,8 +186,8 @@ bool sendUdpPacageToServer(void *self, void *data, unsigned long len, int dataTy
     client->instance->packetSent->address.port = client->instance->serverAddress.port;
 
     ((char *)client->instance->packetSent->data)[0] = (char)dataType;
-    memcpy((char *)(client->instance->packetSent->data+1), data, len);
-    client->instance->packetSent->len = len+1;
+    memcpy((char *)(client->instance->packetSent->data + 1), data, len);
+    client->instance->packetSent->len = len + 1;
 
     if (!SDLNet_UDP_Send(client->instance->serverSocket, -1, client->instance->packetSent))
         return false;

@@ -5,6 +5,7 @@
 #include "InputHandler.h"
 #include "map.h"
 #include "hitBox.h"
+#include <time.h>
 #include "networkClient.h"
 
 #define SDL_MAIN_HANDLED
@@ -18,8 +19,8 @@ int main(int argc, char **argv)
     NetworkClient *network = getNetworkClient();
     if (!network->init(network))
         return 1;
-    
-    network->connect(network);
+
+    network->connect(network, 3);
 
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);

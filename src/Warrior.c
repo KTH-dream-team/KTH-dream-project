@@ -39,7 +39,7 @@ void updateWarrior(void *self, float dt)
     Animation *anim = ((Warrior *)self)->instance->animation;
     anim->update(anim);
 
-    if(! ((Warrior*)self)->instance->isLocal )
+    if (!((Warrior *)self)->instance->isLocal)
         return;
 
     // update rigidBody
@@ -64,9 +64,9 @@ void updateWarrior(void *self, float dt)
     SDL_FPoint acc = rig->getAcceleration(rig);
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
-    //broadcast data;
+    // broadcast data;
     NetworkClient *network = getNetworkClient();
-    WarriorSnapshot wa = {network->getTCPID(network),pos->getX(pos), pos->getY(pos)};
+    WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos)};
     network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
 }
 void renderWarrior(void *self)
@@ -90,11 +90,10 @@ void renderWarrior(void *self)
     // draw hitbox debugg
     SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
-
 }
 void warriorEventHandle(void *self)
 {
-    if(!((Warrior*)self)->instance->isLocal)
+    if (!((Warrior *)self)->instance->isLocal)
         return;
 
     InputHandler *inputHandler = getInputHandler();
@@ -111,12 +110,12 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT))
     {
         rig->setVelocityX(rig, -130);
-        //network->UDPbroadCast(network, &test, sizeof(WarriorSnapshot), 3);
+        // network->UDPbroadCast(network, &test, sizeof(WarriorSnapshot), 3);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT))
     {
         rig->setVelocityX(rig, 130);
-        //network->TCPbroadCast(network, &test, sizeof(WarriorSnapshot), 3);
+        // network->TCPbroadCast(network, &test, sizeof(WarriorSnapshot), 3);
     }
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
@@ -164,11 +163,11 @@ void warriorEventHandle(void *self)
             float yN = vely / sqrt(velx * velx + vely * vely);
             SDL_FPoint velN = {xN * 15, yN * 15}; //! bullet velocity
             Bullet *bullet1 = newBullet(pos->get(pos), velN, true);
-            char * id = bullet1->getID(bullet1);
+            char *id = bullet1->getID(bullet1);
             entityManager->add(entityManager, id, bullet1);
             lastTime = currentTime;
 
-            //broadcast bullet1
+            // broadcast bullet1
             NetworkClient *network = getNetworkClient();
             SDL_FPoint p = pos->get(pos);
             ShootBullet dataToSend = {
@@ -176,8 +175,7 @@ void warriorEventHandle(void *self)
                 p.x,
                 p.y,
                 velN.x,
-                velN.y
-            };
+                velN.y};
             network->TCPbroadCast(network, &dataToSend, sizeof(ShootBullet), 4);
         }
     }
@@ -215,7 +213,7 @@ void updateWarriorPosition(void *self, float x, float y)
     instance->position->set(instance->position, x, y);
 }
 
-char *getWarriorID(void*self)
+char *getWarriorID(void *self)
 {
     return ((Warrior *)self)->instance->id;
 }
@@ -243,11 +241,10 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     int a = 100;
     for (int i = 8; i < 11; i++)
     {
-        self->instance->id[i] += (int)(id/a);
+        self->instance->id[i] += (int)(id / a);
         id %= a;
         a /= 10;
     }
-
 
     self->instance->animation = newAnimation();
     self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE);
