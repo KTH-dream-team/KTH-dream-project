@@ -6,6 +6,7 @@ struct networkClientInstance
 {
     UDPclient *UDP;
     TCPclient *TCP;
+    bool isAllClientJoined;
 };
 
 bool networkClientInnit(void *self)
@@ -48,13 +49,21 @@ void networkUDPbroadcast(void *self, void *data, int dataSize)
 
 void connect(void*self)
 {
-    UDPclient * UDP = ((NetworkClient *)self)->instance->UDP;
-    TCPclient * TCP = ((NetworkClient *)self)->instance->TCP;
+    NetworkClientInstance *instance = ((NetworkClient *)self)->instance;
+
+    UDPclient * UDP = instance->UDP;
+    TCPclient * TCP = instance->TCP;
     while(TCP->getNrOfClients(TCP) < 3)
     {
         networkClientListen(self);
     }
+    instance->isAllClientJoined = true;
     printf("All client joined!\n");
+}
+
+bool getIsAllClientJoined (void*self)
+{
+    return ((NetworkClient *)self)->instance->isAllClientJoined;
 }
 
 NetworkClient *getNetworkClient()
@@ -66,12 +75,14 @@ NetworkClient *getNetworkClient()
     self.instance = malloc(sizeof(NetworkClientInstance));
     self.instance->UDP = getUDPclient();
     self.instance->TCP = getTCPclient();
+    self.instance->isAllClientJoined = false;
 
     self.init = networkClientInnit;
     self.listen = networkClientListen;
     self.TCPbroadCast = networkTCPbroadcast;
     self.UDPbroadCast = networkUDPbroadcast;
     self.connect = connect;
+    self.getIsAllClientJoined = getIsAllClientJoined;
 
     return &self;
 }
