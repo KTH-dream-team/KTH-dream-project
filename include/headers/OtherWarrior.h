@@ -12,9 +12,9 @@ typedef struct otherwarrior
     void (*events)(void *self);
     int (*getID)(void *self);
     Transform *(*getPos)(void *self);
+    void (*setPos)(void *self, int x, int y);
 
     void (*destroy)(void *self);
-
 
     OtherWarriorInstance *instance;
 } OtherWarrior;

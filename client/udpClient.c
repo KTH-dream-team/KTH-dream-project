@@ -8,7 +8,6 @@
 #include "Transform.h"
 #include "EntityManager.h"
 
-
 #include "data.h"
 
 bool sendUdpPacageToServer(void *self, void *data, unsigned long len);
@@ -98,16 +97,32 @@ void UDPclientListen(void *self)
             DataPos data;
             char *dataRecieved = (char *)instance->packetReceived->data;
             int len = instance->packetReceived->len;
-            memcpy(&data, dataRecieved, len);            
+            memcpy(&data, dataRecieved, len);
             printf("from: %d, x: %.2f, y: %.2f\n", data.from, data.x, data.y);
             printf("len: %d\n", len);
+            EntityManager *EM = getEntityManager();
+            OtherWarrior *warrior0 = EM->getByID(EM, "OtherWarrior-0");
+            OtherWarrior *warrior1 = EM->getByID(EM, "OtherWarrior-1");
+            OtherWarrior *warrior2 = EM->getByID(EM, "OtherWarrior-2");
+            OtherWarrior *warrior3 = EM->getByID(EM, "OtherWarrior-3");
 
+            if (data.from == 0)
+            {
+                warrior0->setPos(warrior0, data.x, data.y);
+            }
+            if (data.from == 1)
+            {
+                warrior1->setPos(warrior1, data.x, data.y);
+            }
+            if (data.from == 2)
+            {
+                warrior2->setPos(warrior2, data.x, data.y);
+            }
+            if (data.from == 3)
+            {
+                warrior3->setPos(warrior3, data.x, data.y);
+            }
 
-
-            // if (data.from == 0)
-            // {
-            // }
-            
             // OtherWarrior *otherWarroir = createOtherWarrior();
             // int ClientID = otherWarroir->getID;
             // memcpy(&data, dataRecieved, len);
@@ -120,7 +135,6 @@ void UDPclientListen(void *self)
             //         transform->setX(transform, data.x);
             //         transform->setY(transform, data.y);
             //     }
-            // }
         }
     }
 }

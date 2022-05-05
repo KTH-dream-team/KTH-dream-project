@@ -59,22 +59,22 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
         if(i==client->UDPgetID(client)) continue;
         if(i==0)
         {
-            OtherWarrior *otherwarrior0 =  createOtherWarrior0(i);
+            OtherWarrior *otherwarrior0 =  createOtherWarrior(i);
             entityManager->add(entityManager, "OtherWarrior-0", otherwarrior0);
         }
         else if(i==1)
         {
-            OtherWarrior *otherwarrior1 =  createOtherWarrior1(i);
+            OtherWarrior *otherwarrior1 =  createOtherWarrior(i);
             entityManager->add(entityManager, "OtherWarrior-1", otherwarrior1);
         }
         else if(i==2)
         {
-            OtherWarrior *otherwarrior2 =  createOtherWarrio2(i);
+            OtherWarrior *otherwarrior2 =  createOtherWarrior(i);
             entityManager->add(entityManager, "OtherWarrior-2", otherwarrior2);
         }
         else if(i==3)
         {
-            OtherWarrior *otherwarrior3 = createOtherWarrio3(i);
+            OtherWarrior *otherwarrior3 = createOtherWarrior(i);
             entityManager->add(entityManager, "OtherWarrior-3", otherwarrior3);
         }
     }
