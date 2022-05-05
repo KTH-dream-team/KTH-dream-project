@@ -13,10 +13,10 @@ typedef struct
 {
 
     bool (*init)(void *self);
-    bool (*isRunning)(void *self);
     void (*destroy)(void *self);
     void (*listen)(void *self);
-    int (*broadCast)(void *self, Data *data, int dataSize);
+    int (*getNrOfClients)(void *self);
+    int (*broadCast)(void *self, void *data, int dataSize);
     TCPClientInstance *instance;
 } TCPclient;
 

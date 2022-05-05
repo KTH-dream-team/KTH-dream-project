@@ -16,13 +16,12 @@ struct TCPclientInstance
 {
     TCPsocket serverSocket;
     SDLNet_SocketSet socketSet;
-    Data packetReceived;
-    Data packetSent;
+    void* packetReceived;
+    void* packetSent;
     int numOfClients; // includeing it self
     IPaddress serverAddress;
     int port;
     int id;
-    bool isRunning;
 };
 
 bool TCPinitclient(void *self)
@@ -51,7 +50,6 @@ bool TCPinitclient(void *self)
     }
     SDLNet_TCP_AddSocket(instance->socketSet, instance->serverSocket);
 
-    instance->isRunning = true;
     return true;
 }
 
@@ -63,15 +61,27 @@ void TCPlisten(void *self)
     {
         if (SDLNet_SocketReady(instance->serverSocket))
         {
-            if (SDLNet_TCP_Recv(instance->serverSocket, &instance->packetReceived, sizeof(Data)) > 0)
+            int size = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, sizeof(Data));
+            if (size == sizeof(int))
             {
-                printf("got TCP packet from client %d. data x: %d y: %d\n", instance->packetReceived.from, instance->packetReceived.x, instance->packetReceived.y);
+                int a = *(int*)instance->packetReceived;
+                if(instance->numOfClients < a)
+                    instance->numOfClients = a;
+            }
+            else if(size == sizeof(Data))
+            {
+                printf("got TCP packet from client (Data).\n");
             }
         }
     }
 }
 
-int TCPbroadCast(void *self, Data *data, int dataSize)
+int getNrOfTCPClients(void *self)
+{
+    return ((TCPclient *)self)->instance->numOfClients;
+}
+
+int TCPbroadCast(void *self, void *data, int dataSize)
 {
     TCPClientInstance *instance = ((TCPclient *)self)->instance;
     int amoutSent = SDLNet_TCP_Send(instance->serverSocket, data, dataSize);
@@ -89,10 +99,12 @@ TCPclient *getTCPclient()
     self.init = TCPinitclient;
     self.broadCast = TCPbroadCast;
     self.listen = TCPlisten;
+    self.getNrOfClients = getNrOfTCPClients;
 
     self.instance->serverSocket = NULL;
     self.instance->numOfClients = 0;
-    self.instance->isRunning = false;
+    self.instance->packetReceived = malloc(MAX_SIZE);
+    self.instance->packetSent = malloc(MAX_SIZE);
 
     return &self;
 }

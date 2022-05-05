@@ -30,6 +30,8 @@ struct tcpServerInstance
 };
 
 void broadcastData(void *self, Client sender, void *data, int dataSize);
+void sendAll(void *self, void *data, int dataSize);
+
 
 bool TCPinitServer(void *self)
 {
@@ -75,7 +77,8 @@ void TCPlisten(void *self)
         instance->clients[instance->numOfClients].id = instance->currentID++;
         instance->clients[instance->numOfClients].socket = tmpSock;
         SDLNet_TCP_AddSocket(instance->socketSet, tmpSock);
-        instance->numOfClients++;
+        instance->numOfClients = instance->numOfClients +1;
+        sendAll(self, &instance->numOfClients, sizeof(int));
     }
     // listen for incomming packages from all clients
     while (SDLNet_CheckSockets(instance->socketSet, 0) > 0)
@@ -85,14 +88,25 @@ void TCPlisten(void *self)
             if (SDLNet_SocketReady(instance->clients[i].socket))
             {
                 Client *client = &instance->clients[i];
-                int size = SDLNet_TCP_Recv(instance->clients[i].socket, &client->data, MAX_SIZE);
+                int size = SDLNet_TCP_Recv(instance->clients[i].socket, client->data, MAX_SIZE);
                 if (size > 0)
                 {
                     printf("new package from clientID %d\n", client->id);
-                    broadcastData(self, *client, &client->data, size);
+                    broadcastData(self, *client, client->data, size);
                 }
             }
         }
+    }
+}
+
+void sendAll(void *self, void *data, int dataSize)
+{
+    TCPServerInstance *instance = ((TCPserver *)self)->instance;
+
+    for (int i = 0; i < instance->numOfClients; i++)
+    {
+        int r = SDLNet_TCP_Send(instance->clients[i].socket, data, dataSize);
+        printf("Sent %d bite tO client %d\n", r, instance->clients[i].id);
     }
 }
 
@@ -126,6 +140,9 @@ TCPserver *getTCPserver()
     self.instance = malloc(sizeof(TCPServerInstance));
     self.init = TCPinitServer;
     self.listen = TCPlisten;
+
+    for (int i = 0; i < MAX_SIZE; i++)
+        self.instance->clients[i].data = malloc(MAX_SIZE);
 
     self.instance->serverSocket = NULL;
     self.instance->numOfClients = 0;
