@@ -8,6 +8,7 @@
 #include "EntityManager.h"
 #include "Warrior.h"
 #include "Bullet.h"
+#include "map.h"
 
 #define MAX_SIZE 512
 #define CLIENT_PORT 0
@@ -69,7 +70,7 @@ void TCPlisten(void *self)
             int offset=0;
             while(size > offset)
             {
-
+                
                 if (((char*)instance->packetReceived)[offset] == (char)1)
                 {
                     offset ++;
@@ -104,6 +105,18 @@ void TCPlisten(void *self)
                     char * id = bullet1->getID(bullet1);
                     EntityManager *entityManager = getEntityManager();
                     entityManager->add(entityManager, id, bullet1);
+                    offset += sizeof(ShootBullet);
+                }
+                else if (((char*)instance->packetReceived)[offset] == (char)5)
+                {
+                    offset ++;
+                    BlockDestroy * blockDestroyed = (BlockDestroy*)(instance->packetReceived+offset);
+
+                    printf("Block destroy from: %d (%d, %d).\n", blockDestroyed->from, blockDestroyed->x, blockDestroyed->y);
+
+                    MapManager * map = getMapManager();
+                    map->digNoSend(map, blockDestroyed->x, blockDestroyed->y);
+
                     offset += sizeof(ShootBullet);
                 }
                 else

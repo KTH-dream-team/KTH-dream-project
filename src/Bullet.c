@@ -46,11 +46,29 @@ void updateBullet(void *self, float dt)
     BulletInstance *instance = ((Bullet *)self)->instance;
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 
+
+    // self destroy;
     Transform *pos = instance->position;
     if (pos->getX(pos) > 1100 || pos->getY(pos) > 1100 || pos->getY(pos) < 0 || pos->getX(pos) < 0)
     {
         EntityManager *EM = getEntityManager();
         EM->drop(EM, instance->id);
+        ((Bullet *)self)->destroy(self);
+    }
+
+    // check collition with map tiles
+    MapManager *mapManager = getMapManager();//MAP
+    SDL_Rect hitBox = ((Bullet*)self)->instance->hitBox;
+    SDL_Rect dRect ={
+        instance->position->getX(instance->position) + instance->hitBox.x,
+        instance->position->getY(instance->position) + instance->hitBox.y,
+        instance->hitBox.w,
+        instance->hitBox.h,
+    };
+    if (mapManager->checkColision(mapManager, dRect, &instance->vel, dt,2))
+    {
+        EntityManager *EM = getEntityManager();
+        EM->drop(EM,instance->id);
         ((Bullet *)self)->destroy(self);
     }
 }

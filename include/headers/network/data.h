@@ -29,3 +29,10 @@ typedef struct // datatype: 4
     float velX;
     float velY;
 } ShootBullet;
+
+typedef struct // datatype:5
+{
+    int from;
+    int x; //testa float;
+    int y;
+} BlockDestroy;

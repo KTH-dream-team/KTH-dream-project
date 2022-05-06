@@ -4,6 +4,8 @@
 #include "TextureManager.h"
 #include "map.h"
 #include "CollisionManager.h"
+#include "networkClient.h"
+#include "data.h"
 #define ROW 25
 #define COL 50
 #define PRIVET static 
@@ -12,6 +14,9 @@
 struct mapManagerInstance {
     int map[ROW][COL];
 };
+
+
+bool chekBlockContact(void *self,int blockRow, int blockCol);
 
 void initMap(void *self)
 {    
@@ -65,12 +70,43 @@ void initMap(void *self)
 
 }
 
-void dig(void *self,int x, int y){//!dig when holding Q
+void build(void *self, int x,int y, int blockType){//!builds when holding E
     MapManager *mapmanager = (MapManager *)self;
+
+    blockType = 1; //defult dirt
     int blockCol = x/20;
     int blockRow = y/20;
-    mapmanager->instance->map[blockRow][blockCol] = 0;
+    printf("x %d y%d",x,y);
+    if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
+    {
+        mapmanager->instance->map[blockRow][blockCol] = blockType;
+    }else{
+        printf("\ncant build on exiisting block\n");
+    }
+}
+
+//!function can bradcast data with udp
+void dig(void *self,int x, int y){//!dig when holding Q
+    MapManager *mapmanager = (MapManager *)self;
+    int intBlockCol = x/20;
+    int intBlockRow = y/20;
+    //float blockCol = intBlockCol;
+    //float blockRow = intBlockRow;
+    mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
     
+    NetworkClient *network = getNetworkClient();
+    BlockDestroy dataToSend = {
+        network->getTCPID(network),
+        intBlockCol,
+        intBlockRow
+    };
+    
+    network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
+}
+void digNoSend(void *self,int x, int y){//!
+    MapManager *mapmanager = (MapManager *)self;
+
+    mapmanager->instance->map[y][x] = 0;//!brig make 0    
 }
 
 bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funktion kolla om block gör kontakt
@@ -86,51 +122,47 @@ bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funk
     return false;
 }
 
-void checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt){//
+bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType){//
 
     CollisionManager *colisionManager = GetCollisionManager();
-    MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance;    
+    MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance; 
+    MapManager *map = ((MapManager *)self);
     int lowerBounce = ((dRect.y+dRect.h)/20)+2;
     int upperBounce = (dRect.y/20)-1;    
     int rightBounce = ((dRect.x+dRect.w)/20)+2;
     int leftBounce = (dRect.x/20)-1;
    // int rightBounce = (dRect.x+dRect.w/20)+2;//!optimize collision detection
-
-
     for (int i = 0; i < ROW; i++)
         {   
-            for (int j = leftBounce; j < rightBounce; j++)
+            for (int j = 0; j < COL; j++)
             {
                 if(i<0 && i>ROW)continue;
                 if(j<0 && j>COL)continue;
 
                 SDL_Rect mapBlock = {j * 20, i * 20, 20, 20};
                 int blockType = mapManagerInstance->map[i][j];
-                
                 if (blockType==0)continue;
                 
-                (colisionManager->ResolveDynamicRectVsRect(dRect,dir,mapBlock,dt));
-            
+                switch (collisionType)
+                {
+                case 1://! 1 warrior collison
+                    colisionManager->ResolveDynamicRectVsRect(dRect,dir,mapBlock,dt);
+                    // return true;
+                    break;
+                case 2://! 2 bullet collison
+                    if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
+                    {
+                        map->dig(map,mapBlock.x, mapBlock.y);
+                        // printf("Bullet collision\n");
+                        return true;
+                    }  
+                    break;
+                default://printf("den gjorde defult\n");
+                    break;
+                }
             }
-        }
-        
-    //printf("l=%d r=%d u=%d d=%d\n",leftBounce,rightBounce, upperBounce, lowerBounce);
-}
-
-void build(void *self, int x,int y, int blockType){//!builds when holding E
-    MapManager *mapmanager = (MapManager *)self;
-
-    blockType = 1; //defult dirt
-    int blockCol = x/20;
-    int blockRow = y/20;
-    printf("x %d y%d",x,y);
-    if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
-    {
-        mapmanager->instance->map[blockRow][blockCol] = blockType;
-    }else{
-        printf("\ncant build on exiisting block\n");
-    }
-       
+        }        
+        return false;
 }
 
 
@@ -194,6 +226,7 @@ MapManager *getMapManager(){
     self.showMap = showMap;
     self.initMap = initMap;
     self.dig = dig;
+    self.digNoSend = digNoSend;
     self.build = build;
     self.destroyMap = destroyMap;
     self.checkColision = checkColision;

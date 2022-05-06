@@ -16,6 +16,7 @@ struct fpsManagerInstance
 void fpsManagerListen(void *self)
 {
     unsigned int currentTime = SDL_GetTicks();
+
     FpsManagerInstance *instance = ((FpsManager *)self)->instance;
     float dt = (currentTime - instance->lastTime) * (TARGET_FRAME_RATE / 1000.0);
     instance->deltaTime = dt;

@@ -57,7 +57,7 @@ void updateWarrior(void *self, float dt)
         hitBox.h,
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
-    mapManager->checkColision(mapManager, dRect, vel, dt); //! warrior collision check
+    mapManager->checkColision(mapManager, dRect, vel, dt, 1); //! warrior collision check
 
     // update position
     SDL_FPoint PTranslate = rig->getPosition(rig);
