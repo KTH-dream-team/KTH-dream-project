@@ -73,9 +73,10 @@ void updateBullet(void *self, float dt)
     }
 }
 void destroyBullet(void *self)
-{
-    free(self);
+{   
+    free(((Bullet *)self)->instance->id);
     free(((Bullet *)self)->instance);
+    free(self);
 }
 
 char *getBulletID(void *self)

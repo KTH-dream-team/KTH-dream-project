@@ -8,7 +8,7 @@
 #define MAX_CLIENTS 6
 #define MAX_SIZE 512
 #define SERVER_PORT 7000
-#define SERVER_IP "130.229.129.20"
+#define SERVER_IP "127.0.0.1"
 
 bool sendUdpPacageToClient(void *self, void *data, IPaddress destIP, UDPsocket destSoc, unsigned long len, int dataType);
 bool isClientExit(void *self, IPaddress address);
