@@ -90,11 +90,11 @@ void renderWarrior(void *self)
     // DataPos wariorSendPos ={warriorPos.x, warriorPos.y, network->TCPgetID(network)};
     // network->TCPbroadCast(network,&wariorSendPos,sizeof(DataPos));//todo fixa size
     //! UDP send start here
-    UDPStruct sendData;
-    sendData.from = network->UDPgetID(network);
-    sendData.warrior.x=instance->position->getX(instance->position);
-    sendData.warrior.y=instance->position->getY(instance->position);
-    network->UDPbroadCast(network,&sendData,sizeof(UDPStruct));
+    // UDPStruct sendData;
+    // sendData.from = network->UDPgetID(network);
+    // sendData.warrior.x=instance->position->getX(instance->position);
+    // sendData.warrior.y=instance->position->getY(instance->position);
+    // network->UDPbroadCast(network,&sendData,sizeof(UDPStruct));
     
 }
 void warriorEventHandle(void *self)
@@ -161,7 +161,7 @@ void warriorEventHandle(void *self)
             float vely = cubeY - pos->getY(pos);
             float xN =  velx / sqrt(velx*velx+vely*vely);
             float yN =  vely / sqrt(velx*velx+vely*vely);
-            SDL_FPoint velN = {xN*20, yN*20};
+            SDL_FPoint velN = {xN*50, yN*50};
             Bullet *bullet1 = newBullet("Bullet-1", pos->get(pos), velN);
             entityManager->add(entityManager,"Bullet-1", bullet1);
             //playSound("./assets/sound1.wav", SDL_MIX_MAXVOLUME);

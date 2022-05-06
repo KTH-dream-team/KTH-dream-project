@@ -142,8 +142,8 @@ bool ResolveBulletVSRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, float 
     float t;
     if (DynamicRectVsRect(DRect, *dir, SRect, &normal, &t, dt))
     {   
-        printf("bullet collision\n");
-        printf("normal: x: %f,y:%f \n", normal.x, normal.y);
+        // printf("bullet collision\n");
+        // printf("normal: x: %f,y:%f \n", normal.x, normal.y);
         if(normal.y == -1 || normal.y == 1){
              dir->y = 0;
 
