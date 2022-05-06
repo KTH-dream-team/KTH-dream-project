@@ -12,9 +12,9 @@
 
 #define MAX_SIZE 512
 #define CLIENT_PORT 0
-#define CLIENT_IP "130.229.129.20" // 127.0.0.1
+#define CLIENT_IP "127.0.0.1" // 127.0.0.1//130.229.166.16
 #define SERVER_PORT 3000
-#define SERVER_IP "130.229.129.20"
+#define SERVER_IP "127.0.0.1"
 
 struct TCPclientInstance
 {

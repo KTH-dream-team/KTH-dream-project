@@ -146,7 +146,7 @@ TCPserver *getTCPserver()
     self.init = TCPinitServer;
     self.listen = TCPlisten;
 
-    for (int i = 0; i < MAX_SIZE; i++)
+    for (int i = 0; i < MAX_CLIENTS; i++)
         self.instance->clients[i].data = malloc(MAX_SIZE);
 
     self.instance->serverSocket = NULL;

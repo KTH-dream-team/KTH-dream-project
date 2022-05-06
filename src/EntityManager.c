@@ -63,8 +63,11 @@ void dropEntity(void *self, char*id)
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
         if (strcmp(t->id, id) == 0)
         {
-            entitylist->drop(entitylist, i);
-            printf("Droped: %s\n", id);
+            if(strstr(t->id, "Bullet-") != NULL)
+            {
+                ((Bullet*)t->entity)->destroy((Bullet*)t->entity);
+                entitylist->drop(entitylist, i);
+            }
             break;
         }
     }
@@ -88,7 +91,7 @@ void renderAllEntities(void *self)
         }
         else if(strstr(t->id, "Bullet-") != NULL)
         {
-            ((Bullet*)t->entity)->render((Cube*)t->entity);
+            ((Bullet*)t->entity)->render((Bullet*)t->entity);
         }
     }
 }
