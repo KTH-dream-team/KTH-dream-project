@@ -36,3 +36,10 @@ typedef struct // datatype:5
     int x; //testa float;
     int y;
 } BlockDestroy;
+typedef struct // datatype:6
+{
+    int from;
+    int x; //testa float;
+    int y;
+    int blockType;
+} BlockBuild;

@@ -76,10 +76,22 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
     blockType = 1; //defult dirt
     int blockCol = x/20;
     int blockRow = y/20;
-    printf("x %d y%d",x,y);
+   // printf("x %d y%d",x,y);
+    
     if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
     {
+        
         mapmanager->instance->map[blockRow][blockCol] = blockType;
+        NetworkClient *network = getNetworkClient();
+        BlockBuild dataToSend = {
+            network->getTCPID(network),
+            blockCol,
+            blockRow,
+            blockType
+    };
+    
+    network->TCPbroadCast(network, &dataToSend, sizeof(BlockBuild), 6);
+
     }else{
         printf("\ncant build on exiisting block\n");
     }
