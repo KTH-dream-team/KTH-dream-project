@@ -10,6 +10,7 @@ typedef struct
     void (*listen)(void *self);
     void (*destroy)(void *self);
 
+
     NetworkServerInstance *instance;
 } NetworkServer;
 

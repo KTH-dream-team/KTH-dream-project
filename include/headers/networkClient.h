@@ -1,25 +1,21 @@
 #pragma once
 #include "stdbool.h"
 #include "data.h"
-#include "SDL2/SDL_net.h"
-
 
 typedef struct networkClientInstance NetworkClientInstance;
 
-
-typedef struct {
+typedef struct
+{
 
     bool (*init)(void *self);
     void (*listen)(void *self);
-    int (*TCPresive)(void *self, void *dest, int desireInt);
-    //void (*UDPresive)(void *self);
-    int (*TCPgetID)(void *self);
-    int (*UDPgetID)(void *self);
-    int (*TCPbroadCast)(void *self, void *data, int dataSize);
-    void (*UDPbroadCast)(void *self, void *data, int dataSize);
-    void (*destroy)(void *self);
-    
+    int (*TCPbroadCast)(void *self, void *data, int dataSize, int datatype);
+    void (*UDPbroadCast)(void *self, void *data, int dataSize, int dataType);
+    void (*connect)(void *self, int totalPlayer);
+    int (*getTCPID)(void *self);
+    bool (*getIsAllClientJoined)(void *self);
+
     NetworkClientInstance *instance;
 } NetworkClient;
 
-NetworkClient * getNetworkClient();
+NetworkClient *getNetworkClient();

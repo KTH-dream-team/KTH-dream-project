@@ -7,7 +7,6 @@
 #include "EntityManager.h"
 #include "InputHandler.h"
 #include "Warrior.h"
-#include "OtherWarrior.h"
 #include "FpsManager.h"
 #include "Cube.h"
 #include "map.h"

@@ -72,23 +72,6 @@ void updateBullet(void *self, float dt)
         ((Bullet *)self)->destroy(self);
     }
 
-    MapManager *mapManager = getMapManager();//MAP
-    SDL_Rect hitBox = ((Bullet *)self)->instance->hitBox;
-    SDL_Rect dRect ={
-        instance->position->getX(instance->position) + instance->hitBox.x,
-        instance->position->getY(instance->position) + instance->hitBox.y,
-        instance->hitBox.w,
-        instance->hitBox.h,
-    };
-  
-    // SDL_FPoint *vel = instance->vel;
-    //!warrior collision check 2 betyder att det är en bullet colision
-    if (mapManager->checkColision(mapManager, dRect, &instance->vel, dt,2))
-    {
-        EntityManager * EM = getEntityManager();
-        EM->drop(EM,instance->id);
-        ((Bullet *)self)->destroy(self);
-    }
 }
 void destroyBullet(void *self)
 {   
