@@ -57,7 +57,7 @@ bool UDPinit(void *self)
         fprintf(stderr, "UDP_Alloc error: %s\n", SDLNet_GetError());
         return false;
     }
-    instance->isRunning = true;
+    instance->isRunning = true;//!remove this
 
     return true;
 }
@@ -101,7 +101,7 @@ void UDPclientListen(void *self)
             WarriorSnapshot *ws = (WarriorSnapshot *)(instance->packetReceived->data + 1);
             EntityManager *entityManager = getEntityManager();
 
-            int idInt = ws->from;
+            int idInt = ws->from;//todo fix this
             char id[15];
             strcpy(id, "Warrior-000");
 

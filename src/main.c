@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     if (!network->init(network))
         return 1;
 
-    network->connect(network, 3);
+    network->connect(network, 2);
 
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);

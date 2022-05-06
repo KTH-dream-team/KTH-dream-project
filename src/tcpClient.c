@@ -73,7 +73,7 @@ void TCPlisten(void *self)
                 if (((char*)instance->packetReceived)[offset] == (char)1)
                 {
                     offset ++;
-                    Connection* a = (Connection*)(instance->packetReceived+1);
+                    Connection* a = (Connection*)(instance->packetReceived+offset);
                     if(instance->numOfClients < a->totalClient)
                         instance->numOfClients = a->totalClient;
                     printf("My TCP ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
@@ -87,7 +87,7 @@ void TCPlisten(void *self)
                     printf("Warrior Created by: %d, (x:%d, y:%d), package size: %d, data size:%d.\n",wa->from, wa->x, wa->y, size, (int)sizeof(WarriorCreation));
                     
                     EntityManager *entityManager = getEntityManager();
-                    Warrior *warrior = createWarrior(wa->x, wa->y, wa->from, 23, false);
+                    Warrior *warrior = createWarrior(wa->x, wa->y, wa->from, wa->from, false);//!check if correct
                     char * id = warrior->getID(warrior);
                     entityManager->add(entityManager, id, warrior); // add to entity manager list
                     offset += sizeof(WarriorCreation);
@@ -104,7 +104,7 @@ void TCPlisten(void *self)
                     char * id = bullet1->getID(bullet1);
                     EntityManager *entityManager = getEntityManager();
                     entityManager->add(entityManager, id, bullet1);
-                    offset = size;
+                    offset += sizeof(ShootBullet);
                 }
                 else
                 {

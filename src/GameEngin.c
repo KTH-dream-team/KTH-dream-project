@@ -34,7 +34,7 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     mapManager->initMap(mapManager); //! initializes map
 
     EntityManager *entityManager = getEntityManager();
-    // Warrior creation
+    // Warrior creation handel network
 
     NetworkClient *network = getNetworkClient();
     WarriorCreation wa = {network->getTCPID(network),100, 0};
