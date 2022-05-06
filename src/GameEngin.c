@@ -13,8 +13,7 @@
 #include "map.h"
 #include "Bullet.h"
 #include "networkClient.h"
-#include "audio.h"
-
+#include<time.h>
 
 struct enginInstance
 {
@@ -29,70 +28,23 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     printf("Engin_init_1\n");
     GameEngin *Engin = ((GameEngin *)self);
     bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
-    if (!isRenderSucced){
-        return 0;}
-    printf("Engin_init_2\n");
+    if (!isRenderSucced)
+        return 0;
 
-    NetworkClient *client = getNetworkClient();
-    printf("Engin_init_3\n");
-
-    Audio *audio = newAudio();
-    printf("Engin_init_4\n");
-
-    audio->init();
-    // audio->backgroud(audio, "assets/back.wav", 5);//!backgroud music
-    
-    //init map
+    // init map
     MapManager *mapManager = getMapManager();
-    printf("Engin_init_7\n");
-
-    mapManager->initMap(mapManager);//! initializes map
-    printf("Engin_init_8\n");
-
+    mapManager->initMap(mapManager); //! initializes map
 
     EntityManager *entityManager = getEntityManager();
-    printf("Engin_init_9\n");
+    // Warrior creation handel network
 
-    // Warrior creation
-    Warrior *warrior = createWarrior(client->TCPgetID(client));
-    printf("Engin_init_10\n");
+    NetworkClient *network = getNetworkClient();
+    WarriorCreation wa = {network->getTCPID(network),100, 0};
+    network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
 
-
-    static char myWarrior[10] = "Warrior-";
-    char clientID = '0' + client->TCPgetID(client);
-    printf("TCPgetID: %d, string: %s, charID: %c\n", client->TCPgetID(client), myWarrior, clientID);
-    strncat(myWarrior,&clientID,1);
-    printf("Engin_init_11\n");
-
-    entityManager->add(entityManager, myWarrior, warrior);//add to entity manager list
-    printf("Engin_init_12\n");
-
-    // Other warrior creation
-    for(int i=0;i<MAX_CLIENTS;i++)
-    {
-        if(i==client->TCPgetID(client)) continue;
-        if(i==0)
-        {
-            OtherWarrior *otherwarrior0 =  createOtherWarrior(i, i, i);
-            entityManager->add(entityManager, "OtherWarrior-0", otherwarrior0);
-        }
-        else if(i==1)
-        {
-            OtherWarrior *otherwarrior1 =  createOtherWarrior(i, i, i);
-            entityManager->add(entityManager, "OtherWarrior-1", otherwarrior1);
-        }
-        else if(i==2)
-        {
-            OtherWarrior *otherwarrior2 =  createOtherWarrior(i, i, i);
-            entityManager->add(entityManager, "OtherWarrior-2", otherwarrior2);
-        }
-        else if(i==3)
-        {
-            OtherWarrior *otherwarrior3 = createOtherWarrior(i, i, i);
-            entityManager->add(entityManager, "OtherWarrior-3", otherwarrior3);
-        }
-    }
-    printf("Engin_init_13\n");
+    Warrior *warrior = createWarrior(100, 0, network->getTCPID(network), -1,true);
+    char * wID = warrior->getID(warrior);
+    entityManager->add(entityManager, wID, warrior); // add to entity manager list
 
     Engin->instance->isRunning = true;
     printf("Engin_init_14\n");
@@ -119,17 +71,14 @@ void handleUpdates(void *self)
 void handleRenders(void *self)
 {
     GameEngin *Engin = ((GameEngin *)self);
-    SDL_RenderClear(Engin->instance->renderer);
-    // SDL_SetRenderDrawColor(Engin->instance->renderer, 135, 206, 235, 255);//färg bakgrund
-    
-    //render background
+    // render background
     TextureManager *textureManager = getTextureManager(textureManager);
-    textureManager->load(textureManager,"moon","./assets/moon.jpg");
+    textureManager->load(textureManager, "moon", "./assets/moon.jpg");
     SDL_Rect srcRect = {0, 0, 1000, 500};
     SDL_Rect destRect = {0, 0, 1000, 500};
-    textureManager->draw(textureManager,"moon",srcRect, destRect,1);//!draw bakgrundsbild
-    
-    //render map
+    textureManager->draw(textureManager, "moon", srcRect, destRect, 1); //! draw bakgrundsbild
+
+    // render map
     MapManager *mapManger = getMapManager();
     mapManger->showMap(mapManger);
     EntityManager *entityManager = getEntityManager();
@@ -147,30 +96,22 @@ bool destroyEngine(void *self)
     SDL_DestroyRenderer(Engin->instance->renderer);
     free(Engin->instance);
 
-    //destroy texture manager
+    // destroy texture manager
     TextureManager *texterManager = getTextureManager();
     texterManager->destroy(texterManager);
 
-    //destroy entityManager
+    // destroy entityManager
     EntityManager *entityManager = getEntityManager();
     entityManager->destroy(entityManager);
 
-    //destroy inputHandler
+    // destroy inputHandler
     InputHandler *inputHandler = getInputHandler();
     inputHandler->destroy(inputHandler);
 
-    //destroy mapManager
+    // destroy mapManager
     MapManager *mapManager = getMapManager();
     mapManager->destroyMap(mapManager);
 
-    //destroy networkClient
-    NetworkClient *network = getNetworkClient();
-    network->destroy(network);
-
-    //destroy audio
-    Audio *audio = newAudio();
-    audio->destroy(audio);
-    
     // destroy all assets here !!!
 
     // destroy functions go here !!!

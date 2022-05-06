@@ -4,9 +4,8 @@
 #include "TextureManager.h"
 #include "map.h"
 #include "CollisionManager.h"
-#include "data.h"
 #include "networkClient.h"
-#include <stdbool.h>
+#include "data.h"
 #define ROW 25
 #define COL 50
 #define PRIVET static 
@@ -15,6 +14,9 @@
 struct mapManagerInstance {
     int map[ROW][COL];
 };
+
+
+bool chekBlockContact(void *self,int blockRow, int blockCol);
 
 void initMap(void *self)
 {    
@@ -68,27 +70,53 @@ void initMap(void *self)
 
 }
 
+void build(void *self, int x,int y, int blockType){//!builds when holding E
+    MapManager *mapmanager = (MapManager *)self;
+    blockType = 1; 
+    int blockCol = x/20;
+    int blockRow = y/20;
+    
+    if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
+    {
+        
+        mapmanager->instance->map[blockRow][blockCol] = blockType;
+        NetworkClient *network = getNetworkClient();
+        BlockBuild dataToSend = {
+            network->getTCPID(network),
+            blockCol,
+            blockRow,
+            blockType
+    };
+    network->TCPbroadCast(network, &dataToSend, sizeof(BlockBuild), 6);
+    }else{
+        printf("\ncant build on exiisting block\n");
+    }
+}
+
+void buildNoSend(void *self, int x,int y, int blockType){
+    MapManager *mapmanager = (MapManager *)self;
+    mapmanager->instance->map[y][x] = blockType; 
+}
+
 //!function can bradcast data with udp
 void dig(void *self,int x, int y){//!dig when holding Q
     MapManager *mapmanager = (MapManager *)self;
     int intBlockCol = x/20;
     int intBlockRow = y/20;
-    float blockCol = intBlockCol;
-    float blockRow = intBlockRow;
+    //float blockCol = intBlockCol;
+    //float blockRow = intBlockRow;
     mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
     NetworkClient *network = getNetworkClient();
-    
-    BlockPos blockSendPos ={blockCol, blockRow,1};
-    //send whith udp
-    network->UDPbroadCast(network,&blockSendPos,sizeof(BlockPos));
-    //send whith tcp
-    //network->TCPbroadCast(network,&blockSendPos,sizeof(BlockPos));
-    // printf("remove block x%.2f y%.2f\n",blockCol,blockRow);//?debugings
+    BlockDestroy dataToSend = {
+        network->getTCPID(network),
+        intBlockCol,
+        intBlockRow
+    };
+    network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
 }
-void digNoSend(void *self,int x, int y){//!
+void digNoSend(void *self,int x, int y){
     MapManager *mapmanager = (MapManager *)self;
-
-    mapmanager->instance->map[y][x] = 0;//!brig make 0    
+    mapmanager->instance->map[y][x] = 0;
 }
 
 bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funktion kolla om block gör kontakt
@@ -145,21 +173,6 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
             }
         }        
         return false;
-}
-void build(void *self, int x,int y, int blockType){//!builds when holding E
-    MapManager *mapmanager = (MapManager *)self;
-
-    blockType = 1; //defult dirt
-    int blockCol = x/20;
-    int blockRow = y/20;
-    // printf("x %d y%d",x,y);
-    if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
-    {
-        mapmanager->instance->map[blockRow][blockCol] = blockType;
-    }else{
-        printf("\ncant build on exiisting block\n");
-    }
-       //printf("build on x %d y %d\n",blockCol,blockRow);
 }
 
 
@@ -223,6 +236,7 @@ MapManager *getMapManager(){
     self.initMap = initMap;
     self.dig = dig;
     self.digNoSend = digNoSend;
+    self.buildNoSend = buildNoSend;
     self.build = build;
     self.destroyMap = destroyMap;
     self.checkColision = checkColision;

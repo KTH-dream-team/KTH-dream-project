@@ -3,6 +3,10 @@
 */
 
 #pragma once
+#include <stdbool.h>
+#include "SDL2/SDL.h"
+
+
 
 typedef struct bulletInstance BulletInstance;
 
@@ -11,9 +15,10 @@ typedef struct bullet
     void (*render)(void *self);
     void (*update)(void *self, float dt);
     void (*events)(void *self);
+    char* (*getID)(void *self);
     void (*destroy)(void *self);
 
     BulletInstance *instance;
 } Bullet;
 
-Bullet *newBullet();
+Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal);

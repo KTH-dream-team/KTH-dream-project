@@ -5,9 +5,8 @@
 #include "InputHandler.h"
 #include "map.h"
 #include "hitBox.h"
+#include <time.h>
 #include "networkClient.h"
-#include "audio.h"
-#include <stdlib.h>
 
 #define SDL_MAIN_HANDLED
 
@@ -16,10 +15,13 @@
 
 int main(int argc, char **argv)
 {
-    // system("clear");
+    srand(time(0));
     NetworkClient *network = getNetworkClient();
-    network->init(network);
-    printf("Main_1\n");
+    if (!network->init(network))
+        return 1;
+
+    network->connect(network, 2);
+
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     if (!isInitSucceed)
@@ -35,9 +37,8 @@ int main(int argc, char **argv)
         fpsManager->listen(fpsManager);
         fpsManager->frameRateListen(fpsManager);
         inputHandler->listen(inputHandler);
+        network->listen(network);
 
-        network->listen(network);//! problem here
-        // printf("fps %d\n", fpsManager->getFrameRate(fpsManager));
         Engine->handleEvents(Engine);
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);
