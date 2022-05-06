@@ -68,6 +68,8 @@ void TCPlisten(void *self)
             int size = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
             printf("new TCP packet size: %d\n", size);
             int offset=0;
+            EntityManager *entityManager = getEntityManager();
+            MapManager * map = getMapManager();
             while(size > offset)
             {
                 switch(((char*)instance->packetReceived)[offset])
@@ -81,61 +83,56 @@ void TCPlisten(void *self)
                         instance->id = a->myId;
                         offset += sizeof(Connection);
                     break;
-                }
-                if (((char*)instance->packetReceived)[offset] == (char)1)
-                {
-                    offset ++;
-                    Connection* a = (Connection*)(instance->packetReceived+offset);
-                    if(instance->numOfClients < a->totalClient)
-                        instance->numOfClients = a->totalClient;
-                    printf("My TCP ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
-                    instance->id = a->myId;
-                    offset += sizeof(Connection);
-                }
-                else if (((char*)instance->packetReceived)[offset] == (char)2)
-                {
-                    offset ++;
-                    WarriorCreation * wa = (WarriorCreation*)(instance->packetReceived+offset);
-                    printf("Warrior Created by: %d, (x:%d, y:%d), package size: %d, data size:%d.\n",wa->from, wa->x, wa->y, size, (int)sizeof(WarriorCreation));
-                    
-                    EntityManager *entityManager = getEntityManager();
-                    Warrior *warrior = createWarrior(wa->x, wa->y, wa->from, wa->from, false);//!check if correct
-                    char * id = warrior->getID(warrior);
-                    entityManager->add(entityManager, id, warrior); // add to entity manager list
-                    offset += sizeof(WarriorCreation);
-                }
-                else if (((char*)instance->packetReceived)[offset] == (char)4)
-                {
-                    offset ++;
-                    ShootBullet * bullet = (ShootBullet*)(instance->packetReceived+offset);
-                    printf("fire Bullet from: %d.\n", bullet->from);
+                    case (char)2:
+                        offset ++;
+                        WarriorCreation * wa = (WarriorCreation*)(instance->packetReceived+offset);
+                        printf("Warrior Created by: %d, (x:%d, y:%d), package size: %d, data size:%d.\n",wa->from, wa->x, wa->y, size, (int)sizeof(WarriorCreation));
+                        
+                        Warrior *warrior = createWarrior(wa->x, wa->y, wa->from, wa->from, false);//!check if correct
+                        char * idWarrior = warrior->getID(warrior);
+                        entityManager->add(entityManager, idWarrior, warrior); // add to entity manager list
+                        offset += sizeof(WarriorCreation);
+                    break;
+                    case (char)4:
+                        offset ++;
+                        ShootBullet * bullet = (ShootBullet*)(instance->packetReceived+offset);
+                        printf("fire Bullet from: %d.\n", bullet->from);
+                        SDL_FPoint velN = {bullet->velX, bullet->velY}; //! bullet velocity
+                        SDL_FPoint pos = {bullet->x, bullet->y};
+                        Bullet *bullet1 = newBullet(pos, velN, false);
+                        char * idBullet = bullet1->getID(bullet1);
+                        entityManager->add(entityManager, idBullet, bullet1);
+                        offset += sizeof(ShootBullet);
+                    break;
+                    case (char)5:
+                        offset ++;
+                        BlockDestroy * blockDestroyed = (BlockDestroy*)(instance->packetReceived+offset);
 
-                    SDL_FPoint velN = {bullet->velX, bullet->velY}; //! bullet velocity
-                    SDL_FPoint pos = {bullet->x, bullet->y};
-                    Bullet *bullet1 = newBullet(pos, velN, false);
-                    char * id = bullet1->getID(bullet1);
-                    EntityManager *entityManager = getEntityManager();
-                    entityManager->add(entityManager, id, bullet1);
-                    offset += sizeof(ShootBullet);
-                }
-                else if (((char*)instance->packetReceived)[offset] == (char)5)
-                {
-                    offset ++;
-                    BlockDestroy * blockDestroyed = (BlockDestroy*)(instance->packetReceived+offset);
+                        printf("Block destroy from: %d (%d, %d).\n", blockDestroyed->from, blockDestroyed->x, blockDestroyed->y);
 
-                    printf("Block destroy from: %d (%d, %d).\n", blockDestroyed->from, blockDestroyed->x, blockDestroyed->y);
+                        map->digNoSend(map, blockDestroyed->x, blockDestroyed->y);
 
-                    MapManager * map = getMapManager();
-                    map->digNoSend(map, blockDestroyed->x, blockDestroyed->y);
+                        offset += sizeof(BlockDestroy);
+                    break;
+                    case (char)6:
+                        offset ++;
+                        BlockBuild * blockBuilt = (BlockBuild*)(instance->packetReceived+offset);
 
-                    offset += sizeof(ShootBullet);
-                }
-                else
-                {
+                        printf("Block build from: %d (%d, %d).\n", blockBuilt->from, blockBuilt->x, blockBuilt->y);
+
+                        map->buildNoSend(map, blockBuilt->x, blockBuilt->y,blockBuilt->blockType);
+
+                        offset += sizeof(BlockBuild);
+
+                    break;
+                    default:
                     offset ++;
                     printf("!got TCP packet with flag: %d.\n", ((int*)instance->packetReceived)[0]);
                     offset = size;
+                    break;
                 }
+       
+           
 
             }
         }

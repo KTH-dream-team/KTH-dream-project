@@ -72,11 +72,9 @@ void initMap(void *self)
 
 void build(void *self, int x,int y, int blockType){//!builds when holding E
     MapManager *mapmanager = (MapManager *)self;
-
-    blockType = 1; //defult dirt
+    blockType = 1; 
     int blockCol = x/20;
     int blockRow = y/20;
-   // printf("x %d y%d",x,y);
     
     if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
     {
@@ -89,12 +87,15 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
             blockRow,
             blockType
     };
-    
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockBuild), 6);
-
     }else{
         printf("\ncant build on exiisting block\n");
     }
+}
+
+void buildNoSend(void *self, int x,int y, int blockType){
+    MapManager *mapmanager = (MapManager *)self;
+    mapmanager->instance->map[y][x] = blockType; 
 }
 
 //!function can bradcast data with udp
@@ -105,20 +106,17 @@ void dig(void *self,int x, int y){//!dig when holding Q
     //float blockCol = intBlockCol;
     //float blockRow = intBlockRow;
     mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
-    
     NetworkClient *network = getNetworkClient();
     BlockDestroy dataToSend = {
         network->getTCPID(network),
         intBlockCol,
         intBlockRow
     };
-    
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
 }
-void digNoSend(void *self,int x, int y){//!
+void digNoSend(void *self,int x, int y){
     MapManager *mapmanager = (MapManager *)self;
-
-    mapmanager->instance->map[y][x] = 0;//!brig make 0    
+    mapmanager->instance->map[y][x] = 0;
 }
 
 bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funktion kolla om block gör kontakt
@@ -239,6 +237,7 @@ MapManager *getMapManager(){
     self.initMap = initMap;
     self.dig = dig;
     self.digNoSend = digNoSend;
+    self.buildNoSend = buildNoSend;
     self.build = build;
     self.destroyMap = destroyMap;
     self.checkColision = checkColision;
