@@ -150,7 +150,7 @@ GameEngin *getGameEngin()
 // helper functions
 bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScreen)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if ((SDL_Init(SDL_INIT_VIDEO| SDL_INIT_AUDIO)) < 0)
     {
         printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return false;
