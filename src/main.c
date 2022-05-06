@@ -7,6 +7,7 @@
 #include "hitBox.h"
 #include "networkClient.h"
 #include "audio.h"
+#include "menu.h"
 #include <stdlib.h>
 
 #define SDL_MAIN_HANDLED
@@ -25,6 +26,13 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
     printf("Main_2\n");
+
+    TTF *ttf = getMenu();
+    printf("getMenu Successfull\n");
+    ttf->ttfInit(ttf);
+    printf("Init Successfull\n");
+    ttf->destroy(ttf);
+    printf("destroy Successfull\n");
 
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
