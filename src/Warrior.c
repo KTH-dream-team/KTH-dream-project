@@ -69,7 +69,7 @@ void updateWarrior(void *self, float dt)
 
     unsigned int currentTime = SDL_GetTicks();
     unsigned int deltaTime = currentTime - lastTime;
-    if(deltaTime < 20)
+    if(deltaTime < 100)
         return;
     lastTime = currentTime;
 

@@ -5,10 +5,10 @@
 #include "SDL2/SDL_net.h"
 #include "udpServer.h"
 #include "data.h"
-#define MAX_CLIENTS 4
+#define MAX_CLIENTS 6
 #define MAX_SIZE 512
 #define SERVER_PORT 7000
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "130.229.129.20"
 
 bool sendUdpPacageToClient(void *self, void *data, IPaddress destIP, UDPsocket destSoc, unsigned long len, int dataType);
 bool isClientExit(void *self, IPaddress address);
