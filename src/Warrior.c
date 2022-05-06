@@ -66,7 +66,7 @@ void updateWarrior(void *self, float dt)
 
     // broadcast data;
     static unsigned int lastTime;
-
+    
     unsigned int currentTime = SDL_GetTicks();
     unsigned int deltaTime = currentTime - lastTime;
     if(deltaTime < 20)
