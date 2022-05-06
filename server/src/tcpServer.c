@@ -8,7 +8,7 @@
 #define MAX_CLIENTS 16
 #define MAX_SIZE 512
 #define SERVER_PORT 3000
-#define SERVER_IP "130.229.129.20"
+#define SERVER_IP "127.0.0.1"
 
 typedef struct client
 {
@@ -139,6 +139,7 @@ void TCPdestroy(void *self)
 
 TCPserver *getTCPserver()
 {
+    
     static TCPserver self;
     if (self.instance != NULL)
         return &self;

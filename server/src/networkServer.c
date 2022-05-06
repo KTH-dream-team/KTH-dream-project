@@ -2,6 +2,7 @@
 #include "tcpServer.h"
 #include "udpServer.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 struct networkServerInstance
 {
@@ -50,7 +51,7 @@ NetworkServer *getNetworkServer()
     static NetworkServer self;
     if (self.instance != NULL)
         return &self;
-
+    
     self.instance = malloc(sizeof(NetworkServerInstance));
     self.instance->UDP = getUDPserver();
     self.instance->TCP = getTCPserver();
