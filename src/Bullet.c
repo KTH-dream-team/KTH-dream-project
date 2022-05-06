@@ -30,7 +30,7 @@ void renderBullet(void *self)
     GameEngin *engin = getGameEngin();
     TextureManager *textureManager = getTextureManager();
     textureManager->load(textureManager, "bullet", "./assets/bullet.png"); //! if not null ta befintlig
-    SDL_Rect srcRec = {0, 0, 32, 32};                                      //! skapa 32x32 source rectangel
+    SDL_Rect srcRec = {0, 0, 6, 6};                                      //! skapa 32x32 source rectangel
 
     SDL_Rect box = {
         instance->position->getX(instance->position) + instance->hitBox.x,
@@ -39,7 +39,6 @@ void renderBullet(void *self)
         instance->hitBox.h,
     };
     textureManager->draw(textureManager, "bullet", srcRec, box, 1);
-    SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 }
 void updateBullet(void *self, float dt)
 {
@@ -107,8 +106,8 @@ Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal)
 
     self->instance->hitBox.x = 10;
     self->instance->hitBox.y = 15;
-    self->instance->hitBox.w = 10;
-    self->instance->hitBox.h = 10;
+    self->instance->hitBox.w = 6;
+    self->instance->hitBox.h = 6;
 
     self->render = renderBullet;
     self->update = updateBullet;
