@@ -65,6 +65,14 @@ void updateWarrior(void *self, float dt)
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
     // broadcast data;
+    static unsigned int lastTime;
+
+    unsigned int currentTime = SDL_GetTicks();
+    unsigned int deltaTime = currentTime - lastTime;
+    if(deltaTime < 20)
+        return;
+    lastTime = currentTime;
+
     NetworkClient *network = getNetworkClient();
     WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos)};
     network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
