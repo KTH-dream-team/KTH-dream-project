@@ -20,15 +20,19 @@ int main(int argc, char **argv)
     if (!network->init(network))
         return 1;
 
-    network->connect(network, 2);
+    network->connect(network, 3);
 
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     if (!isInitSucceed)
         return 1;
 
+    printf("test1\n");
+
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
+
+    printf("test2\n");
 
     while (Engine->isRunning(Engine))
     {

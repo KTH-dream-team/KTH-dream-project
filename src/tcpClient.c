@@ -92,6 +92,7 @@ void TCPlisten(void *self)
                         char * idWarrior = warrior->getID(warrior);
                         entityManager->add(entityManager, idWarrior, warrior); // add to entity manager list
                         offset += sizeof(WarriorCreation);
+                        printf("Just print some in tcpClient.c\n");
                     break;
                     case (char)4:
                         offset ++;

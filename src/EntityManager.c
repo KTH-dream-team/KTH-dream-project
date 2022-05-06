@@ -113,7 +113,7 @@ void updateAllEntities(void *self, float dt)
         }
         else if(strstr(t->id, "Bullet-") != NULL)
         {
-            ((Bullet*)t->entity)->update((Cube*)t->entity, dt);
+            ((Bullet*)t->entity)->update((Bullet*)t->entity, dt);
         }
     }
 }
@@ -152,7 +152,7 @@ void destroyEntityManager(void *self)
         }      
         else if(strstr(t->id, "Bullet-") != NULL)
         {
-            ((Bullet*)t->entity)->destroy((Cube*)t->entity);
+            ((Bullet*)t->entity)->destroy((Bullet*)t->entity);
         }
     }
 
