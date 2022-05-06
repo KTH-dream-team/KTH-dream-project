@@ -27,12 +27,12 @@ int main(int argc, char **argv)
         return 1;
     printf("Main_2\n");
 
-    TTF *ttf = getMenu();
-    printf("getMenu Successfull\n");
-    ttf->ttfInit(ttf);
-    printf("Init Successfull\n");
-    ttf->destroy(ttf);
-    printf("destroy Successfull\n");
+    //  TTF *ttf = getMenu();
+    // printf("getMenu Successfull\n");
+    // ttf->ttfInit(ttf);
+    // printf("Init Successfull\n");
+    // ttf->destroy(ttf);
+    // printf("destroy Successfull\n");
 
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
