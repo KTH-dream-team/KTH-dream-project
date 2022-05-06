@@ -27,12 +27,8 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
 
-    printf("test1\n");
-
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
-
-    printf("test2\n");
 
     while (Engine->isRunning(Engine))
     {

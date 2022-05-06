@@ -94,6 +94,7 @@ void UDPlisten(void *self)
                 Connection cdata = {instance->numOfClients, instance->clients[i].id};
                 sendUdpPacageToClient(self, &cdata, instance->clients[i].ip, instance->clients[i].socket, sizeof(Connection),1);
             }
+            printf("new UDP Client ID:%d\n", client->id);
         }
         else
         {
@@ -101,14 +102,11 @@ void UDPlisten(void *self)
 
             if (isClientExit(self, instance->packetReceived->address))
             {
-
                 for (int i = 0; i < instance->numOfClients; i++)
                 {
                     if (instance->clients[i].ip.host == instance->packetReceived->address.host && instance->clients[i].ip.port == instance->packetReceived->address.port)
                         continue;
-                    
                     sendUdpPacageToClient(self, instance->packetReceived->data, instance->clients[i].ip, instance->clients[i].socket, instance->packetReceived->len, -1);
-                    //printf("send package to %d\n", instance->clients[i].id);
                 }
             }
             else
@@ -127,7 +125,7 @@ void UDPdestroy(void *self)
     SDLNet_FreePacket(server->instance->packetSent);
     free(server->instance);
     SDLNet_Quit();
-    printf("Data has been destroyed!\n");
+    printf("UDP server has been destroyed!\n");
 }
 
 UDPserver *getUDPserver()
@@ -184,7 +182,6 @@ bool isClientExit(void *self, IPaddress adress)
     UDPServerInstance *instance = ((UDPserver *)self)->instance;
     for (int i = 0; i < instance->numOfClients; i++)
     {
-        //printf("host: %d, %d, port: %d, %d\n", adress.host, instance->clients[i].ip.host, adress.port, instance->clients[i].ip.port);
         if (adress.host == instance->clients[i].ip.host && adress.port == instance->clients[i].ip.port)
             return 1;
     }

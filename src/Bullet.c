@@ -73,13 +73,9 @@ void updateBullet(void *self, float dt)
 }
 void destroyBullet(void *self)
 {
-    char id[20];
-    strcpy(id, ((Bullet *)self)->instance->id);
-
     free(((Bullet *)self)->instance->id);
     free(((Bullet *)self)->instance);
     free(self);
-    printf("Destroy bullet with ID: %s\n", id);
 }
 
 char *getBulletID(void *self)

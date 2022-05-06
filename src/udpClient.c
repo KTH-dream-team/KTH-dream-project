@@ -76,7 +76,6 @@ void UDPdestroy(void *self)
 void UDPbroadCast(void *self, void *data, unsigned long length, int dataType)
 {
     sendUdpPacageToServer(self, data, length, dataType);
-    // printf("Sent UDP packet to server(broadcast)\n");
 }
 
 void UDPclientListen(void *self)
@@ -90,10 +89,6 @@ void UDPclientListen(void *self)
             if (instance->numOfClients < data->totalClient)
                 instance->numOfClients = data->totalClient;
             printf("UDP Client id: %d, total Client:%d\n", data->myId, data->totalClient);
-        }
-        else if (((char *)instance->packetReceived->data)[0] == (char)2)
-        {
-            printf("got new UDP package with flag: %d (%d)\n", 2, ((int *)instance->packetReceived->data)[0]);
         }
         else if (((char *)instance->packetReceived->data)[0] == (char)3)
         {

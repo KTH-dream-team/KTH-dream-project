@@ -71,7 +71,7 @@ void TCPlisten(void *self)
     tmpSock = SDLNet_TCP_Accept(instance->serverSocket);
     if (tmpSock != NULL && instance->numOfClients <= MAX_CLIENTS)
     {
-        printf("new Client\n");
+        
         instance->clients[instance->numOfClients].socket = tmpSock;
         instance->clients[instance->numOfClients].ip = *SDLNet_TCP_GetPeerAddress(tmpSock);
         instance->clients[instance->numOfClients].id = instance->currentID++;
@@ -84,6 +84,7 @@ void TCPlisten(void *self)
             Connection data = {instance->numOfClients, instance->clients[i].id};
             sendDataTo(instance->clients[i], &data, sizeof(Connection),1);
         }
+        printf("new TCP Client ID:%d\n", instance->clients[instance->numOfClients-1].id);
     }
     // listen for incomming packages from all clients
     while (SDLNet_CheckSockets(instance->socketSet, 0) > 0)
@@ -96,7 +97,6 @@ void TCPlisten(void *self)
                 int size = SDLNet_TCP_Recv(instance->clients[i].socket, client->data, MAX_SIZE);
                 if (size > 0)
                 {
-                    printf("new package from clientID %d, size: %d\n", client->id, size);
                     broadcastData(self, *client, client->data, size);
                 }
             }
@@ -111,8 +111,6 @@ void sendDataTo(Client clients, void *data, int dataSize, int dataType)
     memcpy(buffer+1, data, dataSize);
 
     int r = SDLNet_TCP_Send(clients.socket, buffer, dataSize+1);
-    printf("Sent %d bite tO client %d\n", r, clients.id);
-    
 }
 
 void broadcastData(void *self, Client sender, void *data, int dataSize)
@@ -124,7 +122,6 @@ void broadcastData(void *self, Client sender, void *data, int dataSize)
         if (sender.id == instance->clients[i].id)
             continue;
         int r = SDLNet_TCP_Send(instance->clients[i].socket, data, dataSize);
-        printf("Sent %d bite tO client %d\n", r, instance->clients[i].id);
     }
 }
 
@@ -134,7 +131,7 @@ void TCPdestroy(void *self)
     SDLNet_FreeSocketSet(server->instance->socketSet);
     free(server->instance);
     SDLNet_Quit();
-    printf("Data has been destroyed!\n");
+    printf("TCP server has been destroyed!\n");
 }
 
 TCPserver *getTCPserver()

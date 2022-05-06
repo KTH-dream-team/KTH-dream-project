@@ -35,7 +35,7 @@ void addInstance(void *self, char *id, void *entity)
 
     instance->entityList->add(instance->entityList, temp);
 
-    printf("Added: %s\n", id);
+    //printf("Added: %s\n", id);
 }
 
 void *getEntityByID(void *self, char *id)

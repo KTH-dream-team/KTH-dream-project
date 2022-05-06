@@ -66,7 +66,6 @@ void TCPlisten(void *self)
         if (SDLNet_SocketReady(instance->serverSocket))
         {
             int size = SDLNet_TCP_Recv(instance->serverSocket, instance->packetReceived, MAX_SIZE);
-            printf("new TCP packet size: %d\n", size);
             int offset=0;
             EntityManager *entityManager = getEntityManager();
             MapManager * map = getMapManager();
@@ -79,25 +78,21 @@ void TCPlisten(void *self)
                         Connection* a = (Connection*)(instance->packetReceived+offset);
                         if(instance->numOfClients < a->totalClient)
                             instance->numOfClients = a->totalClient;
-                        printf("My TCP ID:%d, nOc:%d\n",a->myId, instance->numOfClients);
                         instance->id = a->myId;
+                        printf("TCP Client id: %d, total Client:%d\n", a->myId, a->totalClient);
                         offset += sizeof(Connection);
                     break;
                     case (char)2:
                         offset ++;
                         WarriorCreation * wa = (WarriorCreation*)(instance->packetReceived+offset);
-                        printf("Warrior Created by: %d, (x:%d, y:%d), package size: %d, data size:%d.\n",wa->from, wa->x, wa->y, size, (int)sizeof(WarriorCreation));
-                        
                         Warrior *warrior = createWarrior(wa->x, wa->y, wa->from, wa->from, false);//!check if correct
                         char * idWarrior = warrior->getID(warrior);
                         entityManager->add(entityManager, idWarrior, warrior); // add to entity manager list
                         offset += sizeof(WarriorCreation);
-                        printf("Just print some in tcpClient.c\n");
                     break;
                     case (char)4:
                         offset ++;
                         ShootBullet * bullet = (ShootBullet*)(instance->packetReceived+offset);
-                        printf("fire Bullet from: %d.\n", bullet->from);
                         SDL_FPoint velN = {bullet->velX, bullet->velY}; //! bullet velocity
                         SDL_FPoint pos = {bullet->x, bullet->y};
                         Bullet *bullet1 = newBullet(pos, velN, false);
@@ -108,23 +103,14 @@ void TCPlisten(void *self)
                     case (char)5:
                         offset ++;
                         BlockDestroy * blockDestroyed = (BlockDestroy*)(instance->packetReceived+offset);
-
-                        printf("Block destroy from: %d (%d, %d).\n", blockDestroyed->from, blockDestroyed->x, blockDestroyed->y);
-
                         map->digNoSend(map, blockDestroyed->x, blockDestroyed->y);
-
                         offset += sizeof(BlockDestroy);
                     break;
                     case (char)6:
                         offset ++;
                         BlockBuild * blockBuilt = (BlockBuild*)(instance->packetReceived+offset);
-
-                        printf("Block build from: %d (%d, %d).\n", blockBuilt->from, blockBuilt->x, blockBuilt->y);
-
                         map->buildNoSend(map, blockBuilt->x, blockBuilt->y,blockBuilt->blockType);
-
                         offset += sizeof(BlockBuild);
-
                     break;
                     default:
                     offset ++;
@@ -154,7 +140,6 @@ int TCPbroadCast(void *self, void *data, int dataSize, int dataType)
     memcpy(buffer+1, data, dataSize);
 
     int amoutSent = SDLNet_TCP_Send(instance->serverSocket, buffer, dataSize+1);
-    printf("Sent TCP packet to server, amount: %d\n", amoutSent);
     return amoutSent;
 }
 
