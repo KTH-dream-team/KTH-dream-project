@@ -37,7 +37,7 @@ void initMap(void *self)
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,7,7,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
@@ -162,7 +162,7 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                 case 2://! 2 bullet collison
                     if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
                     {
-                        map->dig(map,mapBlock.x, mapBlock.y);
+                         map->dig(map,mapBlock.x, mapBlock.y);
                         // printf("Bullet collision\n");
                         return true;
                     }  
@@ -183,7 +183,6 @@ void showMap(void *self)
     SDL_Rect srcRec = {0, 0, 20, 20};//!skapa 20x20 source rectangel
     for (int i = 0; i < ROW; i++)
     {   
-        //printf("{");
         for (int j = 0; j < COL; j++)
         {
             SDL_Rect destRect = {j * 20, i * 20, 20, 20};//! positionera rectangel enligt for loop
@@ -211,7 +210,7 @@ void destroyMap(void *self){
     printf("map destroyed\n");
 }
 
-void show(void *self){ //todo remove :debug
+void show(void *self){ //map maker prints activ map to terminal in array fromat. use to make a new map
     printf("in show\n");
 
     MapManager *mapmanager = (MapManager *)self;

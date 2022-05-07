@@ -39,6 +39,7 @@ void renderBullet(void *self)
         instance->hitBox.h,
     };
     textureManager->draw(textureManager, "bullet", srcRec, box, 1);
+    SDL_RenderDrawRect(engin->getRenderer(engin), &box);//todo remove
 }
 void updateBullet(void *self, float dt)
 {
@@ -48,27 +49,45 @@ void updateBullet(void *self, float dt)
     // check collition with map tiles
     MapManager *mapManager = getMapManager();//MAP
     SDL_Rect hitBox = ((Bullet*)self)->instance->hitBox;
-    SDL_Rect dRect ={
+    SDL_Rect bulletDRect ={
         instance->position->getX(instance->position) + instance->hitBox.x,
         instance->position->getY(instance->position) + instance->hitBox.y,
         instance->hitBox.w,
         instance->hitBox.h,
     };
-    if (mapManager->checkColision(mapManager, dRect, &instance->vel, dt,2))
+    EntityManager *EM = getEntityManager();
+    if (mapManager->checkColision(mapManager, bulletDRect, &instance->vel, dt,2))
     {
-        EntityManager *EM = getEntityManager();
         EM->drop(EM,instance->id);
         return;
     }
+
+    // check collision with warrior 
+    Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
+    if(warrior000->checkColisionWarriorVsBullet(warrior000,bulletDRect,&instance->vel,dt)){
+
+        EM->drop(EM,instance->id);
+        return;
+    }
+    Warrior *warrior001 = EM->getByID(EM,"Warrior-001");
+    if(warrior001->checkColisionWarriorVsBullet(warrior001,bulletDRect,&instance->vel,dt)){
+
+        EM->drop(EM,instance->id);
+        return;
+    }
+                
+    
+
 
     // self destroy;
     Transform *pos = instance->position;
     if (pos->getX(pos) > 1100 || pos->getY(pos) > 1100 || pos->getY(pos) < 0 || pos->getX(pos) < 0)
     {
-        EntityManager *EM = getEntityManager();
         EM->drop(EM, instance->id);
         return;
     }
+
+    
 }
 void destroyBullet(void *self)
 {

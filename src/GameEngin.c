@@ -40,10 +40,10 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     WarriorCreation wa = {network->getTCPID(network),100, 0};
     network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
 
-    Warrior *warrior = createWarrior(100, 0, network->getTCPID(network), -1,true);
+    Warrior *warrior = createWarrior(100*network->getTCPID(network)+100, 0, network->getTCPID(network), -1,true);
     char * wID = warrior->getID(warrior);
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
-
+    printf("warrior id %s\n",wID);
     Engin->instance->isRunning = true;
 
     return 1;

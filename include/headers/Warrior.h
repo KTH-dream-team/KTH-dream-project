@@ -4,6 +4,7 @@
 */
 #pragma once
 #include <stdbool.h>
+#include "SDL2/SDL.h"
 
 typedef struct warriorInstance WarriorInstance;
 
@@ -15,6 +16,7 @@ typedef struct warrior
     void (*destroy)(void *self);
     void (*updatePossition)(void *self, float x, float y);
     char *(*getID)(void*self);
+    bool (*checkColisionWarriorVsBullet)(void *self,SDL_Rect bulletDRect,SDL_FPoint *vel, float dt);
 
     WarriorInstance *instance;
 } Warrior;
