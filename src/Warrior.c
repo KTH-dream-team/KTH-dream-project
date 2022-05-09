@@ -31,6 +31,7 @@ struct warriorInstance
     bool isLocal;
     int networkId;
     char id[20];
+    int health;
 };
 
 void updateWarrior(void *self, float dt)
@@ -46,7 +47,7 @@ void updateWarrior(void *self, float dt)
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
 
-    // handle collision
+    // handle collision 
     MapManager *mapManager = getMapManager(); // MAP
     Transform *pos = ((Warrior *)self)->instance->position;
     SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
@@ -58,6 +59,9 @@ void updateWarrior(void *self, float dt)
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
     mapManager->checkColision(mapManager, dRect, vel, dt, 1); //! warrior collision check
+
+    
+
 
     // update position
     SDL_FPoint PTranslate = rig->getPosition(rig);
@@ -76,6 +80,8 @@ void updateWarrior(void *self, float dt)
     NetworkClient *network = getNetworkClient();
     WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos)};
     network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
+
+
 }
 void renderWarrior(void *self)
 {
@@ -83,6 +89,11 @@ void renderWarrior(void *self)
     Transform *pos = ((Warrior *)self)->instance->position;
     WarriorInstance *instance = ((Warrior *)self)->instance;
 
+    if (instance->health<=0)
+    {
+        return;
+    }
+    
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
 
     GameEngin *engin = getGameEngin();
@@ -201,6 +212,47 @@ void warriorEventHandle(void *self)
         }
     }
 }
+
+bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *vel, float dt){
+    CollisionManager *collisionManager = GetCollisionManager();
+    WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
+    EntityManager *EM = getEntityManager();
+    Warrior *wa = ((Warrior *)self);
+
+    Animation *anim = ((Warrior *)self)->instance->animation;
+
+    Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
+    rig->update(rig, dt);
+
+    Transform *pos = ((Warrior *)self)->instance->position;
+    SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
+    SDL_Rect warriorDRect = {
+        pos->getX(pos) + hitBox.x,
+        pos->getY(pos) + hitBox.y,
+        hitBox.w,
+        hitBox.h,
+    };
+
+    if (warriorInstance->health<=0) return false;   
+    
+    
+    if(collisionManager->ResolveDynamicRectVsRect(bulletDRect,vel,warriorDRect,dt)){ 
+        warriorInstance->health--;
+        printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
+        anim->set(anim,"warrior",32,32,6,4,90,0);
+        if (warriorInstance->health<=0)
+        {
+            printf("warrior died at %d\n",warriorInstance->health);
+            anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0);
+            // anim->set(anim, "warrior", 32, 32, 8, 7, 90, 0);//row 8 är utanför bilden de därför warrior försvinner
+            EM->drop(EM,warriorInstance->id);
+        }
+        return true;
+    }
+
+    return false;
+}
+
 void destroyWarrior(void *self)
 {
     Warrior *warrior = ((Warrior *)self);
@@ -231,6 +283,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
 
     int warriorHight = 32;
     int warriorWidth = 32;
+    int health=5;
 
     Warrior *self = malloc(sizeof(Warrior));
     self->instance = malloc(sizeof(WarriorInstance));
@@ -242,6 +295,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     self->instance->hitBox.y = 7;
     self->instance->hitBox.w = warriorWidth - 10;
     self->instance->hitBox.h = warriorHight - 7;
+    self->instance->health = health;
     self->instance->isLocal = isLocal;
     self->instance->networkId = networkId;
     strcpy(self->instance->id, "Warrior-000");
@@ -265,6 +319,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
 
     self->update = updateWarrior;
     self->events = warriorEventHandle;
+    self->checkColisionWarriorVsBullet = checkColisionWarriorVsBullet;
     self->destroy = destroyWarrior;
     self->updatePossition = updateWarriorPosition;
     self->render = renderWarrior;
