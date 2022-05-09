@@ -13,6 +13,7 @@
 #include "Bullet.h"
 #include "networkClient.h"
 #include<time.h>
+#include "audio.h"
 
 struct enginInstance
 {
@@ -33,6 +34,10 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     MapManager *mapManager = getMapManager();
     mapManager->initMap(mapManager); //! initializes map
 
+    Audio *audio = newAudio();
+    audio->init();
+    audio->backgroud(audio, "assets/back.wav", 30);
+
     EntityManager *entityManager = getEntityManager();
     // Warrior creation handel network
 
@@ -45,6 +50,9 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
     printf("warrior id %s\n",wID);
     Engin->instance->isRunning = true;
+
+    
+    
 
     return 1;
 }
@@ -108,6 +116,9 @@ bool destroyEngine(void *self)
     MapManager *mapManager = getMapManager();
     mapManager->destroyMap(mapManager);
 
+    //destroy audio
+    Audio *audio = newAudio();
+    audio->destroy(audio);    
     // destroy all assets here !!!
 
     // destroy functions go here !!!
