@@ -35,7 +35,7 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     mapManager->initMap(mapManager); //! initializes map
 
     Audio *audio = newAudio();
-    //audio->init();
+    audio->init();
     audio->backgroud(audio, "assets/back.wav", 10);
 
     EntityManager *entityManager = getEntityManager();

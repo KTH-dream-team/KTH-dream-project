@@ -7,11 +7,13 @@ struct audioInstance
 {
     Mix_Music *music;
     Mix_Chunk *sound;
+
 };
+
 
 void initAudio(){
     printf("Audio_init_1\n");
-    int a = Mix_OpenAudio(24100, MIX_DEFAULT_FORMAT, 2, 2048);//! lower frequency if crash here
+    int a = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);//! lower frequency if crash here
     printf("initAudio: %d\n", a);
     if(a != 0)
     {
@@ -27,27 +29,26 @@ void initAudio(){
 
 }
 
+
 void backgroundMusic(void *self, char *path, int volume){
     Audio *audio = (Audio*)self;
-    initAudio();
+    //initAudio();
     Mix_VolumeMusic(volume);
     audio->instance->music = Mix_LoadMUS(path);
     if(Mix_PlayMusic(audio->instance->music, -1) !=0){
-        printf("back.wav cant play, %s\n", Mix_GetError());
+        printf("Cant play sound %s, %s\n", path , Mix_GetError());
     }
-    
 }
 
-void playSound(void *self, char *path, int volume){
+void playSound(void *self, char *path, int volume, int channel){
     Audio *audio = (Audio*)self;
-    initAudio();
+    //initAudio();
     audio->instance->sound = Mix_LoadWAV(path);
-    if(Mix_PlayChannel(3, audio->instance->sound, 0)){
-        // printf("Cant play sound %s, %s\n", path , Mix_GetError());//!error messege of
+    if(Mix_PlayChannel(channel, audio->instance->sound, 0)){
+        printf("Cant play sound %s, %s\n", path , Mix_GetError());//!error messege of
     }
-    Mix_Volume(3,volume);
+    Mix_Volume(channel,volume);
 }
-
 
 void destroyAudio(void *self){
     Audio *audio = (Audio*)self;
