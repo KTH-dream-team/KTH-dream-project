@@ -1,7 +1,8 @@
+#include <stdio.h>
+#include<time.h>
 #include "GameEngin.h"
 #include "DataTypes.h"
 #include "TextureManager.h"
-#include <stdio.h>
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Animation.h"
@@ -12,8 +13,8 @@
 #include "map.h"
 #include "Bullet.h"
 #include "networkClient.h"
-#include<time.h>
 #include "audio.h"
+#include "text.h"
 
 struct enginInstance
 {
@@ -88,6 +89,10 @@ void handleRenders(void *self)
 
     EntityManager *entityManager = getEntityManager();
     entityManager->renderAll(entityManager);
+
+    SDL_Color color = {100,100,100,0};
+    Text *text = newText("HELLO", 100, 100, 26, color);
+    text->render(text);
 
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
@@ -178,6 +183,13 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
     if (!(Engin->instance->window))
     {
         printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
+        return false;
+    }
+
+    if(!TTF_WasInit() && TTF_Init()==-1) 
+    {
+        printf("TTF_Init: %s\n", TTF_GetError());
+        exit(1);
         return false;
     }
 
