@@ -13,7 +13,8 @@
 #include "Bullet.h"
 #include "networkClient.h"
 #include "text.h"
-#include<time.h>
+#include "SDL2/SDL_ttf.h"
+#include <time.h>
 
 struct enginInstance
 {
@@ -37,16 +38,14 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     EntityManager *entityManager = getEntityManager();
     // Warrior creation handel network
 
-    initTTF();
-
     NetworkClient *network = getNetworkClient();
-    WarriorCreation wa = {network->getTCPID(network),100, 0};
+    WarriorCreation wa = {network->getTCPID(network), 100, 0};
     network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
 
-    Warrior *warrior = createWarrior(100*network->getTCPID(network)+100, 0, network->getTCPID(network), -1,true);
-    char * wID = warrior->getID(warrior);
+    Warrior *warrior = createWarrior(100 * network->getTCPID(network) + 100, 0, network->getTCPID(network), -1, true);
+    char *wID = warrior->getID(warrior);
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
-    printf("warrior id %s\n",wID);
+    printf("warrior id %s\n", wID);
     Engin->instance->isRunning = true;
 
     return 1;
@@ -83,6 +82,10 @@ void handleRenders(void *self)
 
     EntityManager *entityManager = getEntityManager();
     entityManager->renderAll(entityManager);
+
+    SDL_Color color = {100, 100, 100, 255};
+    Text *text = newText("Hello", 250, 250, 24, color);
+    text->render(text);
 
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
@@ -153,7 +156,7 @@ GameEngin *getGameEngin()
 // helper functions
 bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScreen)
 {
-    if ((SDL_Init(SDL_INIT_VIDEO| SDL_INIT_AUDIO)) < 0)
+    if ((SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) < 0)
     {
         printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return false;
@@ -170,6 +173,13 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
     if (!(Engin->instance->window))
     {
         printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
+        return false;
+    }
+
+    if (!TTF_WasInit() && TTF_Init() == -1)
+    {
+        printf("TTF_Init: %s\n", TTF_GetError());
+        exit(1);
         return false;
     }
 

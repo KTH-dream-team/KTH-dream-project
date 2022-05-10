@@ -1,12 +1,13 @@
 #include <stdio.h>
+#include <time.h>
 #include "DataTypes.h"
 #include "FpsManager.h"
 #include "GameEngin.h"
 #include "InputHandler.h"
 #include "map.h"
 #include "hitBox.h"
-#include <time.h>
 #include "networkClient.h"
+#include "text.h"
 
 #define SDL_MAIN_HANDLED
 
@@ -29,6 +30,8 @@ int main(int argc, char **argv)
 
     FpsManager *fpsManager = getFpsManager();
     InputHandler *inputHandler = getInputHandler();
+
+
 
     while (Engine->isRunning(Engine))
     {
