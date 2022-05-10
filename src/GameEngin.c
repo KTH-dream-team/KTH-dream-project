@@ -36,8 +36,8 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     EntityManager *entityManager = getEntityManager();
 
     //! menu creation here
-    SDL_Color tColor = {0,0,0,0};
-    SDL_Color bgColor = {100,100,200,0};
+    SDL_Color tColor = {0,0,0,100};
+    SDL_Color bgColor = {100,100,200,100};
     SDL_Rect destRect = {100,100,100,100};
     TextButton *button = newTextButton("Hello",  tColor,  bgColor, 26, destRect);
 

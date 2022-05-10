@@ -98,7 +98,7 @@ void renderAllEntities(void *self)
         else if (strstr(t->id, "TextButton-") != NULL)
         {
             // printf("Render button Entity!!\n");
-            ((TextButton*)t->entity)->render((TextButton*)t->entity);
+            ((TextButton *)t->entity)->render((TextButton *)t->entity);
         }
     }
 }
@@ -122,8 +122,13 @@ void updateAllEntities(void *self, float dt)
         {
             ((Bullet *)t->entity)->update((Bullet *)t->entity, dt);
         }
+        else if (strstr(t->id, "TextButton-") != NULL)
+        {
+            ((TextButton *)t->entity)->update((TextButton *)t->entity);
+        }
     }
 }
+
 void handleAllEvents(void *self)
 {
     ArrayList *entitylist = ((EntityManager *)self)->instance->entityList;

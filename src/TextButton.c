@@ -1,8 +1,11 @@
 #include "SDL2/SDL_ttf.h"
+#include <stdbool.h>
 #include "text.h"
 #include "string.h"
 #include "GameEngin.h"
 #include "TextButton.h"
+#include "InputHandler.h"
+#include "CollisionManager.h"
 
 
 struct buttonInstance{
@@ -21,7 +24,32 @@ int getStateTextButton(void *self)
 
 void updateTextButton(void *self)
 {
-	ButtonInstance *instance = ((TextButton*)self)->instance;
+    ButtonInstance *instance = ((TextButton*)self)->instance;
+    InputHandler *input = getInputHandler();
+    CollisionManager *collision = GetCollisionManager();
+    int mouseX, mouseY;
+    unsigned int mouseState;
+    mouseState = input->getMouseState(&mouseX, &mouseY);
+
+    if(!(collision->PointVsRect(mouseX, mouseY, &instance->destRect)))
+    {
+        printf("Outside button\n");
+        instance->btnState = 0;
+        return;
+    }
+    instance->btnState = 1;
+    printf("Is hovering!\n");
+    if(mouseState == SDL_BUTTON_LEFT)
+    {
+        printf("Left click in button \n");
+        instance->btnState = 2;
+    }
+    else if(mouseState == SDL_BUTTON_RIGHT)
+    {
+        printf("Right click in button \n");
+        instance->btnState = 3;
+    }
+
 }
 
 void renderTextButton(void *self)
@@ -50,6 +78,8 @@ TextButton *newTextButton(char *text, SDL_Color textColor, SDL_Color backgroundC
     self->instance = malloc(sizeof(ButtonInstance));
 
     self->render = renderTextButton;
+    self->update = updateTextButton;
+
 
     self->instance->backgroundColor = backgroundColor;
     
