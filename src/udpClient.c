@@ -7,6 +7,7 @@
 #include "EntityManager.h"
 #include "Warrior.h"
 #include "string.h"
+#include "networkClient.h"
 
 #define MAX_CLIENTS 16
 #define MAX_SIZE 512
@@ -95,11 +96,11 @@ void UDPclientListen(void *self)
             // printf("Update Warrior from: %d (x:%d, y:%d) size: %d, %d\n", ws->from, ws->x, ws->y, instance->packetReceived->len, (int)sizeof(WarriorSnapshot));
             WarriorSnapshot *ws = (WarriorSnapshot *)(instance->packetReceived->data + 1);
             EntityManager *entityManager = getEntityManager();
-
-            int idInt = ws->from;//todo fix this
+            // NetworkClient *networkClient = getNetworkClient();
+            // int idInt = networkClient->getTCPID(networkClient);
+            int idInt = ws->from;
             char id[15];
             strcpy(id, "Warrior-000");
-
             int a = 100;
             for (int i = 8; i < 11; i++)
             {
@@ -107,7 +108,6 @@ void UDPclientListen(void *self)
                 idInt %= a;
                 a /= 10;
             }
-
             Warrior *wa = entityManager->getByID(entityManager, id);
             if (wa != NULL)
                 wa->updatePossition(wa, ws->x, ws->y);

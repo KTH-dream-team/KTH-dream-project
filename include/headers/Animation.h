@@ -20,6 +20,7 @@
 #pragma once
 #include "SDL2/SDL.h"
 #include "DataTypes.h"
+#include <stdbool.h>
 
 typedef struct animationInstance AnimationInstance;
 
@@ -27,7 +28,7 @@ typedef struct animation
 {
     void (*update)(void *self);
     void (*draw)(void *self, float x, float y, float scale);
-    void (*set)(void *self, char *id, int spriteWidth, int spriteHeight, int row, int totalFrame, int animSpeed, SDL_RendererFlip flip);
+    void (*set)(void *self, char *id, int spriteWidth, int spriteHeight, int row, int totalFrame, int animSpeed, SDL_RendererFlip flip,bool infinity);
     void (*destroy)(void *self);
 
     AnimationInstance *instance;

@@ -55,6 +55,7 @@ void handleEvents(void *self)
     entityManager->handleAllEvents(entityManager);
 }
 
+
 void handleUpdates(void *self)
 {
     // updates functions go here !!!
