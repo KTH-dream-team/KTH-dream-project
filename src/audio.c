@@ -29,7 +29,7 @@ void initAudio(){
 
 void backgroundMusic(void *self, char *path, int volume){
     Audio *audio = (Audio*)self;
-    //initAudio();
+    initAudio();
     Mix_VolumeMusic(volume);
     audio->instance->music = Mix_LoadMUS(path);
     if(Mix_PlayMusic(audio->instance->music, -1) !=0){
@@ -40,7 +40,7 @@ void backgroundMusic(void *self, char *path, int volume){
 
 void playSound(void *self, char *path, int volume){
     Audio *audio = (Audio*)self;
-    //initAudio();
+    initAudio();
     audio->instance->sound = Mix_LoadWAV(path);
     if(Mix_PlayChannel(3, audio->instance->sound, 0)){
         // printf("Cant play sound %s, %s\n", path , Mix_GetError());//!error messege of
