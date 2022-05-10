@@ -12,6 +12,7 @@
 #include "map.h"
 #include "Bullet.h"
 #include "networkClient.h"
+#include "text.h"
 #include<time.h>
 
 struct enginInstance
@@ -35,6 +36,8 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 
     EntityManager *entityManager = getEntityManager();
     // Warrior creation handel network
+
+    initTTF();
 
     NetworkClient *network = getNetworkClient();
     WarriorCreation wa = {network->getTCPID(network),100, 0};
