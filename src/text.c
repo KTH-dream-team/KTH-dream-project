@@ -3,13 +3,10 @@
 #include "string.h"
 #include "GameEngin.h"
 
-void renderTTF(void *self);
-void destroyTTF(void *self);
+
 
 struct textInstance
 {
-    int y;
-    int x;
     int size;
     char *text;
     SDL_Color color;
@@ -18,6 +15,13 @@ struct textInstance
     SDL_Surface *text_surface;
     SDL_Rect rect;
 };
+
+void centerText(void *self, SDL_Rect outerRect)
+{
+    TextInstance *textInstance = ((Text*)self)->instance;
+    textInstance->rect.x = (outerRect.x + ((outerRect.w)/2)) - ((textInstance->rect.w)/2);
+    textInstance->rect.y = (outerRect.y + ((outerRect.h)/2)) - ((textInstance->rect.h)/2);
+}
 
 void renderTTF(void *self)
 {
@@ -29,7 +33,6 @@ void renderTTF(void *self)
 
     SDL_RenderCopy(renderer, texture, NULL, &instance->rect);
 
-    return;
 }
 
 void destroyTTF(void *self)
@@ -40,7 +43,6 @@ void destroyTTF(void *self)
     free(text->instance);
     free(text);
 
-    return;
 }
 
 Text *newText(char *text, int x, int y, int size, SDL_Color color)
@@ -51,6 +53,7 @@ Text *newText(char *text, int x, int y, int size, SDL_Color color)
 
     self->render = renderTTF;
     self->destroy = destroyTTF;
+    self->centerText = centerText;
 
     self->instance->color = color;
     self->instance->text = text;

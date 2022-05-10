@@ -15,6 +15,7 @@
 #include "networkClient.h"
 #include "audio.h"
 #include "text.h"
+#include "TextButton.h"
 
 struct enginInstance
 {
@@ -31,6 +32,19 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     if (!isRenderSucced)
         return 0;
 
+
+    EntityManager *entityManager = getEntityManager();
+
+    //! menu creation here
+    SDL_Color tColor = {0,0,0,0};
+    SDL_Color bgColor = {100,100,200,0};
+    SDL_Rect destRect = {100,100,100,100};
+    TextButton *button = newTextButton("Hello",  tColor,  bgColor, 26, destRect);
+
+    entityManager->add(entityManager, "TextButton-1",button);
+
+
+
     // init map
     MapManager *mapManager = getMapManager();
     mapManager->initMap(mapManager); //! initializes map
@@ -39,9 +53,9 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     audio->init();
     audio->backgroud(audio, "assets/back.wav", 10);
 
-    EntityManager *entityManager = getEntityManager();
-    // Warrior creation handel network
 
+
+    // Warrior creation handel network
     NetworkClient *network = getNetworkClient();
     WarriorCreation wa = {network->getTCPID(network),100, 0};
     network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
@@ -90,9 +104,8 @@ void handleRenders(void *self)
     EntityManager *entityManager = getEntityManager();
     entityManager->renderAll(entityManager);
 
-    SDL_Color color = {100,100,100,0};
-    Text *text = newText("HELLO", 100, 100, 26, color);
-    text->render(text);
+
+
 
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
