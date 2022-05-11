@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
 
-    network->connect(network, 2);
+    network->connect(network, 4);
 
     Engine->innitGameInstances(Engine);
 
