@@ -6,6 +6,7 @@
 #include "CollisionManager.h"
 #include "networkClient.h"
 #include "data.h"
+#include "audio.h"
 #define ROW 25
 #define COL 50
 #define PRIVET static 
@@ -112,12 +113,10 @@ void dig(void *self,int x, int y){//!dig when holding Q
         intBlockCol,
         intBlockRow
     };
-<<<<<<< Updated upstream
-=======
     Audio *audio = newAudio();
-    audio->playSound(audio, "brick", 30, 5);
->>>>>>> Stashed changes
+    audio->playSound(audio, "assets/break.wav", 30, 5);
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
+    
 }
 void digNoSend(void *self,int x, int y){
     MapManager *mapmanager = (MapManager *)self;
