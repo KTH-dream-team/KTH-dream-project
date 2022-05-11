@@ -33,15 +33,12 @@ void updateTextButton(void *self, float dt)
 
     if(!(collision->PointVsRect(mouseX, mouseY, &instance->destRect)))
     {
-        printf("Outside button\n");
         instance->btnState = 0;
         return;
     }
     instance->btnState = 1;
-    printf("Is hovering!\n");
     if(mouseState == SDL_BUTTON_LEFT)
     {
-        printf("Left click in button \n");
         instance->btnState = 2;
     }
 

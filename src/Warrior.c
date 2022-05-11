@@ -100,12 +100,12 @@ void renderWarrior(void *self)
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
 
     // draw hitbox debugg
-    SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
-    SDL_RenderDrawRect(engin->getRenderer(engin), &box);
+    //SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
+    //SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 }
 void warriorEventHandle(void *self)
 {
-    if (!((Warrior *)self)->instance->isLocal)
+    if (!(((Warrior *)self)->instance->isLocal && ((Warrior *)self)->instance->health>0))
         return;
 
     InputHandler *inputHandler = getInputHandler();
@@ -232,8 +232,11 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
         hitBox.h,
     };
 
-    if (warriorInstance->health<=0) return false;   
-    
+    if (warriorInstance->health<=0)
+    {
+        printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
+        return false;
+    }    
     
     if(collisionManager->ResolveDynamicRectVsRect(bulletDRect,vel,warriorDRect,dt)){ 
         warriorInstance->health--;
