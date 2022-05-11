@@ -7,7 +7,6 @@
 #include "hitBox.h"
 #include <time.h>
 #include "networkClient.h"
-#include <process.h>
 
 #define SDL_MAIN_HANDLED
 
