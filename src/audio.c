@@ -10,14 +10,13 @@ struct audioInstance
     Mix_Chunk *jump;
     Mix_Chunk *gun;
     Mix_Chunk *brick;
-
 };
 
 
 void initAudio(void *self){
     Audio *audio = (Audio*)self;
-    int a = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);//! lower frequency if crash here
-    if(a != 0)
+   //! lower frequency if crash here
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048))
     {
         printf("Initialising audio Error, %s\n", Mix_GetError());
     } 
@@ -37,19 +36,19 @@ void backgroundMusic(void *self, int volume){
 }
 
 
-void playSound(void *self, char *path, int volume, int channel){
+void playSound(void *self, char *path){
     Audio *audio = (Audio*)self;
     if(strcmp("jump", path) == 0){
-        Mix_PlayChannel(channel, audio->instance->jump, 0);
-        Mix_Volume(channel,volume);
+        Mix_PlayChannel(3, audio->instance->jump, 0);
+        Mix_Volume(3,30);
     }
     if(strcmp("gun", path) == 0){
-        Mix_PlayChannel(channel, audio->instance->gun, 0);
-        Mix_Volume(channel,volume);
+        Mix_PlayChannel(4, audio->instance->gun, 0);
+        Mix_Volume(4,30);
     }
     if(strcmp("brick", path) == 0){
-        Mix_PlayChannel(channel, audio->instance->brick, 0);
-        Mix_Volume(channel,volume);
+        Mix_PlayChannel(5, audio->instance->brick, 0);
+        Mix_Volume(5,30);
     }
 
 }
