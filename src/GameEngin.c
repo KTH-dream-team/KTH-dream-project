@@ -1,7 +1,8 @@
+#include <stdio.h>
+#include<time.h>
 #include "GameEngin.h"
 #include "DataTypes.h"
 #include "TextureManager.h"
-#include <stdio.h>
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Animation.h"
@@ -12,7 +13,8 @@
 #include "map.h"
 #include "Bullet.h"
 #include "networkClient.h"
-#include<time.h>
+#include "audio.h"
+#include "text.h"
 
 struct enginInstance
 {
@@ -33,6 +35,10 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     MapManager *mapManager = getMapManager();
     mapManager->initMap(mapManager); //! initializes map
 
+    Audio *audio = newAudio();
+    audio->init();
+    audio->backgroud(audio, "assets/back.wav", 10);
+
     EntityManager *entityManager = getEntityManager();
     // Warrior creation handel network
 
@@ -45,6 +51,9 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
     printf("warrior id %s\n",wID);
     Engin->instance->isRunning = true;
+
+    
+    
 
     return 1;
 }
@@ -82,6 +91,10 @@ void handleRenders(void *self)
     EntityManager *entityManager = getEntityManager();
     entityManager->renderAll(entityManager);
 
+    SDL_Color color = {100,100,100,0};
+    Text *text = newText("HELLO", 100, 100, 26, color);
+    text->render(text);
+
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
 }
@@ -109,6 +122,9 @@ bool destroyEngine(void *self)
     MapManager *mapManager = getMapManager();
     mapManager->destroyMap(mapManager);
 
+    //destroy audio
+    Audio *audio = newAudio();
+    audio->destroy(audio);    
     // destroy all assets here !!!
 
     // destroy functions go here !!!
@@ -168,6 +184,13 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
     if (!(Engin->instance->window))
     {
         printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
+        return false;
+    }
+
+    if(!TTF_WasInit() && TTF_Init()==-1) 
+    {
+        printf("TTF_Init: %s\n", TTF_GetError());
+        exit(1);
         return false;
     }
 

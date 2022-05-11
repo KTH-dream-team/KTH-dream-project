@@ -16,6 +16,7 @@
 #include "networkClient.h"
 #include "data.h"
 #include "SDL2/SDL.h"
+#include "audio.h"
 
 static unsigned int currentTime;
 static unsigned int lastTime;
@@ -120,6 +121,8 @@ void warriorEventHandle(void *self)
 
     warriorInstance->isAlive=false;
 
+    Audio *audio = newAudio();
+
     rig->setVelocityX(rig, 0);
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT))
     {
@@ -140,7 +143,7 @@ void warriorEventHandle(void *self)
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
-        anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
+        // anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive); byt till nån annan 
         rig->setVelocityX(rig, 50);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
@@ -165,6 +168,7 @@ void warriorEventHandle(void *self)
     static int bulletCount = 0;                                              //! ongoing
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK) //! right mouse button pressed
     {
+        
         static unsigned int currentTime;
         static unsigned int lastTime;
         currentTime = SDL_GetTicks(); // bullet cooldown 100ms
@@ -181,7 +185,7 @@ void warriorEventHandle(void *self)
             char *id = bullet1->getID(bullet1);
             entityManager->add(entityManager, id, bullet1);
             lastTime = currentTime;
-
+            audio->playSound(audio, "assets/gun.wav", 30, 4);
             // broadcast bullet1
             NetworkClient *network = getNetworkClient();
             SDL_FPoint p = pos->get(pos);
