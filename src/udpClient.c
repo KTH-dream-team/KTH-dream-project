@@ -12,9 +12,9 @@
 #define MAX_CLIENTS 16
 #define MAX_SIZE 512
 #define CLIENT_PORT 0
-#define CLIENT_IP "127.0.0.1" // 127.0.0.1
+#define CLIENT_IP "130.229.142.34" // 127.0.0.1
 #define SERVER_PORT 7000
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "130.229.142.34"
 
 bool sendUdpPacageToServer(void *self, void *data, unsigned long len, int dataType);
 

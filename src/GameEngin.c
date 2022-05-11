@@ -31,6 +31,12 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     if (!isRenderSucced)
         return 0;
 
+    Engin->instance->isRunning = true;
+    return 1;
+}
+
+void innitGameInstances(void*self)
+{
     // init map
     MapManager *mapManager = getMapManager();
     mapManager->initMap(mapManager); //! initializes map
@@ -60,8 +66,7 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     char * wID = warrior->getID(warrior);
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
     printf("warrior id %s\n",wID);
-    Engin->instance->isRunning = true;
-    return 1;
+    
 }
 
 void handleEvents(void *self)
@@ -160,6 +165,7 @@ GameEngin *getGameEngin()
     self.handleRenders = handleRenders;
     self.destroyEngine = destroyEngine;
     self.getRenderer = getRenderer;
+    self.innitGameInstances = innitGameInstances;
     self.isRunning = isRunning;
     self.quit = quit;
 
