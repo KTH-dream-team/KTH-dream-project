@@ -6,6 +6,8 @@ typedef struct text
 {
     void (*render)(void *self);
     void (*destroy)(void *self);
+    void (*centerText)(void *self, SDL_Rect outerRect);
+
 	TextInstance *instance;
 }Text;
 

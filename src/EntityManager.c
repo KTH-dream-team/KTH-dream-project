@@ -6,6 +6,7 @@
 #include "Warrior.h"
 #include "Cube.h"
 #include "Bullet.h"
+#include "TextButton.h"
 
 typedef struct Entity
 {
@@ -20,8 +21,8 @@ struct entityManagerInstance
 
 void addInstance(void *self, char *id, void *entity)
 {
-    EntityManager *EM = (EntityManager*)self;
-    if(EM->getByID(EM, id) != NULL)
+    EntityManager *EM = (EntityManager *)self;
+    if (EM->getByID(EM, id) != NULL)
     {
         printf("Allready added: %s\n", id);
         return;
@@ -35,7 +36,7 @@ void addInstance(void *self, char *id, void *entity)
 
     instance->entityList->add(instance->entityList, temp);
 
-    //printf("Added: %s\n", id);
+    // printf("Added: %s\n", id);
 }
 
 void *getEntityByID(void *self, char *id)
@@ -46,14 +47,15 @@ void *getEntityByID(void *self, char *id)
     for (int i = 0; i < lenght; i++)
     {
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
-        if (strcmp(t->id, id) == 0){
+        if (strcmp(t->id, id) == 0)
+        {
             return t->entity;
         }
     }
 
     return NULL;
 }
-void dropEntity(void *self, char*id)
+void dropEntity(void *self, char *id)
 {
     ArrayList *entitylist = ((EntityManager *)self)->instance->entityList;
     int lenght = entitylist->getLength(entitylist);
@@ -63,9 +65,9 @@ void dropEntity(void *self, char*id)
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
         if (strcmp(t->id, id) == 0)
         {
-            if(strstr(t->id, "Bullet-") != NULL)
+            if (strstr(t->id, "Bullet-") != NULL)
             {
-                ((Bullet*)t->entity)->destroy((Bullet*)t->entity);
+                ((Bullet *)t->entity)->destroy((Bullet *)t->entity);
                 entitylist->drop(entitylist, i);
             }
             break;
@@ -75,23 +77,27 @@ void dropEntity(void *self, char*id)
 
 void renderAllEntities(void *self)
 {
-     ArrayList *entitylist = ((EntityManager *)self)->instance->entityList;
+    ArrayList *entitylist = ((EntityManager *)self)->instance->entityList;
     int lenght = entitylist->getLength(entitylist);
 
     for (int i = 0; i < lenght; i++)
     {
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
-        if(strstr(t->id, "Warrior-") != NULL)
+        if (strstr(t->id, "Warrior-") != NULL)
         {
-            ((Warrior*)t->entity)->render((Warrior*)t->entity);
+            ((Warrior *)t->entity)->render((Warrior *)t->entity);
         }
-        else if(strstr(t->id, "Cube-") != NULL)
+        else if (strstr(t->id, "Cube-") != NULL)
         {
-            ((Cube*)t->entity)->render((Cube*)t->entity);
+            ((Cube *)t->entity)->render((Cube *)t->entity);
         }
-        else if(strstr(t->id, "Bullet-") != NULL)
+        else if (strstr(t->id, "Bullet-") != NULL)
         {
-            ((Bullet*)t->entity)->render((Bullet*)t->entity);
+            ((Bullet *)t->entity)->render((Bullet *)t->entity);
+        }
+        else if (strstr(t->id, "TextButton-") != NULL)
+        {
+            ((TextButton *)t->entity)->render((TextButton *)t->entity);
         }
     }
 }
@@ -103,17 +109,21 @@ void updateAllEntities(void *self, float dt)
     for (int i = 0; i < lenght; i++)
     {
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
-        if(strstr(t->id, "Warrior-") != NULL)
+        if (strstr(t->id, "Warrior-") != NULL)
         {
-            ((Warrior*)t->entity)->update((Warrior*)t->entity, dt);
+            ((Warrior *)t->entity)->update((Warrior *)t->entity, dt);
         }
-        else if(strstr(t->id, "Cube-") != NULL)
+        else if (strstr(t->id, "Cube-") != NULL)
         {
-            ((Cube*)t->entity)->update((Cube*)t->entity, dt);
+            ((Cube *)t->entity)->update((Cube *)t->entity, dt);
         }
-        else if(strstr(t->id, "Bullet-") != NULL)
+        else if (strstr(t->id, "Bullet-") != NULL)
         {
-            ((Bullet*)t->entity)->update((Bullet*)t->entity, dt);
+            ((Bullet *)t->entity)->update((Bullet *)t->entity, dt);
+        }
+        else if (strstr(t->id, "TextButton-") != NULL)
+        {
+            ((TextButton *)t->entity)->update((TextButton *)t->entity, dt);
         }
     }
 }
@@ -125,14 +135,12 @@ void handleAllEvents(void *self)
     for (int i = 0; i < lenght; i++)
     {
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
-        if(strstr(t->id, "Warrior-") != NULL)
+        if (strstr(t->id, "Warrior-") != NULL)
         {
-            ((Warrior*)t->entity)->events((Warrior*)t->entity);
+            ((Warrior *)t->entity)->events((Warrior *)t->entity);
         }
-    
     }
 }
-
 
 void destroyEntityManager(void *self)
 {
@@ -141,18 +149,22 @@ void destroyEntityManager(void *self)
     for (int i = 0; i < lenght; i++)
     {
         Entity *t = (Entity *)(entitylist->indexOf(entitylist, i));
-        if(strstr(t->id, "Warrior-") != NULL)
+        if (strstr(t->id, "Warrior-") != NULL)
         {
-            ((Warrior*)t->entity)->destroy((Warrior*)t->entity);
+            ((Warrior *)t->entity)->destroy((Warrior *)t->entity);
         }
-        else if(strstr(t->id, "Cube-") != NULL)
+        else if (strstr(t->id, "Cube-") != NULL)
         {
-            ((Cube*)t->entity)->destroy((Cube*)t->entity);
+            ((Cube *)t->entity)->destroy((Cube *)t->entity);
             printf("update Cube: %s\n", t->id);
-        }      
-        else if(strstr(t->id, "Bullet-") != NULL)
+        }
+        else if (strstr(t->id, "Bullet-") != NULL)
         {
-            ((Bullet*)t->entity)->destroy((Bullet*)t->entity);
+            ((Bullet *)t->entity)->destroy((Bullet *)t->entity);
+        }
+        else if (strstr(t->id, "TextButton-") != NULL)
+        {
+            ((TextButton *)t->entity)->destroy((TextButton *)t->entity);
         }
     }
 
@@ -178,7 +190,7 @@ EntityManager *getEntityManager()
     self.renderAll = renderAllEntities;
     self.handleAllEvents = handleAllEvents;
 
-    self.instance = malloc(sizeof(EntityManagerInstance ));
+    self.instance = malloc(sizeof(EntityManagerInstance));
     self.instance->entityList = malloc(sizeof(ArrayList *));
     self.instance->entityList = newArrayList();
 

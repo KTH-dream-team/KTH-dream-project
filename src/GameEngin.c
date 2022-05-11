@@ -14,7 +14,7 @@
 #include "Bullet.h"
 #include "networkClient.h"
 #include "audio.h"
-#include "text.h"
+#include "TextButton.h"
 
 struct enginInstance
 {
@@ -41,6 +41,14 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 
     EntityManager *entityManager = getEntityManager();
     // Warrior creation handel network
+
+    SDL_Color tColor = {0,0,0,100};
+    SDL_Color bgColor = {100,100,200,100};
+    SDL_Rect destRect = {100,100,100,100};
+    TextButton *button = newTextButton("Hello",  tColor,  bgColor, 26, destRect);
+    entityManager->add(entityManager, "TextButton-1",button);
+
+
 
     NetworkClient *network = getNetworkClient();
     WarriorCreation wa = {network->getTCPID(network),100, 0};
@@ -90,10 +98,6 @@ void handleRenders(void *self)
 
     EntityManager *entityManager = getEntityManager();
     entityManager->renderAll(entityManager);
-
-    SDL_Color color = {100,100,100,0};
-    Text *text = newText("HELLO", 100, 100, 26, color);
-    text->render(text);
 
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
