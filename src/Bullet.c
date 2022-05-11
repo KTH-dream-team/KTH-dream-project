@@ -62,32 +62,32 @@ void updateBullet(void *self, float dt)
         return;
     }
     
-    // check collision with warrior 
-    // Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
-    // if(warrior000->checkColisionWarriorVsBullet(warrior000,bulletDRect,&instance->vel,dt)){
+    //check collision with warrior 
+    Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
+    if(warrior000->checkColisionWarriorVsBullet(warrior000,bulletDRect,&instance->vel,dt)){
 
-    //     EM->drop(EM,instance->id);
-    //     return;
-    // }
-    // Warrior *warrior001 = EM->getByID(EM,"Warrior-001");
-    // if(warrior001->checkColisionWarriorVsBullet(warrior001,bulletDRect,&instance->vel,dt)){
+        EM->drop(EM,instance->id);
+        return;
+    }
+    Warrior *warrior001 = EM->getByID(EM,"Warrior-001");
+    if(warrior001->checkColisionWarriorVsBullet(warrior001,bulletDRect,&instance->vel,dt)){
 
-    //     EM->drop(EM,instance->id);
-    //     return;
-    // }
+        EM->drop(EM,instance->id);
+        return;
+    }
 
-    // Warrior *warrior002 = EM->getByID(EM,"Warrior-002");
-    // if(warrior002->checkColisionWarriorVsBullet(warrior002,bulletDRect,&instance->vel,dt)){
+    Warrior *warrior002 = EM->getByID(EM,"Warrior-002");
+    if(warrior002->checkColisionWarriorVsBullet(warrior002,bulletDRect,&instance->vel,dt)){
 
-    //     EM->drop(EM,instance->id);
-    //     return;
-    // }
-    // Warrior *warrior003 = EM->getByID(EM,"Warrior-003");
-    // if(warrior003->checkColisionWarriorVsBullet(warrior003,bulletDRect,&instance->vel,dt)){
+        EM->drop(EM,instance->id);
+        return;
+    }
+    Warrior *warrior003 = EM->getByID(EM,"Warrior-003");
+    if(warrior003->checkColisionWarriorVsBullet(warrior003,bulletDRect,&instance->vel,dt)){
 
-    //     EM->drop(EM,instance->id);
-    //     return;
-    // }
+        EM->drop(EM,instance->id);
+        return;
+    }
 
 
     
