@@ -6,7 +6,7 @@
 #include "TextButton.h"
 #include "InputHandler.h"
 #include "CollisionManager.h"
-
+#include <stdio.h>
 
 struct buttonInstance{
     SDL_Rect destRect;

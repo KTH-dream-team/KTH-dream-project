@@ -114,7 +114,7 @@ void dig(void *self,int x, int y){//!dig when holding Q
         intBlockRow
     };
     Audio *audio = newAudio();
-    audio->playSound(audio, "assets/break.wav", 30, 5);
+    audio->playSound(audio, "brick", 30, 5);
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
     
 }

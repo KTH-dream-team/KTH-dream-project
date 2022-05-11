@@ -153,7 +153,7 @@ void warriorEventHandle(void *self)
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
     {
-
+        audio->playSound(audio, "jump", 30, 3);
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
         rig->setVelocityY(rig, -100);
     }
@@ -185,7 +185,7 @@ void warriorEventHandle(void *self)
             char *id = bullet1->getID(bullet1);
             entityManager->add(entityManager, id, bullet1);
             lastTime = currentTime;
-            audio->playSound(audio, "assets/gun.wav", 30, 4);
+            audio->playSound(audio, "gun", 30, 4);
             // broadcast bullet1
             NetworkClient *network = getNetworkClient();
             SDL_FPoint p = pos->get(pos);
