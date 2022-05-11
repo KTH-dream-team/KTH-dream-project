@@ -119,7 +119,7 @@ void warriorEventHandle(void *self)
     WarriorSnapshot test = {2, 32, 134};
     WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
 
-    warriorInstance->isAlive=false;
+    //warriorInstance->isAlive=false;
 
     Audio *audio = newAudio();
 
