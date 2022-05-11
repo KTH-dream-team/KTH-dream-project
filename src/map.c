@@ -112,6 +112,11 @@ void dig(void *self,int x, int y){//!dig when holding Q
         intBlockCol,
         intBlockRow
     };
+<<<<<<< Updated upstream
+=======
+    Audio *audio = newAudio();
+    audio->playSound(audio, "brick", 30, 5);
+>>>>>>> Stashed changes
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
 }
 void digNoSend(void *self,int x, int y){

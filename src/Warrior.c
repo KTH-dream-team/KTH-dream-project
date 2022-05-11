@@ -154,7 +154,11 @@ void warriorEventHandle(void *self)
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
     {
+<<<<<<< Updated upstream
 
+=======
+        audio->playSound(audio, "jump", 40, 3);
+>>>>>>> Stashed changes
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0);
         rig->setVelocityY(rig, -100);
     }
@@ -185,7 +189,11 @@ void warriorEventHandle(void *self)
             char *id = bullet1->getID(bullet1);
             entityManager->add(entityManager, id, bullet1);
             lastTime = currentTime;
+<<<<<<< Updated upstream
 
+=======
+            audio->playSound(audio, "gun", 30, 4);
+>>>>>>> Stashed changes
             // broadcast bullet1
             NetworkClient *network = getNetworkClient();
             SDL_FPoint p = pos->get(pos);
