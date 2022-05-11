@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<time.h>
+#include <time.h>
 #include "GameEngin.h"
 #include "DataTypes.h"
 #include "TextureManager.h"

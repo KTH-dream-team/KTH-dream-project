@@ -2,6 +2,7 @@
 #include "text.h"
 #include "string.h"
 #include "GameEngin.h"
+#include <stdio.h>
 
 void renderTTF(void *self);
 void destroyTTF(void *self);
