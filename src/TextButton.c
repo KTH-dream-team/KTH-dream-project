@@ -44,7 +44,7 @@ void updateTextButton(void *self)
         printf("Left click in button \n");
         instance->btnState = 2;
     }
-    else if(mouseState == SDL_BUTTON_RIGHT)
+    else if(mouseState == SDL_BUTTON_RIGHT) //! right click crash the game
     {
         printf("Right click in button \n");
         instance->btnState = 3;

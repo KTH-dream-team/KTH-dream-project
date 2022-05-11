@@ -113,7 +113,7 @@ void renderWarrior(void *self)
 }
 void warriorEventHandle(void *self)
 {
-    if (!((Warrior *)self)->instance->isLocal)
+    if (!( ((Warrior *)self)->instance->isLocal && (((Warrior *)self)->instance->health>0)))
         return;
 
     InputHandler *inputHandler = getInputHandler();

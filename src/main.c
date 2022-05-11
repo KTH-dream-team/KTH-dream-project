@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     if (!network->init(network))
         return 1;
 
-    network->connect(network, 1);
+    network->connect(network, 2);
 
 
     GameEngin *Engine = getGameEngin();
