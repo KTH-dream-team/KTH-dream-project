@@ -17,7 +17,8 @@ typedef struct warrior
     void (*updatePossition)(void *self, float x, float y);
     char *(*getID)(void*self);
     bool (*checkColisionWarriorVsBullet)(void *self,SDL_Rect bulletDRect,SDL_FPoint *vel, float dt);
-
+    void (*setHealth)(void *self,int health);
+    int (*getHealth)(void *self);
     WarriorInstance *instance;
 } Warrior;
 

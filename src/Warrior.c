@@ -105,7 +105,7 @@ void renderWarrior(void *self)
 }
 void warriorEventHandle(void *self)
 {
-    if (!(((Warrior *)self)->instance->isLocal && ((Warrior *)self)->instance->health>0))
+    if (!(((Warrior *)self)->instance->isLocal && ((Warrior *)self)->instance->health>0))//!if dead stop controlls
         return;
 
     InputHandler *inputHandler = getInputHandler();
@@ -119,8 +119,7 @@ void warriorEventHandle(void *self)
     WarriorSnapshot test = {2, 32, 134};
     WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
 
-    warriorInstance->isAlive=false;
-
+    // warriorInstance->isAlive=false;
     Audio *audio = newAudio();
 
     rig->setVelocityX(rig, 0);
@@ -172,7 +171,7 @@ void warriorEventHandle(void *self)
         static unsigned int currentTime;
         static unsigned int lastTime;
         currentTime = SDL_GetTicks(); // bullet cooldown 100ms
-        if (lastTime + 100 < currentTime)
+        if (lastTime + 400 < currentTime)
         {
             int cubeX, cubeY;
             unsigned int buttons = inputHandler->getMouseState(&cubeX, &cubeY);
@@ -254,6 +253,16 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
     return false;
 }
 
+void setHealth(void *self, int health){
+    Warrior *warrior = ((Warrior *)self);
+    warrior->instance->health +=health;
+}
+
+int getHealth(void *self){
+    Warrior *warrior = ((Warrior *)self);
+    return warrior->instance->health;
+}
+
 void destroyWarrior(void *self)
 {
     Warrior *warrior = ((Warrior *)self);
@@ -326,6 +335,8 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     self->updatePossition = updateWarriorPosition;
     self->render = renderWarrior;
     self->getID = getWarriorID;
+    self->setHealth = setHealth;
+    self->getHealth = getHealth;
 
     return self;
 }

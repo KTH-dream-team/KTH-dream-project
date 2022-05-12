@@ -43,3 +43,9 @@ typedef struct // datatype:6
     int y;
     int blockType;
 } BlockBuild;
+
+typedef struct // datatype:7
+{
+    int from;
+    int intId;
+} DestroyBullet;

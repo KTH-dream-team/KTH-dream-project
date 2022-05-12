@@ -13,6 +13,7 @@
 #include "string.h"
 #include "TextureManager.h"
 #include "map.h"
+#include "networkClient.h"
 void destroyBullet(void *self);
 
 struct bulletInstance
@@ -21,6 +22,7 @@ struct bulletInstance
     SDL_FPoint vel;
     SDL_Rect hitBox;
     char *id;
+    int *intId;
     bool isLocal;
 };
 
@@ -46,6 +48,7 @@ void updateBullet(void *self, float dt)
     BulletInstance *instance = ((Bullet *)self)->instance;
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 
+    if(instance->isLocal)return;
     // check collition with map tiles
     MapManager *mapManager = getMapManager();//MAP
     SDL_Rect hitBox = ((Bullet*)self)->instance->hitBox;
@@ -62,6 +65,8 @@ void updateBullet(void *self, float dt)
         return;
     }
     
+    
+
     //check collision with warrior 
     Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
     if(warrior000->checkColisionWarriorVsBullet(warrior000,bulletDRect,&instance->vel,dt)){
@@ -76,18 +81,18 @@ void updateBullet(void *self, float dt)
         return;
     }
 
-    Warrior *warrior002 = EM->getByID(EM,"Warrior-002");
-    if(warrior002->checkColisionWarriorVsBullet(warrior002,bulletDRect,&instance->vel,dt)){
+    // Warrior *warrior002 = EM->getByID(EM,"Warrior-002");
+    // if(warrior002->checkColisionWarriorVsBullet(warrior002,bulletDRect,&instance->vel,dt)){
 
-        EM->drop(EM,instance->id);
-        return;
-    }
-    Warrior *warrior003 = EM->getByID(EM,"Warrior-003");
-    if(warrior003->checkColisionWarriorVsBullet(warrior003,bulletDRect,&instance->vel,dt)){
+    //     EM->drop(EM,instance->id);
+    //     return;
+    // }
+    // Warrior *warrior003 = EM->getByID(EM,"Warrior-003");
+    // if(warrior003->checkColisionWarriorVsBullet(warrior003,bulletDRect,&instance->vel,dt)){
 
-        EM->drop(EM,instance->id);
-        return;
-    }
+    //     EM->drop(EM,instance->id);
+    //     return;
+    // }
 
 
     
@@ -105,6 +110,9 @@ void updateBullet(void *self, float dt)
 }
 void destroyBullet(void *self)
 {
+    NetworkClient *network = getNetworkClient();
+
+    network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
     free(((Bullet *)self)->instance->id);
     free(((Bullet *)self)->instance);
     free(self);
@@ -125,11 +133,15 @@ Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal)
     self->instance->position->set(self->instance->position, pos.x, pos.y); //! position
 
     // randomize bullet id;
+    self->instance->intId=0;
     strcpy(self->instance->id, "Bullet-000");
+    int ok= 100;
     for (int i = 7; i < 10; i++)
     {
         int r = rand() % 10;
         self->instance->id[i] += r;
+        self->intId += r*ok;
+        ok /= 10;
     }
     self->instance->id[11] = '\0';
 
