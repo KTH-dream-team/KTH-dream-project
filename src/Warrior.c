@@ -45,6 +45,8 @@ void updateWarrior(void *self, float dt)
     if (!((Warrior *)self)->instance->isLocal)
         return;
 
+    WarriorInstance *instance = ((Warrior *)self)->instance;
+
     // update rigidBody
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
@@ -77,7 +79,7 @@ void updateWarrior(void *self, float dt)
     lastTime = currentTime;
 
     NetworkClient *network = getNetworkClient();
-    WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos)};
+    WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos),instance->health};
     network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
 
 
@@ -200,7 +202,6 @@ void warriorEventHandle(void *self)
 
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_LEFT)
     {
-
         if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_E))
         {
             mapManager->build(mapManager, mouse_x, mouse_y, 0); //! build hold E
@@ -253,7 +254,7 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
     return false;
 }
 
-void setHealth(void *self, int health){
+void addHealth(void *self, int health){
     Warrior *warrior = ((Warrior *)self);
     warrior->instance->health +=health;
 }
@@ -335,7 +336,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     self->updatePossition = updateWarriorPosition;
     self->render = renderWarrior;
     self->getID = getWarriorID;
-    self->setHealth = setHealth;
+    self->addHealth = addHealth;
     self->getHealth = getHealth;
 
     return self;
