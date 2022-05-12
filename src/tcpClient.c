@@ -97,7 +97,7 @@ void TCPlisten(void *self)
                         ShootBullet * bullet = (ShootBullet*)(instance->packetReceived+offset);
                         SDL_FPoint velN = {bullet->velX, bullet->velY}; //! bullet velocity
                         SDL_FPoint pos = {bullet->x, bullet->y};
-                        Bullet *bullet1 = newBullet(pos, velN, false);
+                        Bullet *bullet1 = newBullet(pos, velN, bullet->intId, false);
                         char * idBullet = bullet1->getID(bullet1);
                         entityManager->add(entityManager, idBullet, bullet1);
                         offset += sizeof(ShootBullet);
@@ -114,15 +114,33 @@ void TCPlisten(void *self)
                         map->buildNoSend(map, blockBuilt->x, blockBuilt->y,blockBuilt->blockType);
                         offset += sizeof(BlockBuild);
                     break;
+                    case (char)7:
+                        offset ++;
+                        DestroyBullet * data = (DestroyBullet*)(instance->packetReceived+offset);
+                        
+                        //convert int to char ID
+                        char id[11];
+                        strcpy(id, "Bullet-000");
+                        
+                        int div = 100;
+                        for (int i = 7; i < 10; i++)
+                        {
+                            id[i] += (int)(data->intId / div);
+                            data->intId %= div;
+                            div /= 10;
+                        }
+
+                        entityManager->drop(entityManager,id);
+
+                        offset += sizeof(DestroyBullet);
+                        printf("ok");
+                    break;
                     default:
-                    offset ++;
-                    printf("!got TCP packet with flag: %d.\n", ((int*)instance->packetReceived)[0]);
-                    offset = size;
+                        offset ++;
+                        printf("!got TCP packet with flag: %d.\n", ((int*)instance->packetReceived)[0]);
+                        offset = size;
                     break;
                 }
-       
-           
-
             }
         }
     }
