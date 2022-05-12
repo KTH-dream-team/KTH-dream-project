@@ -14,6 +14,7 @@
 #include "TextureManager.h"
 #include "map.h"
 #include "networkClient.h"
+#include "data.h"
 void destroyBullet(void *self);
 
 struct bulletInstance
@@ -22,9 +23,19 @@ struct bulletInstance
     SDL_FPoint vel;
     SDL_Rect hitBox;
     char *id;
-    int *intId;
+    int intId;
     bool isLocal;
 };
+
+char *getBulletID(void *self)
+{
+    return ((Bullet *)self)->instance->id;
+}
+
+int getIntId(void *self)
+{
+    return ((Bullet*)self)->instance->intId;
+}
 
 void renderBullet(void *self)
 {
@@ -48,7 +59,7 @@ void updateBullet(void *self, float dt)
     BulletInstance *instance = ((Bullet *)self)->instance;
     instance->position->translate(instance->position, instance->vel.x * dt, instance->vel.y * dt);
 
-    if(instance->isLocal)return;
+    if(!instance->isLocal)return;
     // check collition with map tiles
     MapManager *mapManager = getMapManager();//MAP
     SDL_Rect hitBox = ((Bullet*)self)->instance->hitBox;
@@ -110,20 +121,25 @@ void updateBullet(void *self, float dt)
 }
 void destroyBullet(void *self)
 {
-    NetworkClient *network = getNetworkClient();
+    BulletInstance *instance = ((Bullet *)self)->instance;
+    if(instance->isLocal)
+    {
+        NetworkClient *network = getNetworkClient();
 
-    network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
+        DestroyBullet dataToSend = {
+            network->getTCPID(network),
+            instance->intId
+        };
+
+        network->TCPbroadCast(network, &dataToSend, sizeof(DestroyBullet), 7);
+    }
+
     free(((Bullet *)self)->instance->id);
     free(((Bullet *)self)->instance);
-    free(self);
+    free(self);   
 }
 
-char *getBulletID(void *self)
-{
-    return ((Bullet *)self)->instance->id;
-}
-
-Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal)
+Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, int id, bool isLocal)
 {
     Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
@@ -132,17 +148,32 @@ Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal)
     self->instance->position = newTransform();                             //! positon
     self->instance->position->set(self->instance->position, pos.x, pos.y); //! position
 
-    // randomize bullet id;
-    self->instance->intId=0;
     strcpy(self->instance->id, "Bullet-000");
-    int ok= 100;
-    for (int i = 7; i < 10; i++)
+
+    if(id < 0)
     {
-        int r = rand() % 10;
-        self->instance->id[i] += r;
-        self->intId += r*ok;
-        ok /= 10;
+        // randomize bullet id;
+        self->instance->intId = 0;
+        int a = 100;
+        for (int i = 7; i < 10; i++)
+        {
+            int r = rand() % 10;
+            self->instance->id[i] += r;
+            self->instance->intId += (r*a);
+            a /= 10;
+        }
+    }else 
+    {
+        int a = 100;
+        self->instance->intId = id;
+        for (int i = 7; i < 10; i++)
+        {
+            self->instance->id[i] += (int)(id / a);
+            id %= a;
+            a /= 10;
+        }
     }
+
     self->instance->id[11] = '\0';
 
     self->instance->vel.x = vel.x;
@@ -158,6 +189,22 @@ Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal)
     self->update = updateBullet;
     self->destroy = destroyBullet;
     self->getID = getBulletID;
+    self->getIntId = getIntId;
+
+    if(!self->instance->isLocal)
+        return self;
+
+    // broadcast bullet
+    NetworkClient *network = getNetworkClient();
+
+    ShootBullet ataToSend = {
+        network->getTCPID(network),
+        self->instance->intId,
+        pos.x,
+        pos.y,
+        vel.x,
+        vel.y};
+    network->TCPbroadCast(network, &ataToSend, sizeof(ShootBullet), 4);
 
     return self;
 }

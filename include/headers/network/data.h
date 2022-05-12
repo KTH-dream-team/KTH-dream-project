@@ -24,6 +24,7 @@ typedef struct //datatype: 3
 typedef struct // datatype: 4
 {
     int from;
+    int intId;
     float x;
     float y;
     float velX;
@@ -36,6 +37,7 @@ typedef struct // datatype:5
     int x; //testa float;
     int y;
 } BlockDestroy;
+
 typedef struct // datatype:6
 {
     int from;

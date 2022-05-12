@@ -7,8 +7,8 @@
 #include "networkClient.h"
 #include "data.h"
 #include "audio.h"
-#include "entityManager.h"
-#include "warrior.h"
+#include "EntityManager.h"
+#include "Warrior.h"
 #define ROW 25
 #define COL 50
 #define PRIVET static 

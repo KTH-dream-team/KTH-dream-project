@@ -17,8 +17,9 @@ typedef struct bullet
     void (*events)(void *self);
     char* (*getID)(void *self);
     void (*destroy)(void *self);
+    int (*getIntId)(void *self);
 
     BulletInstance *instance;
 } Bullet;
 
-Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, bool isLocal);
+Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, int id, bool isLocal);

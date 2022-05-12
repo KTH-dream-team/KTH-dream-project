@@ -128,14 +128,11 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_LEFT))
     {
         rig->setVelocityX(rig, -130);
-        // network->UDPbroadCast(network, &test, sizeof(WarriorSnapshot), 3);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_RIGHT))
     {
         rig->setVelocityX(rig, 130);
-        // network->TCPbroadCast(network, &test, sizeof(WarriorSnapshot), 3);
     }
-
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
 
@@ -144,7 +141,6 @@ void warriorEventHandle(void *self)
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
-        // anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive); byt till nån annan 
         rig->setVelocityX(rig, 50);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
@@ -177,26 +173,22 @@ void warriorEventHandle(void *self)
         {
             int cubeX, cubeY;
             unsigned int buttons = inputHandler->getMouseState(&cubeX, &cubeY);
+
+            //calculate bullet direction;
             float velx = cubeX - pos->getX(pos);
             float vely = cubeY - pos->getY(pos);
             float xN = velx / sqrt(velx * velx + vely * vely);
             float yN = vely / sqrt(velx * velx + vely * vely);
-            SDL_FPoint velN = {xN * 15, yN * 15}; //! bullet velocity
-            Bullet *bullet1 = newBullet(pos->get(pos), velN, true);
-            char *id = bullet1->getID(bullet1);
-            entityManager->add(entityManager, id, bullet1);
+            SDL_FPoint vel = {xN * 15, yN * 15}; //! bullet velocity
+
+            //create new bullet
+            Bullet *bullet = newBullet(pos->get(pos), vel, -1, true);
+            char *id = bullet->getID(bullet);
+            entityManager->add(entityManager, id, bullet);
             lastTime = currentTime;
             audio->playSound(audio, "gun");
-            // broadcast bullet1
-            NetworkClient *network = getNetworkClient();
-            SDL_FPoint p = pos->get(pos);
-            ShootBullet dataToSend = {
-                network->getTCPID(network),
-                p.x,
-                p.y,
-                velN.x,
-                velN.y};
-            network->TCPbroadCast(network, &dataToSend, sizeof(ShootBullet), 4);
+
+           
         }
     }
 
