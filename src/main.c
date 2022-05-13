@@ -10,7 +10,6 @@
 #include "startMenu.h"
 #include "EntityManager.h"
 
-
 #define SDL_MAIN_HANDLED
 
 #define SCREEN_WIDTH 1000
@@ -29,31 +28,38 @@ int main(int argc, char **argv)
         return 1;
 
     network->connect(network, 2);
-
-
     InputHandler *inputHandler = getInputHandler();
     StartMenu *startMenu = getStartMenu();
 
-    while(startMenu->isRunning(startMenu))
-    {
-        inputHandler->listen(inputHandler);
-        startMenu->render(startMenu);
-        startMenu->update(startMenu);
-    }
-
     FpsManager *fpsManager = getFpsManager();
-    Engine->innitGameInstances(Engine);
+
+    bool GameInstanceIsInit = false;
 
     while (Engine->isRunning(Engine))
     {
-        fpsManager->listen(fpsManager);
-        fpsManager->frameRateListen(fpsManager);
-        inputHandler->listen(inputHandler);
-        network->listen(network);
+        if (startMenu->isRunning(startMenu))
+        {
+            inputHandler->listen(inputHandler);
+            startMenu->render(startMenu);
+            startMenu->update(startMenu);
+        }
+        else
+        {
+            if (!GameInstanceIsInit)
+            {
+                Engine->innitGameInstances(Engine);
+                GameInstanceIsInit = true;
+            }
 
-        Engine->handleEvents(Engine);
-        Engine->handleUpdates(Engine);
-        Engine->handleRenders(Engine);
+            fpsManager->listen(fpsManager);
+            fpsManager->frameRateListen(fpsManager);
+            inputHandler->listen(inputHandler);
+            network->listen(network);
+
+            Engine->handleEvents(Engine);
+            Engine->handleUpdates(Engine);
+            Engine->handleRenders(Engine);
+        }
     }
     Engine->destroyEngine(Engine);
 
