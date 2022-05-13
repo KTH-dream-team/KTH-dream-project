@@ -8,7 +8,6 @@
 #include "SDL2/SDL_image.h"
 #include "stdio.h"
 
-
 struct startmenuinstance
 {
     bool isRunning;
@@ -40,19 +39,34 @@ void updateStartMenu(void *self)
 
     int connectBtnState = instance->connect->getStateTextButton(instance->connect);
     int serverBtnState = instance->createServer->getStateTextButton(instance->createServer);
-    printf("connectBtnState: %d serverBtnState: %d\n", connectBtnState, serverBtnState);
-    if (connectBtnState == 1)
+    if (connectBtnState == 0)
     {
-        printf("Connect hover\n");
+        SDL_Color bgColor = {0, 0, 0, 255};
+        SDL_Color txtColor = {255, 255, 255, 255};
+        instance->connect->changeColor(instance->connect, bgColor, txtColor);
+    }
+    else if (connectBtnState == 1)
+    {
+        SDL_Color bgColor = {255, 255, 255, 255};
+        SDL_Color txtColor = {1, 1, 1, 255};
+        instance->connect->changeColor(instance->connect, bgColor, txtColor);
     }
     else if (connectBtnState == 2)
     {
         instance->isRunning = false;
-        printf("Connect left click\n");
+    }
+
+    if (serverBtnState == 0)
+    {
+        SDL_Color bgColor = {0, 0, 0, 255};
+        SDL_Color txtColor = {255, 255, 255, 255};
+        instance->createServer->changeColor(instance->createServer, bgColor, txtColor);
     }
     else if (serverBtnState == 1)
     {
-        printf("Create server hover\n");
+        SDL_Color bgColor = {255, 255, 255, 255};
+        SDL_Color txtColor = {1, 1, 1, 255};
+        instance->createServer->changeColor(instance->createServer, bgColor, txtColor);
     }
     else if (serverBtnState == 2)
     {

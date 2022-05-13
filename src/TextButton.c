@@ -45,6 +45,13 @@ void updateTextButton(void *self)
 
 }
 
+void SetBtnColor(void *self, SDL_Color bgColor, SDL_Color textColor){
+    ButtonInstance *instance = ((TextButton*)self)->instance;
+    instance->backgroundColor = bgColor;
+    instance->text->setColor(instance->text, textColor);
+}
+
+
 void renderTextButton(void *self)
 {
 	ButtonInstance *instance = ((TextButton*)self)->instance;
@@ -69,6 +76,7 @@ TextButton *newTextButton(char *text, SDL_Color textColor, SDL_Color backgroundC
     TextButton *self = malloc(sizeof(TextButton));
     self->instance = malloc(sizeof(ButtonInstance));
     self->render = renderTextButton;
+    self->changeColor = SetBtnColor;
     self->update = updateTextButton;
     self->destroy = destroyTextButton;
     self->getStateTextButton = getStateTextButton;
