@@ -119,8 +119,6 @@ void dig(void *self,int x, int y){//!dig when holding Q
     Audio *audio = newAudio();
     audio->playSound(audio, "brick");
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
-
-    printf("dig sent\n");
     
 }
 void digNoSend(void *self,int x, int y){
@@ -181,7 +179,6 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                         {
 
                             warrior000->addHealth(warrior000,10);
-                            warrior000->setBulletCooldown(warrior000,100);
                             mapManagerInstance->map[i][j]=0;
                             map->dig(map,mapBlock.x,mapBlock.y);
                             printf("Warrior000 health = %d \n",warrior000->getHealth(warrior000));
