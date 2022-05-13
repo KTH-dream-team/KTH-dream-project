@@ -7,6 +7,7 @@
 #include "hitBox.h"
 #include <time.h>
 #include "networkClient.h"
+#include "startMenu.h"
 
 #define SDL_MAIN_HANDLED
 
@@ -25,7 +26,15 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
 
-    network->connect(network, 4);
+    // StartMenu *startMenu = getStartMenu(); //! this will be inside Engine->init();
+    // startMenu->init(startMenu);
+    // while (startMenu->isRunning(startMenu))
+    // {
+    //     startMenu->render(startMenu);
+
+    // }
+
+    network->connect(network, 2);
 
     Engine->innitGameInstances(Engine);
 
