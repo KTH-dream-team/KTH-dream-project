@@ -67,6 +67,7 @@ bool load(void *self, char *id, char *filename)
 
 void drop(void *self, char *id)
 {
+    
 }
 
 void destroy(void *self)

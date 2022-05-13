@@ -26,20 +26,21 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
 
-    // StartMenu *startMenu = getStartMenu(); //! this will be inside Engine->init();
-    // startMenu->init(startMenu);
-    // while (startMenu->isRunning(startMenu))
-    // {
-    //     startMenu->render(startMenu);
-
-    // }
-
     network->connect(network, 2);
 
-    Engine->innitGameInstances(Engine);
+
+    InputHandler *inputHandler = getInputHandler();
+    StartMenu *startMenu = getStartMenu();
+
+    while(startMenu->isRunning(startMenu))
+    {
+        
+        startMenu->render(startMenu);
+        inputHandler->listen(inputHandler);
+    }
 
     FpsManager *fpsManager = getFpsManager();
-    InputHandler *inputHandler = getInputHandler();
+    Engine->innitGameInstances(Engine);
 
     while (Engine->isRunning(Engine))
     {

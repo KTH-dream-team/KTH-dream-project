@@ -40,6 +40,7 @@ typedef struct gameEngin
     void (*innitGameInstances)(void*self);
     void (*quit)(void *self);
     SDL_Renderer *(*getRenderer)(void *self);
+    SDL_Window *(*getWindow)(void *self);
 
     EnginInstance *instance;
 

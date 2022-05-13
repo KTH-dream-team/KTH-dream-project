@@ -15,6 +15,7 @@
 #include "networkClient.h"
 #include "audio.h"
 #include "TextButton.h"
+#include "startMenu.h"
 
 struct enginInstance
 {
@@ -30,6 +31,7 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     bool isRenderSucced = initSDL(Engin, title, width, height, fullScreen);
     if (!isRenderSucced)
         return 0;
+
 
     Engin->instance->isRunning = true;
     return 1;
@@ -75,7 +77,6 @@ void handleEvents(void *self)
     entityManager->handleAllEvents(entityManager);
 }
 
-
 void handleUpdates(void *self)
 {
     // updates functions go here !!!
@@ -85,9 +86,11 @@ void handleUpdates(void *self)
     EntityManager *entityManager = getEntityManager();
     entityManager->updateAll(entityManager, dt);
 }
+
 void handleRenders(void *self)
 {
     GameEngin *Engin = ((GameEngin *)self);
+    
     // render background
     TextureManager *textureManager = getTextureManager(textureManager);
     textureManager->load(textureManager, "moon", "./assets/moon.jpg");
@@ -142,6 +145,10 @@ SDL_Renderer *getRenderer(void *self)
 {
     return ((GameEngin *)self)->instance->renderer;
 }
+SDL_Window *getWindow(void *self)
+{
+    return ((GameEngin *)self)->instance->window;
+}
 bool isRunning(void *self)
 {
     return ((GameEngin *)self)->instance->isRunning;
@@ -165,6 +172,7 @@ GameEngin *getGameEngin()
     self.handleRenders = handleRenders;
     self.destroyEngine = destroyEngine;
     self.getRenderer = getRenderer;
+    self.getWindow = getWindow;
     self.innitGameInstances = innitGameInstances;
     self.isRunning = isRunning;
     self.quit = quit;
