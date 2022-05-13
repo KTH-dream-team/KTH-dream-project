@@ -73,7 +73,7 @@ void initMap(void *self)
     }
 
 }
-
+//!function can bradcast data with udp
 void build(void *self, int x,int y, int blockType){//!builds when holding E
     MapManager *mapmanager = (MapManager *)self;
     blockType = 1; 
@@ -119,6 +119,8 @@ void dig(void *self,int x, int y){//!dig when holding Q
     Audio *audio = newAudio();
     audio->playSound(audio, "brick");
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
+
+    printf("dig sent\n");
     
 }
 void digNoSend(void *self,int x, int y){
@@ -168,12 +170,20 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                 {
                 case 1://! 1 warrior collison
                     if(colisionManager->ResolveDynamicRectVsRect(dRect,dir,mapBlock,dt)){
+                        if (blockType==6)
+                        {
+
+                            warrior000->setBulletCooldown(warrior000,100);
+                            map->dig(map,mapBlock.x,mapBlock.y);
+                            printf("Warrior000 has picked up machine gun\n");
+                        }
                         if (blockType==9)
                         {
 
-                            warrior000->setHealth(warrior000,10);
+                            warrior000->addHealth(warrior000,10);
+                            warrior000->setBulletCooldown(warrior000,100);
                             mapManagerInstance->map[i][j]=0;
-                            map->dig(map,i,j);
+                            map->dig(map,mapBlock.x,mapBlock.y);
                             printf("Warrior000 health = %d \n",warrior000->getHealth(warrior000));
                         }
                     }

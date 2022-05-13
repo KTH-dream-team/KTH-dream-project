@@ -18,6 +18,7 @@ typedef struct //datatype: 3
     int from;
     int x;
     int y;
+    int health;
 
 } WarriorSnapshot;
 

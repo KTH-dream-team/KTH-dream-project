@@ -33,6 +33,7 @@ struct warriorInstance
     int networkId;
     char id[20];
     int health;
+    int bulletCooldown;
     bool isAlive;
 };
 
@@ -69,7 +70,7 @@ void updateWarrior(void *self, float dt)
     SDL_FPoint acc = rig->getAcceleration(rig);
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
-    // broadcast data;
+      // broadcast data;
     static unsigned int lastTime;
     
     unsigned int currentTime = SDL_GetTicks();
@@ -163,13 +164,13 @@ void warriorEventHandle(void *self)
     char result[50];
     char bulletId[50] = "Bullet-";
     static int bulletCount = 0;                                              //! ongoing
-    if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK) //! right mouse button pressed
+    if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_LEFT) //! right mouse button pressed
     {
         
         static unsigned int currentTime;
         static unsigned int lastTime;
         currentTime = SDL_GetTicks(); // bullet cooldown 100ms
-        if (lastTime + 400 < currentTime)
+        if (lastTime + warriorInstance->bulletCooldown < currentTime)
         {
             int cubeX, cubeY;
             unsigned int buttons = inputHandler->getMouseState(&cubeX, &cubeY);
@@ -187,21 +188,18 @@ void warriorEventHandle(void *self)
             entityManager->add(entityManager, id, bullet);
             lastTime = currentTime;
             audio->playSound(audio, "gun");
-
-           
+         
         }
     }
 
-    if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_LEFT)
+    if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK)
     {
-        if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_E))
-        {
-            mapManager->build(mapManager, mouse_x, mouse_y, 0); //! build hold E
-        }
-        if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
-        {
-            mapManager->dig(mapManager, mouse_x, mouse_y); //! dig hold Q
-        }
+           mapManager->build(mapManager, mouse_x, mouse_y, 0); //! build hold E
+        
+        // if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
+        // {
+        //     mapManager->dig(mapManager, mouse_x, mouse_y); //! dig hold Q
+        // }
     }
 }
 
@@ -256,6 +254,11 @@ int getHealth(void *self){
     return warrior->instance->health;
 }
 
+void setBulletCooldown(void *self, int bulletCooldown){//shorter cooldown means faster shooting
+    Warrior *warrior = ((Warrior *)self);
+    warrior->instance->bulletCooldown =bulletCooldown;
+}
+
 void destroyWarrior(void *self)
 {
     Warrior *warrior = ((Warrior *)self);
@@ -274,6 +277,9 @@ void updateWarriorPosition(void *self, float x, float y)
 {
     WarriorInstance *instance = ((Warrior *)self)->instance;
     instance->position->set(instance->position, x, y);
+
+      //update health
+    // instance->health = health;
 }
 
 char *getWarriorID(void *self)
@@ -287,6 +293,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     int warriorHight = 32;
     int warriorWidth = 32;
     int health=5;
+    int bulletCooldown =400; //inital fier rate cooldown
 
     Warrior *self = malloc(sizeof(Warrior));
     self->instance = malloc(sizeof(WarriorInstance));
@@ -297,9 +304,10 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     self->instance->isAlive=true;
     self->instance->hitBox.x = 3;
     self->instance->hitBox.y = 7;
-    self->instance->hitBox.w = warriorWidth - 10;
+    self->instance->hitBox.w = warriorWidth - 12;
     self->instance->hitBox.h = warriorHight - 7;
     self->instance->health = health;
+    self->instance->bulletCooldown= bulletCooldown;
     self->instance->isLocal = isLocal;
     self->instance->networkId = networkId;
     strcpy(self->instance->id, "Warrior-000");
@@ -330,6 +338,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     self->getID = getWarriorID;
     self->addHealth = addHealth;
     self->getHealth = getHealth;
+    self->setBulletCooldown=setBulletCooldown;
 
     return self;
 }

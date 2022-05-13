@@ -43,7 +43,7 @@ void innitGameInstances(void*self)
 
     Audio *audio = newAudio();
     audio->init(audio);
-    audio->backgroud(audio, 10);
+    // audio->backgroud(audio, 10);
 
 
     EntityManager *entityManager = getEntityManager();

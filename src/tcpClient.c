@@ -133,7 +133,6 @@ void TCPlisten(void *self)
                         entityManager->drop(entityManager,id);
 
                         offset += sizeof(DestroyBullet);
-                        printf("ok");
                     break;
                     default:
                         offset ++;
