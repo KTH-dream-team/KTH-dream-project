@@ -5,67 +5,71 @@
 #include "GameEngin.h"
 #include "TextButton.h"
 #include "InputHandler.h"
+#include "audio.h"
 #include "CollisionManager.h"
 #include <stdio.h>
 
-struct buttonInstance{
+struct buttonInstance
+{
     SDL_Rect destRect;
     SDL_Color backgroundColor;
     Text *text;
     int btnState;
 };
-
-
+static bool playedSound = false;
+void removeHover(void *self);
+void hoverEffect(void *self);
 
 int getStateTextButton(void *self)
 {
-	return ((TextButton*)self)->instance->btnState;
+    return ((TextButton *)self)->instance->btnState;
 }
 
 void updateTextButton(void *self)
 {
-    ButtonInstance *instance = ((TextButton*)self)->instance;
+    ButtonInstance *instance = ((TextButton *)self)->instance;
     InputHandler *input = getInputHandler();
     CollisionManager *collision = GetCollisionManager();
     int mouseX, mouseY;
     unsigned int mouseState;
     mouseState = input->getMouseState(&mouseX, &mouseY);
 
-    if(!(collision->PointVsRect(mouseX, mouseY, &instance->destRect)))
+    if (!(collision->PointVsRect(mouseX, mouseY, &instance->destRect)))
     {
-        instance->btnState = 0;
+        removeHover(instance);
         return;
     }
-    
+
     instance->btnState = 1;
-    if(mouseState == SDL_BUTTON_LEFT)
+    hoverEffect(instance);
+
+    if (mouseState == SDL_BUTTON_LEFT)
     {
         instance->btnState = 2;
     }
-
 }
 
-void SetBtnColor(void *self, SDL_Color bgColor, SDL_Color textColor){
-    ButtonInstance *instance = ((TextButton*)self)->instance;
+void SetBtnColor(void *self, SDL_Color bgColor, SDL_Color textColor)
+{
+    ButtonInstance *instance = ((TextButton *)self)->instance;
     instance->backgroundColor = bgColor;
     instance->text->setColor(instance->text, textColor);
 }
 
-
 void renderTextButton(void *self)
 {
-	ButtonInstance *instance = ((TextButton*)self)->instance;
+    ButtonInstance *instance = ((TextButton *)self)->instance;
     GameEngin *GE = getGameEngin();
     SDL_Renderer *renderer = GE->getRenderer(GE);
-	SDL_Color c = instance->backgroundColor;
-	SDL_SetRenderDrawColor(renderer, c.r , c.g , c.b , c.a); 
-    SDL_RenderFillRect(renderer,&instance->destRect);
-	instance->text->render(instance->text);
+    SDL_Color c = instance->backgroundColor;
+    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+    SDL_RenderFillRect(renderer, &instance->destRect);
+    instance->text->render(instance->text);
 }
 
 void destroyTextButton(void *self)
 {
-    TextButton *button = (TextButton*)self;
+    TextButton *button = (TextButton *)self;
     button->instance->text->destroy(button->instance->text);
     free(button->instance);
     free(button);
@@ -81,11 +85,30 @@ TextButton *newTextButton(char *text, SDL_Color textColor, SDL_Color backgroundC
     self->destroy = destroyTextButton;
     self->getStateTextButton = getStateTextButton;
     self->instance->backgroundColor = backgroundColor;
-    self->instance->text = newText(text,destRect.x, destRect.y,size,textColor);
-	self->instance->text->centerText(self->instance->text,destRect);
+    self->instance->text = newText(text, destRect.x, destRect.y, size, textColor);
+    self->instance->text->centerText(self->instance->text, destRect);
     self->instance->text->render(self->instance->text);
-	self->instance->destRect = destRect;
-	self->instance->btnState = 0;
-	
+    self->instance->destRect = destRect;
+    self->instance->btnState = 0;
+
     return self;
+}
+
+void removeHover(void *self)
+{
+    ButtonInstance *instance = ((ButtonInstance *)self);
+
+    SDL_Color bgColor = {0, 0, 0, 255};
+    SDL_Color txtColor = {255, 255, 255, 255};
+    instance->backgroundColor = bgColor;
+    instance->text->setColor(instance->text, txtColor);
+}
+void hoverEffect(void *self)
+{
+    ButtonInstance *instance = ((ButtonInstance *)self);
+
+    SDL_Color txtColor = {0, 0, 0, 255};
+    SDL_Color bgColor = {255, 255, 255, 255};
+    instance->backgroundColor = bgColor;
+    instance->text->setColor(instance->text, txtColor);
 }

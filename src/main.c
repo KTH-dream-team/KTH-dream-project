@@ -19,15 +19,13 @@ int main(int argc, char **argv)
 {
     srand(time(0));
     NetworkClient *network = getNetworkClient();
-    if (!network->init(network))
-        return 1;
+
 
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     if (!isInitSucceed)
         return 1;
 
-    network->connect(network, 2);
     InputHandler *inputHandler = getInputHandler();
     StartMenu *startMenu = getStartMenu();
 
