@@ -6,7 +6,7 @@ typedef struct buttonInstance ButtonInstance;
 typedef struct textButton
 {
     int (*getStateTextButton)(void *self);
-    void (*update)(void *self, float dt);
+    void (*update)(void *self);
     void (*render)(void *self);
     void (*destroy)(void *self);
     ButtonInstance *instance;

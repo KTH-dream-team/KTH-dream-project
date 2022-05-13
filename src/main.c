@@ -8,6 +8,8 @@
 #include <time.h>
 #include "networkClient.h"
 #include "startMenu.h"
+#include "EntityManager.h"
+
 
 #define SDL_MAIN_HANDLED
 
@@ -34,9 +36,9 @@ int main(int argc, char **argv)
 
     while(startMenu->isRunning(startMenu))
     {
-        
-        startMenu->render(startMenu);
         inputHandler->listen(inputHandler);
+        startMenu->render(startMenu);
+        startMenu->update(startMenu);
     }
 
     FpsManager *fpsManager = getFpsManager();

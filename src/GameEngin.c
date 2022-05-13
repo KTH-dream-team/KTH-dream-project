@@ -32,12 +32,11 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
     if (!isRenderSucced)
         return 0;
 
-
     Engin->instance->isRunning = true;
     return 1;
 }
 
-void innitGameInstances(void*self)
+void innitGameInstances(void *self)
 {
     // init map
     MapManager *mapManager = getMapManager();
@@ -47,28 +46,24 @@ void innitGameInstances(void*self)
     audio->init(audio);
     audio->backgroud(audio, 10);
 
-
     EntityManager *entityManager = getEntityManager();
     // Warrior creation handel network
 
     // create button here
-    //SDL_Color tColor = {0,0,0,100};
-    //SDL_Color bgColor = {100,100,200,100};
-    //SDL_Rect destRect = {100,100,100,100};
-    //TextButton *button = newTextButton("Hello",  tColor,  bgColor, 26, destRect);
-    //entityManager->add(entityManager, "TextButton-1",button);
-
-
+    // SDL_Color tColor = {0,0,0,100};
+    // SDL_Color bgColor = {100,100,200,100};
+    // SDL_Rect destRect = {100,100,100,100};
+    // TextButton *button = newTextButton("Hello",  tColor,  bgColor, 26, destRect);
+    // entityManager->add(entityManager, "TextButton-1",button);
 
     NetworkClient *network = getNetworkClient();
-    WarriorCreation wa = {network->getTCPID(network),100, 0};
+    WarriorCreation wa = {network->getTCPID(network), 100, 0};
     network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
 
-    Warrior *warrior = createWarrior(300*network->getTCPID(network), 0, network->getTCPID(network), -1,true);
-    char * wID = warrior->getID(warrior);
+    Warrior *warrior = createWarrior(300 * network->getTCPID(network), 0, network->getTCPID(network), -1, true);
+    char *wID = warrior->getID(warrior);
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
-    printf("warrior id %s\n",wID);
-    
+    printf("warrior id %s\n", wID);
 }
 
 void handleEvents(void *self)
@@ -90,8 +85,8 @@ void handleUpdates(void *self)
 void handleRenders(void *self)
 {
     GameEngin *Engin = ((GameEngin *)self);
-    
-    // render background
+
+    //render background
     TextureManager *textureManager = getTextureManager(textureManager);
     textureManager->load(textureManager, "moon", "./assets/moon.jpg");
     SDL_Rect srcRect = {0, 0, 1000, 500};
@@ -110,11 +105,14 @@ void handleRenders(void *self)
 }
 bool destroyEngine(void *self)
 {
+    
     GameEngin *Engin = ((GameEngin *)self);
     SDL_Quit();
     SDL_DestroyWindow(Engin->instance->window);
     SDL_DestroyRenderer(Engin->instance->renderer);
     free(Engin->instance);
+
+    //----------destroy all assets bellow !!!---------//
 
     // destroy texture manager
     TextureManager *texterManager = getTextureManager();
@@ -132,13 +130,14 @@ bool destroyEngine(void *self)
     MapManager *mapManager = getMapManager();
     mapManager->destroyMap(mapManager);
 
-    //destroy audio
-    Audio *audio = newAudio();
-    audio->destroy(audio);    
-    // destroy all assets here !!!
+    // destroy startMenu
+    StartMenu *startMenu = getStartMenu();
+    startMenu->destroy(startMenu);
 
-    // destroy functions go here !!!
-    printf("Engine Cleaned");
+
+    //----------destroy all assets above !!!---------//
+
+    printf("Engine Cleaned\n");
     return false;
 }
 SDL_Renderer *getRenderer(void *self)
@@ -183,7 +182,7 @@ GameEngin *getGameEngin()
 // helper functions
 bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScreen)
 {
-    if ((SDL_Init(SDL_INIT_VIDEO| SDL_INIT_AUDIO)) < 0)
+    if ((SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) < 0)
     {
         printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return false;
@@ -203,7 +202,7 @@ bool initSDL(GameEngin *Engin, char *title, int width, int height, int fullScree
         return false;
     }
 
-    if(!TTF_WasInit() && TTF_Init()==-1) 
+    if (!TTF_WasInit() && TTF_Init() == -1)
     {
         printf("TTF_Init: %s\n", TTF_GetError());
         exit(1);
