@@ -194,12 +194,14 @@ void warriorEventHandle(void *self)
 
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK)
     {
-           mapManager->build(mapManager, mouse_x, mouse_y, 0); //! build hold E
+        if(inputHandler->getKeyPress(inputHandler,SDL_SCANCODE_E)){
+            mapManager->build(mapManager, mouse_x, mouse_y, 0); //! build hold E
+        }
         
-        // if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
-        // {
-        //     mapManager->dig(mapManager, mouse_x, mouse_y); //! dig hold Q
-        // }
+        if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
+        {
+            mapManager->dig(mapManager, mouse_x, mouse_y); //! dig hold Q
+        }
     }
 }
 

@@ -10,8 +10,8 @@
 
 #define SDL_MAIN_HANDLED
 
-#define SCREEN_WIDTH 1000
-#define SCREEN_HEIGHT 500
+#define SCREEN_WIDTH 2000
+#define SCREEN_HEIGHT 1000
 
 int main(int argc, char **argv)
 {
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
 
-    network->connect(network, 2);
+    network->connect(network, 1);
 
     Engine->innitGameInstances(Engine);
 
@@ -44,6 +44,9 @@ int main(int argc, char **argv)
         Engine->handleRenders(Engine);
     }
     Engine->destroyEngine(Engine);
+
+    // MapManager *mapManager = getMapManager();//TODO REMOVE
+    // mapManager->show(mapManager);
 
     return 0;
 }

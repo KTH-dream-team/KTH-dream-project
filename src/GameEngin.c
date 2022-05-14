@@ -15,6 +15,9 @@
 #include "networkClient.h"
 #include "audio.h"
 #include "TextButton.h"
+#define SCREEN_WIDTH 2000
+#define SCREEN_HEIGHT 1000
+
 
 struct enginInstance
 {
@@ -91,8 +94,8 @@ void handleRenders(void *self)
     // render background
     TextureManager *textureManager = getTextureManager(textureManager);
     textureManager->load(textureManager, "moon", "./assets/moon.jpg");
-    SDL_Rect srcRect = {0, 0, 1000, 500};
-    SDL_Rect destRect = {0, 0, 1000, 500};
+    SDL_Rect srcRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_Rect destRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     textureManager->draw(textureManager, "moon", srcRect, destRect, 1); //! draw bakgrundsbild
 
     // render map
