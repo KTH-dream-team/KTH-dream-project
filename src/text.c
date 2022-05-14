@@ -42,10 +42,10 @@ void renderTTF(void *self)
 void destroyTTF(void *self)
 {
     Text *text = (Text *)self;
-    free(text->instance->renderer);
-    TTF_Quit();
+    SDL_DestroyRenderer(text->instance->renderer);
     free(text->instance);
     free(text);
+    TTF_Quit();
 
     return;
 }

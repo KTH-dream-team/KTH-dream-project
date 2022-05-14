@@ -66,6 +66,7 @@ void destroyStartMenu(void *self)
     instance->connect->destroy(instance->connect);
     instance->createServer->destroy(instance->createServer);
     free(instance);
+    printf("Menu destroyed\n");
 }
 
 bool startMenuIsRunning(void *self)
@@ -85,9 +86,11 @@ StartMenu *getStartMenu()
     self.render = renderStartMenu;
     self.isRunning = startMenuIsRunning;
     self.update = updateStartMenu;
+    self.destroy = destroyStartMenu;
+
 
     // load background
-    self.instance->surface = IMG_Load("src/menu.jpg");
+    self.instance->surface = IMG_Load("assets/menu.jpg");
 
     // create button
     SDL_Color txtColor = {255, 255, 255, 255};
@@ -95,7 +98,7 @@ StartMenu *getStartMenu()
     SDL_Rect connectRect = {100, 100, 200, 60};
     SDL_Rect ServerRect = {100, 200, 200, 60};
     self.instance->connect = newTextButton("Connect", txtColor, bgColor, 24, connectRect);
-    self.instance->createServer = newTextButton("CreateServer", txtColor, bgColor, 24, ServerRect);
+    self.instance->createServer = newTextButton("Create Server", txtColor, bgColor, 24, ServerRect);
 
     return &self;
 }

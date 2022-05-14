@@ -16,7 +16,6 @@ struct buttonInstance
     Text *text;
     int btnState;
 };
-static bool playedSound = false;
 void removeHover(void *self);
 void hoverEffect(void *self);
 
@@ -39,6 +38,7 @@ void updateTextButton(void *self)
         removeHover(instance);
         return;
     }
+
 
     instance->btnState = 1;
     hoverEffect(instance);

@@ -4,6 +4,15 @@
 #include "audio.h"
 #include <string.h>
 
+
+// Background music licens
+// This must be included in project description
+// Powerful Trap Beat | Strong by Alex-Productions | https://www.youtube.com/channel/UCx0_M61F81Nfb-BRXE-SeVA
+// Music promoted by https://www.chosic.com/free-music/all/
+// Creative Commons CC BY 3.0
+// https://creativecommons.org/licenses/by/3.0/
+ 
+
 struct audioInstance
 {
     Mix_Music *music;
@@ -28,7 +37,7 @@ void backgroundMusic(void *self, int volume)
 {
     Audio *audio = (Audio *)self;
     Mix_VolumeMusic(volume);
-    audio->instance->music = Mix_LoadMUS("audio/back.wav");
+    audio->instance->music = Mix_LoadMUS("audio/bgm.wav");
     if (Mix_PlayMusic(audio->instance->music, -1) != 0)
     {
         printf("Cant play background, %s\n", Mix_GetError());
@@ -41,7 +50,7 @@ void playSound(void *self, char *path)
     if (strcmp("jump", path) == 0)
     {
         Mix_PlayChannel(3, audio->instance->jump, 0);
-        Mix_Volume(3, 30);
+        Mix_Volume(3, 60);
     }
     if (strcmp("gun", path) == 0)
     {
@@ -56,7 +65,7 @@ void playSound(void *self, char *path)
     if (strcmp("hover", path) == 0)
     {
         Mix_PlayChannel(5, audio->instance->hover, 0);
-        Mix_Volume(5, 30);
+        Mix_Volume(3, 100);
     }
 }
 
@@ -79,9 +88,9 @@ Audio *newAudio()
 {
     Audio *self = malloc(sizeof(Audio));
     self->instance = malloc(sizeof(AudioInstance));
-    self->instance->jump = Mix_LoadWAV("audio/jump.wav");
+    self->instance->jump = Mix_LoadWAV("audio/jumppp11.wav");
     self->instance->gun = Mix_LoadWAV("audio/gun.wav");
-    self->instance->brick = Mix_LoadWAV("audio/brick.wav");
+    self->instance->brick = Mix_LoadWAV("audio/break.wav");
     self->instance->hover = Mix_LoadWAV("audio/hover.wav");
 
     self->backgroud = backgroundMusic;
