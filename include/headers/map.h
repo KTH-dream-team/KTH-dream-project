@@ -12,7 +12,7 @@ typedef struct mapManager{
     void(*buildNoSend)(void *self,int x,int y,int blockType);//builds blocks on the map no network send x and y in blockIndex
     void(*build)(void *self,int x,int y,int blockType);//place blocks on mp when clicking on mouse and holding E
     void(*destroyMap)(void *self);//destroy the map
-    void(*show)(void *self);//debug
+    void(*show)(void *self);//map builder helper function
     bool(*checkColision)(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType);
 
     MapManagerInstance *instance;
