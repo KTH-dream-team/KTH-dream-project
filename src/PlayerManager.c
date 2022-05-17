@@ -38,16 +38,16 @@ void initPlayerManager(void *self)
 
 int winnerPlayerManager(void *self)
 {	
-	printf("winner\n");
+	//printf("winner\n");
 	PlayerManager *PM = getPlayerManager();
 	if(PM->instance->nrOfPlayerAlive>1)
 	{
-		printf("More than 1 player alive!\n");
+		//printf("More than 1 player alive!\n");
 		return -1;
 	}
 	else if(PM->instance->nrOfPlayerAlive==0)
 	{
-		printf("Draw 0 players alive!\n");
+		//printf("Draw 0 players alive!\n");
 		return -2;
 	}
 
@@ -60,11 +60,6 @@ int winnerPlayerManager(void *self)
 		}
 	}
 	return -1;
-}
-
-void alivePlayerManager(void *self)
-{
-	return;
 }
 
 void killedPlayerManager(void *self, int id)
@@ -85,7 +80,6 @@ PlayerManager *getPlayerManager()
 
 	self.init = initPlayerManager;
 	self.winner = winnerPlayerManager;
-	self.alive = alivePlayerManager;
 	self.killed = killedPlayerManager;
 
 	return &self;

@@ -35,17 +35,18 @@ int main(int argc, char **argv)
     InputHandler *inputHandler = getInputHandler();
     StartMenu *startMenu = getStartMenu();
 
-    while(startMenu->isRunning(startMenu))
+    /*while(startMenu->isRunning(startMenu))
     {
         inputHandler->listen(inputHandler);
         startMenu->render(startMenu);
         startMenu->update(startMenu);
-    }
+    }*/
 
     FpsManager *fpsManager = getFpsManager();
     Engine->innitGameInstances(Engine);
-    
-    while (Engine->isRunning(Engine))
+
+    PlayerManager *PM = getPlayerManager();
+    while (PM->winner(PM)==-1)
     {
         fpsManager->listen(fpsManager);
         fpsManager->frameRateListen(fpsManager);
