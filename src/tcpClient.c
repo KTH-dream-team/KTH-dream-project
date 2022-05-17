@@ -119,9 +119,8 @@ void TCPlisten(void *self)
                         Alive *alive = (Alive*)(instance->packetReceived+offset);
                         
                         PlayerManager *PM = getPlayerManager();
-                        PM->winner(PM);
-                        PM->alive(PM);
                         PM->killed(PM,alive->from);
+                        PM->winner(PM);
 
                         offset += sizeof(Alive);
                     break;

@@ -9,6 +9,7 @@
 #include "networkClient.h"
 #include "startMenu.h"
 #include "EntityManager.h"
+#include "PlayerManager.h"
 
 
 #define SDL_MAIN_HANDLED
@@ -43,7 +44,7 @@ int main(int argc, char **argv)
 
     FpsManager *fpsManager = getFpsManager();
     Engine->innitGameInstances(Engine);
-
+    
     while (Engine->isRunning(Engine))
     {
         fpsManager->listen(fpsManager);

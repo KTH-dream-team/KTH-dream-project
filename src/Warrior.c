@@ -246,13 +246,15 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
             anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
            if(warriorInstance->isLocal==true)
            {
-               printf("broadcast dead warrior\n");
+                printf("broadcast dead warrior\n");
                 //broadcast player dead
                 Alive alive;
                 alive.from = network->getTCPID(network);
                 alive.isAlive = false;
                 alive.isLocal = warriorInstance->isLocal;
-                PM->killed(PM,alive.from);
+
+                PM->killed(PM,alive.from); // kill yourself
+                PM->winner(PM); // check if there is a winner
                 network->TCPbroadCast(network,&alive, sizeof(Alive), 7);
 
            }
