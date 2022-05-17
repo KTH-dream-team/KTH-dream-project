@@ -3,11 +3,15 @@
 #include "GameEngin.h"
 #include "startMenu.h"
 #include "TextButton.h"
+#include "text.h"
 #include "EntityManager.h"
 #include "TextureManager.h"
 #include "SDL2/SDL_image.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <ifaddrs.h>
 
 #include "networkClient.h"
 
@@ -17,6 +21,7 @@ struct startmenuinstance
     SDL_Surface *surface;
     TextButton *connect;
     TextButton *createServer;
+    Text *IP;
 };
 
 void renderStartMenu(void *self)
@@ -30,6 +35,8 @@ void renderStartMenu(void *self)
     SDL_RenderCopy(renderer, texture, NULL, NULL); //! ordning spelar roll på renderingen
     instance->connect->render(instance->connect);
     instance->createServer->render(instance->createServer);
+    instance->IP->render(instance->IP);
+
     SDL_RenderPresent(renderer);
 }
 
@@ -74,6 +81,26 @@ bool startMenuIsRunning(void *self)
     return ((StartMenu *)self)->instance->isRunning;
 }
 
+char *getMyIPAdress()
+{
+    //hämtad från stack overflow
+    //https://stackoverflow.com/questions/4139405/how-can-i-get-to-know-the-ip-address-for-interfaces-in-c
+    struct ifaddrs *ifap, *ifa;
+    struct sockaddr_in *sockAddr;
+    char *addr;
+    getifaddrs(&ifap);
+    for (ifa = ifap; ifa; ifa = ifa->ifa_next)
+    {
+        if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET)
+        {
+            sockAddr = (struct sockaddr_in *)ifa->ifa_addr;
+            addr = inet_ntoa(sockAddr->sin_addr);
+        }
+    }
+    freeifaddrs(ifap);
+    return addr;
+}
+
 StartMenu *getStartMenu()
 {
     static StartMenu self;
@@ -88,7 +115,6 @@ StartMenu *getStartMenu()
     self.update = updateStartMenu;
     self.destroy = destroyStartMenu;
 
-
     // load background
     self.instance->surface = IMG_Load("assets/menu.jpg");
 
@@ -99,6 +125,10 @@ StartMenu *getStartMenu()
     SDL_Rect ServerRect = {100, 200, 200, 60};
     self.instance->connect = newTextButton("Connect", txtColor, bgColor, 24, connectRect);
     self.instance->createServer = newTextButton("Create Server", txtColor, bgColor, 24, ServerRect);
+
+    //create IP text
+    char *ip = getMyIPAdress();
+    self.instance->IP = newText(ip, 760, 440, 24, txtColor);
 
     return &self;
 }
