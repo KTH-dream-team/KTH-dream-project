@@ -88,6 +88,15 @@ void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_Rendere
     SDL_RenderCopyEx(ren, tex, &srcRect, &destRect, 0, NULL, flip);
 }
 
+void drawWithAngle(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip, float angle)
+{
+    GameEngin *Engine = getGameEngin();
+    SDL_Renderer *ren = Engine->getRenderer(Engine);
+    SDL_Texture *tex = getTextureByID(self, id);
+
+    SDL_RenderCopyEx(ren, tex, &srcRect, &destRect, angle, NULL, flip);
+}
+
 void drawFrame(void *self, char *id, float x, float y, int w, int h, int row, int frame, float scale, SDL_RendererFlip flip)
 {
     SDL_Rect srcRect = {w * frame, h * row, w, h};
@@ -113,7 +122,8 @@ TextureManager *getTextureManager()
     self.load = load;
     self.drop = drop;
     self.destroy = destroy;
-    self.draw = draw;
+    self.draw = draw;    
+    self.drawWithAngle = drawWithAngle;
     self.drawFrame = drawFrame;
     self.getTextureByID = getTextureByID;
     printf("Initialize TextureManager \n");

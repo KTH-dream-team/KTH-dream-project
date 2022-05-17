@@ -23,6 +23,7 @@ static unsigned int currentTime;
 static unsigned int lastTime;
 #define accMan 0.5
 #define speedMan 2
+#define PI 3.141
 
 struct warriorInstance
 {
@@ -50,7 +51,7 @@ void updateWarrior(void *self, float dt)
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
 
-    // handle collision 
+    // handle collision
     MapManager *mapManager = getMapManager(); // MAP
     Transform *pos = ((Warrior *)self)->instance->position;
     SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
@@ -70,49 +71,67 @@ void updateWarrior(void *self, float dt)
 
     // broadcast data;
     static unsigned int lastTime;
-    
+
     unsigned int currentTime = SDL_GetTicks();
     unsigned int deltaTime = currentTime - lastTime;
-    if(deltaTime < 20)
+    if (deltaTime < 20)
         return;
     lastTime = currentTime;
 
     NetworkClient *network = getNetworkClient();
     WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos)};
     network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
-
-
 }
 void renderWarrior(void *self)
 {
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
-    WarriorInstance *instance = ((Warrior *)self)->instance;
+    anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
 
+    WarriorInstance *instance = ((Warrior *)self)->instance;
+    if(!instance->isLocal)
+        return;
+    TextureManager *instanceTexture = getTextureManager();
+    InputHandler *input = getInputHandler();
     GameEngin *engin = getGameEngin();
+    int mouseX, mouseY;
+    float angle, radian;
+    input->getMouseState(&mouseX, &mouseY);
 
     SDL_Rect box = {
-        instance->position->getX(instance->position) + instance->hitBox.x,
-        instance->position->getY(instance->position) + instance->hitBox.y,
+        instance->position->getX(instance->position) + 5,
+        instance->position->getY(instance->position) + 8,
         instance->hitBox.w,
         instance->hitBox.h,
     };
+
+    radian = atan2(mouseY - box.y, mouseX - box.x);
+    box.x = box.x + (20 * cos(radian));
+    box.y = box.y + (20 * sin(radian));
+    angle = radian * (180 / PI);
+    printf("Angle: %f\n", angle);
+    SDL_Rect srcRect = {0, 0, 40, 15};
     SDL_Renderer *ren = engin->getRenderer(engin);
-    anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
+    instanceTexture->load(instanceTexture,"sniper","./assets/sniper3.png");
+
+    if (angle < 90 && angle > -90)
+        instanceTexture->drawWithAngle(instanceTexture, "sniper", srcRect, box, SDL_FLIP_NONE, angle);
+    else
+        instanceTexture->drawWithAngle(instanceTexture, "sniper", srcRect, box, SDL_FLIP_VERTICAL, angle);
 
     // draw hitbox debugg
-    //SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
-    //SDL_RenderDrawRect(engin->getRenderer(engin), &box);
+    // SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
+    // SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 }
 void warriorEventHandle(void *self)
 {
-    if (!(((Warrior *)self)->instance->isLocal && ((Warrior *)self)->instance->health>0))
+    if (!(((Warrior *)self)->instance->isLocal && ((Warrior *)self)->instance->health > 0))
         return;
 
     InputHandler *inputHandler = getInputHandler();
-    MapManager *mapManager = getMapManager(); 
+    MapManager *mapManager = getMapManager();
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
-    EntityManager *entityManager = getEntityManager(); 
+    EntityManager *entityManager = getEntityManager();
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
 
@@ -120,7 +139,7 @@ void warriorEventHandle(void *self)
     WarriorSnapshot test = {2, 32, 134};
     WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
 
-    //warriorInstance->isAlive=false;
+    // warriorInstance->isAlive=false;
 
     Audio *audio = newAudio();
 
@@ -144,7 +163,7 @@ void warriorEventHandle(void *self)
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
-        // anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive); byt till nån annan 
+        // anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive); byt till nån annan
         rig->setVelocityX(rig, 50);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
@@ -169,7 +188,7 @@ void warriorEventHandle(void *self)
     static int bulletCount = 0;                                              //! ongoing
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK) //! right mouse button pressed
     {
-        
+
         static unsigned int currentTime;
         static unsigned int lastTime;
         currentTime = SDL_GetTicks(); // bullet cooldown 100ms
@@ -214,7 +233,8 @@ void warriorEventHandle(void *self)
     }
 }
 
-bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *vel, float dt){
+bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *vel, float dt)
+{
     CollisionManager *collisionManager = GetCollisionManager();
     WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
     EntityManager *EM = getEntityManager();
@@ -234,32 +254,30 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
         hitBox.w,
         hitBox.h,
     };
-    
-    if(collisionManager->ResolveDynamicRectVsRect(bulletDRect,vel,warriorDRect,dt)){ 
+
+    if (collisionManager->ResolveDynamicRectVsRect(bulletDRect, vel, warriorDRect, dt))
+    {
         warriorInstance->health--;
-        //printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
-        anim->set(anim,"warrior",32,32,6,4,90,0, warriorInstance->isAlive);
-        if (warriorInstance->health==0)
+        // printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
+        anim->set(anim, "warrior", 32, 32, 6, 4, 90, 0, warriorInstance->isAlive);
+        if (warriorInstance->health == 0)
         {
-            printf("Warrior died: ID: %d, Health: %d, Name %s, isLocal: %d\n",warriorInstance->networkId, warriorInstance->health, warriorInstance->id, warriorInstance->isLocal);
-            warriorInstance->isAlive=false;
+            printf("Warrior died: ID: %d, Health: %d, Name %s, isLocal: %d\n", warriorInstance->networkId, warriorInstance->health, warriorInstance->id, warriorInstance->isLocal);
+            warriorInstance->isAlive = false;
             anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
-           if(warriorInstance->isLocal==true)
-           {
+            if (warriorInstance->isLocal == true)
+            {
                 printf("broadcast dead warrior\n");
-                //broadcast player dead
+                // broadcast player dead
                 Alive alive;
                 alive.from = network->getTCPID(network);
                 alive.isAlive = false;
                 alive.isLocal = warriorInstance->isLocal;
 
-                PM->killed(PM,alive.from); // kill yourself
-                PM->winner(PM); // check if there is a winner
-                network->TCPbroadCast(network,&alive, sizeof(Alive), 7);
-
-           }
-
-
+                PM->killed(PM, alive.from); // kill yourself
+                PM->winner(PM);             // check if there is a winner
+                network->TCPbroadCast(network, &alive, sizeof(Alive), 7);
+            }
         }
         return true;
     }
@@ -297,7 +315,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
 
     int warriorHight = 32;
     int warriorWidth = 32;
-    int health=5;
+    int health = 5;
 
     Warrior *self = malloc(sizeof(Warrior));
     self->instance = malloc(sizeof(WarriorInstance));
@@ -305,7 +323,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
 
-    self->instance->isAlive=true;
+    self->instance->isAlive = true;
     self->instance->hitBox.x = 3;
     self->instance->hitBox.y = 7;
     self->instance->hitBox.w = warriorWidth - 10;
@@ -324,7 +342,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     }
 
     self->instance->animation = newAnimation();
-    self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE,true);
+    self->instance->animation->set(self->instance->animation, "warrior", warriorWidth, warriorHight, 0, 13, 90, SDL_FLIP_NONE, true);
 
     self->instance->position = newTransform();
     self->instance->position->set(self->instance->position, x, y);
