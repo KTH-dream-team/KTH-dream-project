@@ -12,6 +12,8 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <ifaddrs.h>
+#include <InputHandler.h>
+
 
 #include "networkClient.h"
 
@@ -22,8 +24,19 @@ struct startmenuinstance
     TextButton *connect;
     TextButton *createServer;
     Text *IP;
+    Text *input;
 };
+// void showInput(void *self)
+// {
+//     StartMenuInstance *instance = ((StartMenu *)self)->instance;
+//     InputHandler *IH = getInputHandler();
+//     char *text;
+//     text = IH->getKeyPress(IH);
 
+//     SDL_Color txtColor = {255, 255, 255, 255};
+//     instance->input = newText(text, 300, 300, 24, txtColor);
+//     instance->input->render(instance->input);
+// }
 void renderStartMenu(void *self)
 {
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
@@ -36,6 +49,7 @@ void renderStartMenu(void *self)
     instance->connect->render(instance->connect);
     instance->createServer->render(instance->createServer);
     instance->IP->render(instance->IP);
+    // showInput(self);
 
     SDL_RenderPresent(renderer);
 }
@@ -49,7 +63,6 @@ void updateStartMenu(void *self)
 
     int connectBtnState = instance->connect->getStateTextButton(instance->connect);
     int serverBtnState = instance->createServer->getStateTextButton(instance->createServer);
-
     if (connectBtnState == 2)
     {
         NetworkClient *network = getNetworkClient();
@@ -83,8 +96,8 @@ bool startMenuIsRunning(void *self)
 
 char *getMyIPAdress()
 {
-    //hämtad från stack overflow
-    //https://stackoverflow.com/questions/4139405/how-can-i-get-to-know-the-ip-address-for-interfaces-in-c
+    // hämtad från stack overflow
+    // https://stackoverflow.com/questions/4139405/how-can-i-get-to-know-the-ip-address-for-interfaces-in-c
     struct ifaddrs *ifap, *ifa;
     struct sockaddr_in *sockAddr;
     char *addr;
@@ -126,7 +139,7 @@ StartMenu *getStartMenu()
     self.instance->connect = newTextButton("Connect", txtColor, bgColor, 24, connectRect);
     self.instance->createServer = newTextButton("Create Server", txtColor, bgColor, 24, ServerRect);
 
-    //create IP text
+    // create IP text
     char *ip = getMyIPAdress();
     self.instance->IP = newText(ip, 760, 440, 24, txtColor);
 
