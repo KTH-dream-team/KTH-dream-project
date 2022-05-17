@@ -66,6 +66,13 @@ bool getIsAllClientJoined(void *self)
     return ((NetworkClient *)self)->instance->isAllClientJoined;
 }
 
+int getNrOfClientsTCP(void *self)
+{
+    NetworkClientInstance *instance = ((NetworkClient *)self)->instance;
+    TCPclient *TCP = instance->TCP;
+    return TCP->getNrOfClients(TCP);
+}
+
 int networkGetTCPID(void *self)
 {
     TCPclient *TCP = ((NetworkClient *)self)->instance->TCP;
@@ -89,6 +96,7 @@ NetworkClient *getNetworkClient()
     self.UDPbroadCast = networkUDPbroadcast;
     self.connect = connect;
     self.getTCPID = networkGetTCPID;
+    self.getNrOfClientTCP = getNrOfClientsTCP;
     self.getIsAllClientJoined = getIsAllClientJoined;
 
     return &self;

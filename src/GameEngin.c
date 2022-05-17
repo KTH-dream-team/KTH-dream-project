@@ -16,6 +16,7 @@
 #include "audio.h"
 #include "TextButton.h"
 #include "startMenu.h"
+#include "PlayerManager.h"
 
 struct enginInstance
 {
@@ -38,15 +39,16 @@ bool init(void *self, char *title, int width, int height, int fullScreen)
 
 void innitGameInstances(void *self)
 {
-    // init map
     MapManager *mapManager = getMapManager();
-    mapManager->initMap(mapManager); //! initializes map
+    mapManager->initMap(mapManager);
 
     Audio *audio = newAudio();
     audio->init(audio);
     audio->backgroud(audio, 10);
 
     EntityManager *entityManager = getEntityManager();
+
+
     // Warrior creation handel network
 
     // create button here
@@ -64,6 +66,9 @@ void innitGameInstances(void *self)
     char *wID = warrior->getID(warrior);
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
     printf("warrior id %s\n", wID);
+
+    PlayerManager *PM = getPlayerManager();
+    PM->init(PM);
 }
 
 void handleEvents(void *self)

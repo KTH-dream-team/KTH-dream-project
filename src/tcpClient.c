@@ -9,6 +9,7 @@
 #include "Warrior.h"
 #include "Bullet.h"
 #include "map.h"
+#include "PlayerManager.h"
 
 #define MAX_SIZE 512
 #define CLIENT_PORT 0
@@ -111,6 +112,18 @@ void TCPlisten(void *self)
                         BlockBuild * blockBuilt = (BlockBuild*)(instance->packetReceived+offset);
                         map->buildNoSend(map, blockBuilt->x, blockBuilt->y,blockBuilt->blockType);
                         offset += sizeof(BlockBuild);
+                    break;
+                    case (char)7:
+                        offset ++;
+
+                        Alive *alive = (Alive*)(instance->packetReceived+offset);
+                        
+                        PlayerManager *PM = getPlayerManager();
+                        PM->winner(PM);
+                        PM->alive(PM);
+                        PM->killed(PM,alive->from);
+
+                        offset += sizeof(Alive);
                     break;
                     default:
                     offset ++;

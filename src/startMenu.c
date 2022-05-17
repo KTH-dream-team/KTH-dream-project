@@ -40,7 +40,7 @@ void updateStartMenu(void *self)
 
     int connectBtnState = instance->connect->getStateTextButton(instance->connect);
     int serverBtnState = instance->createServer->getStateTextButton(instance->createServer);
-    printf("connectBtnState: %d serverBtnState: %d\n", connectBtnState, serverBtnState);
+    //printf("connectBtnState: %d serverBtnState: %d\n", connectBtnState, serverBtnState);
     if (connectBtnState == 1)
     {
         printf("Connect hover\n");

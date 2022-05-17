@@ -1,0 +1,2 @@
+#define MAXPLAYER 16
+#define PLAYERNAME 50
