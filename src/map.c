@@ -171,17 +171,12 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
                         if (blockType==6)
                         {
 
-                            // warrior000->setBulletCooldown(warrior000,100);
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            // printf("Warrior000 has picked up machine gun\n");
                             return blockType;
                         }
                         if (blockType==9)
                         {
-                            // warrior000->addHealth(warrior000,10);
-                            // mapManagerInstance->map[i][j]=0;
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            // printf("Warrior000 health = %d \n",warrior000->getHealth(warrior000));
                             return blockType;
                         }
                             // return 1;//todo return blockType
@@ -192,7 +187,6 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
                     if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
                     {
                          map->dig(map,mapBlock.x, mapBlock.y);
-                        // printf("Bullet collision\n");
                         return blockType;
                     }  
                     break;
