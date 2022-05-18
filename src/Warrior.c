@@ -256,12 +256,13 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
         if (warriorInstance->health<=0)
         {
             printf("warrior died at %d\n",warriorInstance->health);
+            audio->playSound(audio, "death");
              warriorInstance->isAlive=false;
              anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
         }
         return true;
     }
-
+    
     return false;
 }
 
