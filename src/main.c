@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "DataTypes.h"
 #include "FpsManager.h"
 #include "GameEngin.h"
 #include "InputHandler.h"

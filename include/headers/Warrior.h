@@ -20,6 +20,9 @@ typedef struct warrior
     void (*addHealth)(void *self,int health);
     int (*getHealth)(void *self);
     void (*setBulletCooldown)(void *self,int bulletCooldown);//shorter cooldown means faster shoting
+    void (*setHealth)(void *self,int health);
+    bool (*isLocalWarrior)(void *self);
+    
     WarriorInstance *instance;
 } Warrior;
 

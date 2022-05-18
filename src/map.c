@@ -139,7 +139,7 @@ bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funk
     return false;
 }
 
-bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType){//
+int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType){//
 
     CollisionManager *colisionManager = GetCollisionManager();
     MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance; 
@@ -171,18 +171,20 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                         if (blockType==6)
                         {
 
-                            warrior000->setBulletCooldown(warrior000,100);
+                            // warrior000->setBulletCooldown(warrior000,100);
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            printf("Warrior000 has picked up machine gun\n");
+                            // printf("Warrior000 has picked up machine gun\n");
+                            return blockType;
                         }
                         if (blockType==9)
                         {
-
-                            warrior000->addHealth(warrior000,10);
-                            mapManagerInstance->map[i][j]=0;
+                            // warrior000->addHealth(warrior000,10);
+                            // mapManagerInstance->map[i][j]=0;
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            printf("Warrior000 health = %d \n",warrior000->getHealth(warrior000));
+                            // printf("Warrior000 health = %d \n",warrior000->getHealth(warrior000));
+                            return blockType;
                         }
+                            // return 1;//todo return blockType
                     }
                     // return true;
                     break;
@@ -191,7 +193,7 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                     {
                          map->dig(map,mapBlock.x, mapBlock.y);
                         // printf("Bullet collision\n");
-                        return true;
+                        return blockType;
                     }  
                     break;
                 default://printf("den gjorde defult\n");
@@ -199,7 +201,7 @@ bool checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int coll
                 }
             }
         }        
-        return false;
+        return 0;
 }
 
 
@@ -246,9 +248,8 @@ void show(void *self){ //map maker prints activ map to terminal in array fromat.
             printf("\n");   
             for (int j = 0; j < COL; j++){   
                 printf("%d ",mapmanager->instance->map[i][j]);
-            
             }
-    }
+        }
 }
 
 MapManager *getMapManager(){

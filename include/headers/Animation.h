@@ -19,8 +19,8 @@
 
 #pragma once
 #include "SDL2/SDL.h"
-#include "DataTypes.h"
 #include <stdbool.h>
+
 
 typedef struct animationInstance AnimationInstance;
 

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <time.h>
 #include "GameEngin.h"
-#include "DataTypes.h"
 #include "TextureManager.h"
 #include "Animation.h"
 #include "EntityManager.h"
@@ -15,6 +14,7 @@
 #include "networkClient.h"
 #include "audio.h"
 #include "TextButton.h"
+#include <stdbool.h>
 
 struct enginInstance
 {

@@ -45,8 +45,8 @@
 
 #pragma once
 #include "SDL2/SDL.h"
-#include "DataTypes.h"
 #include "ArrayList.h"
+#include <stdbool.h>
 
 typedef struct textureManagerInstance TextureManagerInstance;
 

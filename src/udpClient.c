@@ -113,6 +113,8 @@ void UDPclientListen(void *self)
             Warrior *wa = entityManager->getByID(entityManager, id);
             if (wa != NULL)
                 wa->updatePossition(wa, ws->x, ws->y);
+                wa->setHealth(wa,ws->health);
+
         }
         else
         {

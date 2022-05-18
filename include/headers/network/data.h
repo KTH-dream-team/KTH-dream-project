@@ -52,3 +52,9 @@ typedef struct // datatype:7
     int from;
     int intId;
 } DestroyBullet;
+
+typedef struct { //datatype:8
+    int from;
+    int id;
+    int healthDecline;
+} GotShot;

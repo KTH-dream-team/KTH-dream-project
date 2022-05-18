@@ -119,21 +119,56 @@ void TCPlisten(void *self)
                         DestroyBullet * data = (DestroyBullet*)(instance->packetReceived+offset);
                         
                         //convert int to char ID
-                        char id[11];
-                        strcpy(id, "Bullet-000");
+                        char wid[11];
+                        strcpy(wid, "Bullet-000");
                         
-                        int div = 100;
+                        int divider = 100;
                         for (int i = 7; i < 10; i++)
                         {
-                            id[i] += (int)(data->intId / div);
-                            data->intId %= div;
-                            div /= 10;
+                            wid[i] += (int)(data->intId / divider);
+                            data->intId %= divider;
+                            divider /= 10;
                         }
 
-                        entityManager->drop(entityManager,id);
+                        entityManager->drop(entityManager,wid);
 
                         offset += sizeof(DestroyBullet);
+                    break;                    
+                    case (char)8:
+                        offset ++;
+                        GotShot * gotshotData = (GotShot*)(instance->packetReceived+offset);
+                        
+                        //convert int to char ID
+                        char id[13];
+                            strcpy(id, "Warrior-000");
+                        int b = 100;
+                        for (int i = 8; i < 11; i++)
+                        {
+                            id[i] += (int)(gotshotData->id / b);
+                            gotshotData->id %= b;
+                            b /= 10;
+                        }
+                        id[11] = '\0';
+                                            
+                        Warrior *warrior1= entityManager->getByID(entityManager,id);
+                        printf("got Warrior: %s\n", id);
+
+                        if (warrior1 != NULL)
+                        {
+                            if (warrior1->isLocalWarrior(warrior1))
+                            {
+                                
+                                printf("from %d id %d healtdecline %d",gotshotData->from,gotshotData->id,gotshotData->healthDecline);
+                                warrior1->addHealth(warrior1,-gotshotData->healthDecline);
+                                printf("got shot\n");
+                                /* code */
+                            }
+                        }
+                            
+
+                        offset += sizeof(GotShot);
                     break;
+
                     default:
                         offset ++;
                         printf("!got TCP packet with flag: %d.\n", ((int*)instance->packetReceived)[0]);

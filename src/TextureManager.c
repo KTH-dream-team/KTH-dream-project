@@ -3,7 +3,6 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL.h"
 #include "GameEngin.h"
-#include "DataTypes.h"
 #include <stdio.h>
 
 typedef struct textureMap

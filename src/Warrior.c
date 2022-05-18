@@ -46,6 +46,7 @@ void updateWarrior(void *self, float dt)
     if (!((Warrior *)self)->instance->isLocal)
         return;
 
+    Warrior *warrior = ((Warrior *)self);
     WarriorInstance *instance = ((Warrior *)self)->instance;
 
     // update rigidBody
@@ -63,26 +64,19 @@ void updateWarrior(void *self, float dt)
         hitBox.h,
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
-    mapManager->checkColision(mapManager, dRect, vel, dt, 1); //! warrior collision check
+    int blockType = mapManager->checkColision(mapManager, dRect, vel, dt, 1); //! warrior collision check
+    switch (blockType) {
+        case 6: warrior->setBulletCooldown(warrior,100); 
+        printf("you picked up mashineGun\n"); break;
+        case 9: warrior->addHealth(warrior,10);
+        printf("added 10 health\n");
+        break;
+    }
 
     // update position
     SDL_FPoint PTranslate = rig->getPosition(rig);
     SDL_FPoint acc = rig->getAcceleration(rig);
     pos->translate(pos, PTranslate.x, PTranslate.y);
-
-      // broadcast data;
-    static unsigned int lastTime;
-    
-    unsigned int currentTime = SDL_GetTicks();
-    unsigned int deltaTime = currentTime - lastTime;
-    if(deltaTime < 20)
-        return;
-    lastTime = currentTime;
-
-    NetworkClient *network = getNetworkClient();
-    WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos),instance->health};
-    network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
-
 
 }
 void renderWarrior(void *self)
@@ -102,6 +96,23 @@ void renderWarrior(void *self)
     SDL_Renderer *ren = engin->getRenderer(engin);
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
 
+        if (!((Warrior *)self)->instance->isLocal)
+        return;
+ // broadcast data;
+    static unsigned int lastTime;
+    
+    unsigned int currentTime = SDL_GetTicks();
+    unsigned int deltaTime = currentTime - lastTime;
+    if(deltaTime < 20)
+        return;
+    lastTime = currentTime;
+
+    NetworkClient *network = getNetworkClient();
+    // printf("warrior current health %d \n ",instance->health);
+    WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos),instance->health};
+    network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
+    
+
     // draw hitbox debugg
     //SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
     //SDL_RenderDrawRect(engin->getRenderer(engin), &box);
@@ -119,7 +130,7 @@ void warriorEventHandle(void *self)
     Transform *pos = ((Warrior *)self)->instance->position;
 
     NetworkClient *network = getNetworkClient();
-    WarriorSnapshot test = {2, 32, 134};
+
     WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
 
     // warriorInstance->isAlive=false;
@@ -209,7 +220,6 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
     EntityManager *EM = getEntityManager();
     Warrior *wa = ((Warrior *)self);
     Animation *anim = ((Warrior *)self)->instance->animation;
-
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
 
@@ -230,6 +240,12 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
     
     if(collisionManager->ResolveDynamicRectVsRect(bulletDRect,vel,warriorDRect,dt)){ 
         warriorInstance->health--;
+        //brodcast healt decline
+        NetworkClient *network = getNetworkClient();
+        printf("id %d tcp id %d",warriorInstance->networkId, network->getTCPID(network));
+        GotShot gotshot = {network->getTCPID(network), warriorInstance->networkId,1};
+        network->TCPbroadCast(network, &gotshot, sizeof(GotShot), 8);
+        
         printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
          anim->set(anim,"warrior",32,32,6,4,90,0, warriorInstance->isAlive);
         if (warriorInstance->health<=0)
@@ -254,6 +270,11 @@ int getHealth(void *self){
     return warrior->instance->health;
 }
 
+void setHealth(void *self, int health){
+    Warrior *warrior = ((Warrior *)self);
+    warrior->instance->health = health;
+}
+
 void setBulletCooldown(void *self, int bulletCooldown){//shorter cooldown means faster shooting
     Warrior *warrior = ((Warrior *)self);
     warrior->instance->bulletCooldown =bulletCooldown;
@@ -269,7 +290,6 @@ void destroyWarrior(void *self)
 
     free(warrior->instance);
     free(warrior);
-
     printf("Warrior destroyed\n");
 }
 
@@ -285,6 +305,10 @@ void updateWarriorPosition(void *self, float x, float y)
 char *getWarriorID(void *self)
 {
     return ((Warrior *)self)->instance->id;
+}
+
+bool isLocalWarrior(void *self){
+    return ((Warrior *)self)->instance->isLocal;
 }
 
 Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
@@ -309,7 +333,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     self->instance->health = health;
     self->instance->bulletCooldown= bulletCooldown;
     self->instance->isLocal = isLocal;
-    self->instance->networkId = networkId;
+    self->instance->networkId = id;
     strcpy(self->instance->id, "Warrior-000");
 
     int a = 100;
@@ -339,6 +363,8 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     self->addHealth = addHealth;
     self->getHealth = getHealth;
     self->setBulletCooldown=setBulletCooldown;
+    self->setHealth=setHealth;
+    self->isLocalWarrior = isLocalWarrior;
 
     return self;
 }
