@@ -42,7 +42,7 @@ void innitGameInstances(void*self)
     mapManager->initMap(mapManager); //! initializes map
 
     Audio *audio = newAudio();
-    audio->init(audio);
+    //audio->init(audio);
     // audio->backgroud(audio, 10);
 
 
