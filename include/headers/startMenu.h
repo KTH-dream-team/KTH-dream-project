@@ -5,6 +5,7 @@ typedef struct startmenu
     void(*render)(void *self);
     void(*update)(void *self);
     void(*destroy)(void *self);
+    void(*input)(void *self);
     bool (*isRunning)(void *self);
     StartMenuInstance *instance;
 }StartMenu;

@@ -40,6 +40,7 @@ int main(int argc, char **argv)
             inputHandler->listen(inputHandler);
             startMenu->render(startMenu);
             startMenu->update(startMenu);
+            startMenu->input(startMenu);
         }
         else
         {

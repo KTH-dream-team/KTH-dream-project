@@ -12,11 +12,10 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <ifaddrs.h>
+#include <string.h>
 #include <InputHandler.h>
 
-
 #include "networkClient.h"
-
 struct startmenuinstance
 {
     bool isRunning;
@@ -25,18 +24,33 @@ struct startmenuinstance
     TextButton *createServer;
     Text *IP;
     Text *input;
+    char text[16];
 };
-// void showInput(void *self)
-// {
-//     StartMenuInstance *instance = ((StartMenu *)self)->instance;
-//     InputHandler *IH = getInputHandler();
-//     char *text;
-//     text = IH->getKeyPress(IH);
+void userInput(void *self)
+{
+    StartMenuInstance *instance = ((StartMenu *)self)->instance;
+    SDL_StartTextInput();
+    while (strlen(instance->text) < 16)
+    {
+        SDL_Event event;
+        if (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_TEXTINPUT:
+                strcat(instance->text, event.text.text);
+                system("clear");
+                printf("%s\n", instance->text);
+                break;
+            default:
+                break;
+            }
+        }
+    }
 
-//     SDL_Color txtColor = {255, 255, 255, 255};
-//     instance->input = newText(text, 300, 300, 24, txtColor);
-//     instance->input->render(instance->input);
-// }
+    SDL_StopTextInput();
+}
+
 void renderStartMenu(void *self)
 {
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
@@ -49,7 +63,10 @@ void renderStartMenu(void *self)
     instance->connect->render(instance->connect);
     instance->createServer->render(instance->createServer);
     instance->IP->render(instance->IP);
-    // showInput(self);
+
+    // SDL_Color txtColor = {255, 255, 255, 255};
+    // instance->input = newText(instance->text, 300, 300, 24, txtColor);
+    // instance->input->render(instance->input);
 
     SDL_RenderPresent(renderer);
 }
@@ -83,8 +100,7 @@ void destroyStartMenu(void *self)
 {
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
     SDL_FreeSurface(instance->surface);
-    instance->connect->destroy(instance->connect);
-    instance->createServer->destroy(instance->createServer);
+
     free(instance);
     printf("Menu destroyed\n");
 }
@@ -127,9 +143,7 @@ StartMenu *getStartMenu()
     self.isRunning = startMenuIsRunning;
     self.update = updateStartMenu;
     self.destroy = destroyStartMenu;
-
-    // load background
-    self.instance->surface = IMG_Load("assets/menu.jpg");
+    self.input = userInput;
 
     // create button
     SDL_Color txtColor = {255, 255, 255, 255};
@@ -138,10 +152,12 @@ StartMenu *getStartMenu()
     SDL_Rect ServerRect = {100, 200, 200, 60};
     self.instance->connect = newTextButton("Connect", txtColor, bgColor, 24, connectRect);
     self.instance->createServer = newTextButton("Create Server", txtColor, bgColor, 24, ServerRect);
-
     // create IP text
     char *ip = getMyIPAdress();
     self.instance->IP = newText(ip, 760, 440, 24, txtColor);
+    // load background
+    self.instance->surface = IMG_Load("assets/menu.jpg");
+    strcpy(self.instance->text, "");
 
     return &self;
 }
