@@ -175,7 +175,6 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
                             audio->playSound(audio, "gunPickup");
                             // warrior000->setBulletCooldown(warrior000,100);
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            // printf("Warrior000 has picked up machine gun\n");
                             return blockType;
                         }
                         if (blockType==9)
@@ -184,7 +183,6 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
                             // warrior000->addHealth(warrior000,10);
                             // mapManagerInstance->map[i][j]=0;
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            // printf("Warrior000 health = %d \n",warrior000->getHealth(warrior000));
                             return blockType;
                         }
                             // return 1;//todo return blockType
@@ -195,7 +193,6 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
                     if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
                     {
                          map->dig(map,mapBlock.x, mapBlock.y);
-                        // printf("Bullet collision\n");
                         return blockType;
                     }  
                     break;
@@ -225,7 +222,7 @@ void showMap(void *self)
                 case 3: textureManager->draw(textureManager, "grass.1", srcRec, destRect, 1); break;
                 case 4: textureManager->draw(textureManager, "stone", srcRec, destRect, 1); break;
                 case 5: textureManager->draw(textureManager, "wood", srcRec, destRect, 1); break;
-                case 6: textureManager->draw(textureManager, "gun", srcRec, destRect, 1); break;
+                case 6: textureManager->draw(textureManager, "gun", srcRec, destRect, 0); break;
                 case 7: textureManager->draw(textureManager, "brick", srcRec, destRect, 1); break;
                 case 8: textureManager->draw(textureManager, "black", srcRec, destRect, 1); break;
                 case 9: textureManager->draw(textureManager, "healthPack", srcRec, destRect, 1); break;
