@@ -116,8 +116,8 @@ void dig(void *self,int x, int y){//!dig when holding Q
         intBlockCol,
         intBlockRow
     };
-    Audio *audio = newAudio();
-    audio->playSound(audio, "brick");
+    //Audio *audio = newAudio();
+    //audio->playSound(audio, "brick");
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
     
 }
@@ -144,9 +144,11 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
     CollisionManager *colisionManager = GetCollisionManager();
     MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance; 
     MapManager *map = ((MapManager *)self);
-
+    
     EntityManager *EM = getEntityManager();
     Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
+    Audio *audio = newAudio();
+    
     // WarriorInstance *warriorInstance = ((Warrior *)warrior000)->instance;
     int lowerBounce = ((dRect.y+dRect.h)/20)+2;
     int upperBounce = (dRect.y/20)-1;    
@@ -170,12 +172,16 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
                     if(colisionManager->ResolveDynamicRectVsRect(dRect,dir,mapBlock,dt)){
                         if (blockType==6)
                         {
-
+                            audio->playSound(audio, "gunPickup");
+                            // warrior000->setBulletCooldown(warrior000,100);
                             map->dig(map,mapBlock.x,mapBlock.y);
                             return blockType;
                         }
                         if (blockType==9)
                         {
+                            audio->playSound(audio, "health");
+                            // warrior000->addHealth(warrior000,10);
+                            // mapManagerInstance->map[i][j]=0;
                             map->dig(map,mapBlock.x,mapBlock.y);
                             return blockType;
                         }

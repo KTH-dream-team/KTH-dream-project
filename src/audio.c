@@ -9,7 +9,8 @@ struct audioInstance
     Mix_Music *music;
     Mix_Chunk *jump;
     Mix_Chunk *gun;
-    Mix_Chunk *brick;
+    Mix_Chunk *health;
+    Mix_Chunk *gunPickup;
 };
 
 
@@ -46,8 +47,12 @@ void playSound(void *self, char *path){
         Mix_PlayChannel(4, audio->instance->gun, 0);
         Mix_Volume(4,30);
     }
-    if(strcmp("brick", path) == 0){
-        Mix_PlayChannel(5, audio->instance->brick, 0);
+    if(strcmp("health", path) == 0){
+        Mix_PlayChannel(5, audio->instance->health, 0);
+        Mix_Volume(5,30);
+    }
+    if(strcmp("gunPickup", path) == 0){
+        Mix_PlayChannel(5, audio->instance->gunPickup, 0);
         Mix_Volume(5,30);
     }
 
@@ -61,7 +66,8 @@ void destroyAudio(void *self){
     Mix_FreeMusic(audio->instance->music);
     Mix_FreeChunk(audio->instance->jump);
     Mix_FreeChunk(audio->instance->gun);
-    Mix_FreeChunk(audio->instance->brick);
+    Mix_FreeChunk(audio->instance->health);
+    Mix_FreeChunk(audio->instance->gunPickup);
     Mix_CloseAudio();
 }
 
@@ -70,7 +76,8 @@ Audio *newAudio(){
     self->instance = malloc(sizeof(AudioInstance));
     self->instance->jump = Mix_LoadWAV("assets/jump.wav");
     self->instance->gun = Mix_LoadWAV("assets/gun.wav");
-    self->instance->brick = Mix_LoadWAV("assets/brick.wav");
+    self->instance->health = Mix_LoadWAV("assets/health.wav");
+    self->instance->gunPickup = Mix_LoadWAV("assets/gunPickup.wav");
 
     self->backgroud = backgroundMusic;
     self->playSound = playSound;
