@@ -216,7 +216,7 @@ void showMap(void *self)
                 case 3: textureManager->draw(textureManager, "grass.1", srcRec, destRect, 1); break;
                 case 4: textureManager->draw(textureManager, "stone", srcRec, destRect, 1); break;
                 case 5: textureManager->draw(textureManager, "wood", srcRec, destRect, 1); break;
-                case 6: textureManager->draw(textureManager, "gun", srcRec, destRect, 1); break;
+                case 6: textureManager->draw(textureManager, "gun", srcRec, destRect, 0); break;
                 case 7: textureManager->draw(textureManager, "brick", srcRec, destRect, 1); break;
                 case 8: textureManager->draw(textureManager, "black", srcRec, destRect, 1); break;
                 case 9: textureManager->draw(textureManager, "healthPack", srcRec, destRect, 1); break;
