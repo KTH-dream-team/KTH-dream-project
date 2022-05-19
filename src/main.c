@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     network->connect(network, 2);
 
     InputHandler *inputHandler = getInputHandler();
-    StartMenu *startMenu = getStartMenu();
+   // StartMenu *startMenu = getStartMenu();
 
     /*while(startMenu->isRunning(startMenu))
     {

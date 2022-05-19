@@ -256,7 +256,7 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
         hitBox.h,
     };
 
-    if (collisionManager->ResolveDynamicRectVsRect(bulletDRect, vel, warriorDRect, dt))
+    if (warriorInstance->health<=0)
     {
         printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
         return false;
