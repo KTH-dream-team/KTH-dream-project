@@ -57,6 +57,7 @@ typedef struct textureManager
     void (*destroy)(void *self);
     SDL_Texture *(*getTextureByID)(void *self, char *id);
     void (*draw)(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip);
+    void (*drawWithAngle)(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip, float angle);
     void (*drawFrame)(void *self, char *id, float x, float y, int w, int h, int row, int frame, float scale, SDL_RendererFlip flip);
 
     TextureManagerInstance *instance;
