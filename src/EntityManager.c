@@ -95,10 +95,10 @@ void renderAllEntities(void *self)
         {
             ((Bullet *)t->entity)->render((Bullet *)t->entity);
         }
-        else if (strstr(t->id, "TextButton-") != NULL)
-        {
-            ((TextButton *)t->entity)->render((TextButton *)t->entity);
-        }
+        // else if (strstr(t->id, "TextButton-") != NULL)
+        // {
+        //     ((TextButton *)t->entity)->render((TextButton *)t->entity);
+        // }
     }
 }
 void updateAllEntities(void *self, float dt)
@@ -121,10 +121,10 @@ void updateAllEntities(void *self, float dt)
         {
             ((Bullet *)t->entity)->update((Bullet *)t->entity, dt);
         }
-        else if (strstr(t->id, "TextButton-") != NULL)
-        {
-            ((TextButton *)t->entity)->update((TextButton *)t->entity, dt);
-        }
+        // else if (strstr(t->id, "TextButton-") != NULL)
+        // {
+        //     ((TextButton *)t->entity)->update((TextButton *)t->entity);
+        // }
     }
 }
 void handleAllEvents(void *self)

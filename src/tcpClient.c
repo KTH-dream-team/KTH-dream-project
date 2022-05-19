@@ -9,13 +9,12 @@
 #include "Warrior.h"
 #include "Bullet.h"
 #include "map.h"
+#include "PlayerManager.h"
 
 #define MAX_SIZE 512
 #define CLIENT_PORT 0
-// #define CLIENT_IP "130.229.142.34" // 127.0.0.1//130.229.166.16
 #define CLIENT_IP "127.0.0.1" // 127.0.0.1//130.229.166.16
 #define SERVER_PORT 3000
-// #define SERVER_IP "130.229.142.34"
 #define SERVER_IP "127.0.0.1"
 
 struct TCPclientInstance
@@ -167,6 +166,17 @@ void TCPlisten(void *self)
                             
 
                         offset += sizeof(GotShot);
+                    break;
+
+                    case (char)9:
+                        offset ++;
+                        Alive *alive = (Alive*)(instance->packetReceived+offset);
+                        
+                        PlayerManager *PM = getPlayerManager();
+                        PM->killed(PM,alive->from);
+                        PM->winner(PM);
+
+                        offset += sizeof(Alive);
                     break;
 
                     default:

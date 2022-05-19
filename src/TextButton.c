@@ -22,7 +22,7 @@ int getStateTextButton(void *self)
 	return ((TextButton*)self)->instance->btnState;
 }
 
-void updateTextButton(void *self, float dt)
+void updateTextButton(void *self)
 {
     ButtonInstance *instance = ((TextButton*)self)->instance;
     InputHandler *input = getInputHandler();
@@ -36,6 +36,7 @@ void updateTextButton(void *self, float dt)
         instance->btnState = 0;
         return;
     }
+    
     instance->btnState = 1;
     if(mouseState == SDL_BUTTON_LEFT)
     {
@@ -70,6 +71,7 @@ TextButton *newTextButton(char *text, SDL_Color textColor, SDL_Color backgroundC
     self->render = renderTextButton;
     self->update = updateTextButton;
     self->destroy = destroyTextButton;
+    self->getStateTextButton = getStateTextButton;
     self->instance->backgroundColor = backgroundColor;
     self->instance->text = newText(text,destRect.x, destRect.y,size,textColor);
 	self->instance->text->centerText(self->instance->text,destRect);

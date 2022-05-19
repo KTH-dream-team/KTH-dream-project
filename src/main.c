@@ -6,6 +6,10 @@
 #include "hitBox.h"
 #include <time.h>
 #include "networkClient.h"
+#include "startMenu.h"
+#include "EntityManager.h"
+#include "PlayerManager.h"
+
 
 #define SDL_MAIN_HANDLED
 
@@ -26,12 +30,21 @@ int main(int argc, char **argv)
 
     network->connect(network, 2);
 
-    Engine->innitGameInstances(Engine);
+    InputHandler *inputHandler = getInputHandler();
+   // StartMenu *startMenu = getStartMenu();
+
+    /*while(startMenu->isRunning(startMenu))
+    {
+        inputHandler->listen(inputHandler);
+        startMenu->render(startMenu);
+        startMenu->update(startMenu);
+    }*/
 
     FpsManager *fpsManager = getFpsManager();
-    InputHandler *inputHandler = getInputHandler();
+    Engine->innitGameInstances(Engine);
 
-    while (Engine->isRunning(Engine))
+    PlayerManager *PM = getPlayerManager();
+    while (PM->winner(PM)==-1)
     {
         fpsManager->listen(fpsManager);
         fpsManager->frameRateListen(fpsManager);

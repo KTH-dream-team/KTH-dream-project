@@ -60,11 +60,10 @@ Text *newText(char *text, int x, int y, int size, SDL_Color color)
     self->destroy = destroyTTF;
     self->centerText = centerText;
 
-
     self->instance->color = color;
     self->instance->text = text;
 
-    self->instance->font = TTF_OpenFont("./font/PaletteMosaic-Regular.ttf", size);
+    self->instance->font = TTF_OpenFont("./font/Inter-SemiBold.ttf", size);
     if (self->instance->font == NULL)
         printf("Oh My Goodness, font error : %s\n", TTF_GetError());
 

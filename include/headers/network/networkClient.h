@@ -13,6 +13,7 @@ typedef struct
     void (*UDPbroadCast)(void *self, void *data, int dataSize, int dataType);
     void (*connect)(void *self, int totalPlayer);
     int (*getTCPID)(void *self);
+    int (*getNrOfClientTCP)(void *self);
     bool (*getIsAllClientJoined)(void *self);
 
     NetworkClientInstance *instance;

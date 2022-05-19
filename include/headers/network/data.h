@@ -1,4 +1,5 @@
 #pragma once
+#include<stdbool.h>
 
 typedef struct // datatype: 1
 {
@@ -58,3 +59,9 @@ typedef struct { //datatype:8
     int id;
     int healthDecline;
 } GotShot;
+
+typedef struct { //datatype:9
+    int from;
+    bool isLocal;
+    bool isAlive;
+}Alive;
