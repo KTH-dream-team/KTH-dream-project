@@ -24,12 +24,12 @@ struct startmenuinstance
     Text *input;
     char *text;
 };
-static int wordSize = 0;
+static bool changeWord = false;
 
 void userInput(void *self)
 {
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
-   
+
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -37,11 +37,13 @@ void userInput(void *self)
         {
             strcat(instance->text, event.text.text);
             printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
+            changeWord = true;
         }
         else if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(instance->text) > 4)
         {
             instance->text[strlen(instance->text) - 1] = '\0';
             printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
+            changeWord = true;
         }
         else if (strlen(instance->text) > 18)
         {
@@ -52,15 +54,6 @@ void userInput(void *self)
 
 void renderStartMenu(void *self)
 {
-    // StartMenuInstance *instance = ((StartMenu *)self)->instance;
-    // GameEngin *Engine = getGameEngin();
-    // SDL_Renderer *renderer = Engine->getRenderer(Engine);
-    // SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, instance->surface);
-    // SDL_RenderCopy(renderer, texture, NULL, NULL);
-    //  instance->connect->render(instance->connect);
-    //  instance->createServer->render(instance->createServer);
-    //  instance->IP->render(instance->IP);
-    // SDL_RenderPresent(renderer);
 
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
     GameEngin *Engine = getGameEngin();
@@ -72,6 +65,13 @@ void renderStartMenu(void *self)
     instance->connect->render(instance->connect);
     instance->createServer->render(instance->createServer);
     instance->IP->render(instance->IP);
+    if (changeWord)
+    {
+        free(instance->input);
+        SDL_Color txtColor = {255, 255, 255, 255};
+        instance->input = newText(instance->text, 100, 300, 24, txtColor);
+        changeWord = false;
+    }
     instance->input->render(instance->input);
 
     SDL_RenderPresent(renderer);
