@@ -28,32 +28,53 @@ static int wordSize = 0;
 
 void userInput(void *self)
 {
-    StartMenuInstance *instance = ((StartMenu *)self)->instance;    
+    StartMenuInstance *instance = ((StartMenu *)self)->instance;
+   
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_TEXTINPUT)
+        {
+            strcat(instance->text, event.text.text);
+            printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
+        }
+        else if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(instance->text) > 4)
+        {
+            instance->text[strlen(instance->text) - 1] = '\0';
+            printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
+        }
+        else if (strlen(instance->text) > 18)
+        {
+            return;
+        }
+    }
 }
 
 void renderStartMenu(void *self)
 {
-    //StartMenuInstance *instance = ((StartMenu *)self)->instance;
-    //GameEngin *Engine = getGameEngin();
-    //SDL_Renderer *renderer = Engine->getRenderer(Engine);
-    //SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, instance->surface);
-    //SDL_RenderCopy(renderer, texture, NULL, NULL);
-    // instance->connect->render(instance->connect);
-    // instance->createServer->render(instance->createServer);
-    // instance->IP->render(instance->IP);
-    //SDL_RenderPresent(renderer); 
+    // StartMenuInstance *instance = ((StartMenu *)self)->instance;
+    // GameEngin *Engine = getGameEngin();
+    // SDL_Renderer *renderer = Engine->getRenderer(Engine);
+    // SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, instance->surface);
+    // SDL_RenderCopy(renderer, texture, NULL, NULL);
+    //  instance->connect->render(instance->connect);
+    //  instance->createServer->render(instance->createServer);
+    //  instance->IP->render(instance->IP);
+    // SDL_RenderPresent(renderer);
 
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
     GameEngin *Engine = getGameEngin();
     SDL_Renderer *renderer = Engine->getRenderer(Engine);
 
     TextureManager *TM = getTextureManager();
-    TM->draw(TM,"startMenyBg",NULL, NULL,SDL_FLIP_NONE);
+    TM->draw(TM, "startMenyBg", NULL, NULL, SDL_FLIP_NONE);
 
     instance->connect->render(instance->connect);
     instance->createServer->render(instance->createServer);
+    instance->IP->render(instance->IP);
+    instance->input->render(instance->input);
 
-    SDL_RenderPresent(renderer); 
+    SDL_RenderPresent(renderer);
 }
 
 void updateStartMenu(void *self)
@@ -78,8 +99,6 @@ void updateStartMenu(void *self)
         const char *cmd = "open -a Terminal.app ./server.o";
         system(cmd);
     }
-
-
 }
 
 void destroyStartMenu(void *self)
@@ -137,11 +156,11 @@ StartMenu *getStartMenu()
     // create IP text
     char *ip = getMyIPAdress();
     self.instance->IP = newText(ip, 760, 440, 24, txtColor);
-    
-    // load background
+    self.instance->text = malloc(sizeof(char) * 20);
+    strcpy(self.instance->text, "IP: ");
+    self.instance->input = newText(self.instance->text, 100, 300, 24, txtColor);
     TextureManager *TM = getTextureManager();
     TM->load(TM, "startMenyBg", "assets/menu.jpg");
-
 
     return &self;
 }

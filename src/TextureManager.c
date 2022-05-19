@@ -50,6 +50,7 @@ bool load(void *self, char *id, char *filename)
     GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(ren, surface);
+    SDL_FreeSurface(surface);
     if (texture == NULL)
     {
         SDL_Log("Failed to load texture from surface: %s %s", filename, SDL_GetError());
@@ -61,9 +62,7 @@ bool load(void *self, char *id, char *filename)
     temp->id = id;
     temp->texture = texture;
     ((TextureManager *)self)->instance->textureList->add(((TextureManager *)self)->instance->textureList, temp);
-
-    printf("loaded: %s\n", filename);
-
+    
     return true;
 }
 
