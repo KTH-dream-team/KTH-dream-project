@@ -14,61 +14,46 @@
 #include <ifaddrs.h>
 #include <string.h>
 #include <InputHandler.h>
-
 #include "networkClient.h"
 struct startmenuinstance
 {
     bool isRunning;
-    SDL_Surface *surface;
     TextButton *connect;
     TextButton *createServer;
     Text *IP;
     Text *input;
-    char text[16];
+    char *text;
 };
+static int wordSize = 0;
+
 void userInput(void *self)
 {
-    StartMenuInstance *instance = ((StartMenu *)self)->instance;
-    SDL_StartTextInput();
-    while (strlen(instance->text) < 16)
-    {
-        SDL_Event event;
-        if (SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-            case SDL_TEXTINPUT:
-                strcat(instance->text, event.text.text);
-                system("clear");
-                printf("%s\n", instance->text);
-                break;
-            default:
-                break;
-            }
-        }
-    }
-
-    SDL_StopTextInput();
+    StartMenuInstance *instance = ((StartMenu *)self)->instance;    
 }
 
 void renderStartMenu(void *self)
 {
+    //StartMenuInstance *instance = ((StartMenu *)self)->instance;
+    //GameEngin *Engine = getGameEngin();
+    //SDL_Renderer *renderer = Engine->getRenderer(Engine);
+    //SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, instance->surface);
+    //SDL_RenderCopy(renderer, texture, NULL, NULL);
+    // instance->connect->render(instance->connect);
+    // instance->createServer->render(instance->createServer);
+    // instance->IP->render(instance->IP);
+    //SDL_RenderPresent(renderer); 
+
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
     GameEngin *Engine = getGameEngin();
-
     SDL_Renderer *renderer = Engine->getRenderer(Engine);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, instance->surface);
 
-    SDL_RenderCopy(renderer, texture, NULL, NULL); //! ordning spelar roll på renderingen
+    TextureManager *TM = getTextureManager();
+    TM->draw(TM,"startMenyBg",NULL, NULL,SDL_FLIP_NONE);
+
     instance->connect->render(instance->connect);
     instance->createServer->render(instance->createServer);
-    instance->IP->render(instance->IP);
 
-    // SDL_Color txtColor = {255, 255, 255, 255};
-    // instance->input = newText(instance->text, 300, 300, 24, txtColor);
-    // instance->input->render(instance->input);
-
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer); 
 }
 
 void updateStartMenu(void *self)
@@ -77,7 +62,6 @@ void updateStartMenu(void *self)
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
     instance->connect->update(instance->connect);
     instance->createServer->update(instance->createServer);
-
     int connectBtnState = instance->connect->getStateTextButton(instance->connect);
     int serverBtnState = instance->createServer->getStateTextButton(instance->createServer);
     if (connectBtnState == 2)
@@ -94,13 +78,13 @@ void updateStartMenu(void *self)
         const char *cmd = "open -a Terminal.app ./server.o";
         system(cmd);
     }
+
+
 }
 
 void destroyStartMenu(void *self)
 {
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
-    SDL_FreeSurface(instance->surface);
-
     free(instance);
     printf("Menu destroyed\n");
 }
@@ -112,8 +96,6 @@ bool startMenuIsRunning(void *self)
 
 char *getMyIPAdress()
 {
-    // hämtad från stack overflow
-    // https://stackoverflow.com/questions/4139405/how-can-i-get-to-know-the-ip-address-for-interfaces-in-c
     struct ifaddrs *ifap, *ifa;
     struct sockaddr_in *sockAddr;
     char *addr;
@@ -155,9 +137,11 @@ StartMenu *getStartMenu()
     // create IP text
     char *ip = getMyIPAdress();
     self.instance->IP = newText(ip, 760, 440, 24, txtColor);
+    
     // load background
-    self.instance->surface = IMG_Load("assets/menu.jpg");
-    strcpy(self.instance->text, "");
+    TextureManager *TM = getTextureManager();
+    TM->load(TM, "startMenyBg", "assets/menu.jpg");
+
 
     return &self;
 }

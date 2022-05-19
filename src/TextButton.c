@@ -61,6 +61,7 @@ void renderTextButton(void *self)
     ButtonInstance *instance = ((TextButton *)self)->instance;
     GameEngin *GE = getGameEngin();
     SDL_Renderer *renderer = GE->getRenderer(GE);
+
     SDL_Color c = instance->backgroundColor;
     SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
     SDL_RenderFillRect(renderer, &instance->destRect);

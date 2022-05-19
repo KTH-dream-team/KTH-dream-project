@@ -62,6 +62,8 @@ bool load(void *self, char *id, char *filename)
     temp->texture = texture;
     ((TextureManager *)self)->instance->textureList->add(((TextureManager *)self)->instance->textureList, temp);
 
+    printf("loaded: %s\n", filename);
+
     return true;
 }
 
@@ -79,13 +81,13 @@ void destroy(void *self)
     printf("TextureManager destroyed\n");
 }
 
-void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip)
+void draw(void *self, char *id, SDL_Rect *srcRect, SDL_Rect *destRect, SDL_RendererFlip flip)
 {
     GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
     SDL_Texture *tex = getTextureByID(self, id);
 
-    SDL_RenderCopyEx(ren, tex, &srcRect, &destRect, 0, NULL, flip);
+    SDL_RenderCopyEx(ren, tex, srcRect, destRect, 0, NULL, flip);
 }
 
 void drawFrame(void *self, char *id, float x, float y, int w, int h, int row, int frame, float scale, SDL_RendererFlip flip)

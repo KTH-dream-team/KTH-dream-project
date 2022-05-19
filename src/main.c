@@ -20,7 +20,6 @@ int main(int argc, char **argv)
     srand(time(0));
     NetworkClient *network = getNetworkClient();
 
-
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     if (!isInitSucceed)
@@ -40,7 +39,6 @@ int main(int argc, char **argv)
             inputHandler->listen(inputHandler);
             startMenu->render(startMenu);
             startMenu->update(startMenu);
-            startMenu->input(startMenu);
         }
         else
         {

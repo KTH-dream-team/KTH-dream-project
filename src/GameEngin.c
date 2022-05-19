@@ -91,7 +91,7 @@ void handleRenders(void *self)
     textureManager->load(textureManager, "moon", "./assets/moon.jpg");
     SDL_Rect srcRect = {0, 0, 1000, 500};
     SDL_Rect destRect = {0, 0, 1000, 500};
-    textureManager->draw(textureManager, "moon", srcRect, destRect, 1); //! draw bakgrundsbild
+    textureManager->draw(textureManager, "moon", &srcRect, &destRect, 1); //! draw bakgrundsbild
 
     // render map
     MapManager *mapManger = getMapManager();
