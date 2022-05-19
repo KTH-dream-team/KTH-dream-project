@@ -178,7 +178,7 @@ void warriorEventHandle(void *self)
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_A))
     {
 
-        anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0, warriorInstance->isAlive);
+        // anim->set(anim, "warrior", 32, 32, 0, 13, 90, 0, warriorInstance->isAlive);
         rig->setVelocityX(rig, -130);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
@@ -188,15 +188,17 @@ void warriorEventHandle(void *self)
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
     {
-        anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
+        // anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
         rig->setVelocityX(rig, 130);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
     {
-        printf("before jump playsound was called\n");
-        audio->playSound(audio, "jump");
-        anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
-        rig->setVelocityY(rig, -100);
+        if (warriorInstance->canJump)
+        {
+            audio->playSound(audio, "jump");
+            anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
+            rig->setVelocityY(rig, -200);
+        }
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_W))
     {
@@ -206,7 +208,6 @@ void warriorEventHandle(void *self)
             anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
             rig->setVelocityY(rig, -200);
         }
-        
     }
     int mouse_x, mouse_y;
     char result[50];
