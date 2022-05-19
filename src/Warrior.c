@@ -172,7 +172,13 @@ void warriorEventHandle(void *self)
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
         rig->setVelocityX(rig, 130);
     }
-
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
+    {
+        printf("before jump playsound was called\n");
+        audio->playSound(audio, "jump");
+        anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
+        rig->setVelocityY(rig, -100);
+    }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_W))
     {
         if (warriorInstance->canJump)
@@ -210,6 +216,7 @@ void warriorEventHandle(void *self)
             char *id = bullet->getID(bullet);
             entityManager->add(entityManager, id, bullet);
             lastTime = currentTime;
+            printf("before playsound was called\n");
             audio->playSound(audio, "gun");
          
         }
@@ -234,7 +241,7 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
     Animation *anim = ((Warrior *)self)->instance->animation;
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     rig->update(rig, dt);
-
+    Audio *audio = newAudio();
     Transform *pos = ((Warrior *)self)->instance->position;
     SDL_Rect hitBox = ((Warrior *)self)->instance->hitBox;
     SDL_Rect warriorDRect = {
@@ -251,24 +258,28 @@ bool checkColisionWarriorVsBullet(void *self,SDL_Rect bulletDRect,SDL_FPoint *ve
     }    
     
     if(collisionManager->ResolveDynamicRectVsRect(bulletDRect,vel,warriorDRect,dt)){ 
+        
         warriorInstance->health--;
+        audio->playSound(audio, "hitWarrior");
         //brodcast healt decline
         NetworkClient *network = getNetworkClient();
         printf("id %d tcp id %d",warriorInstance->networkId, network->getTCPID(network));
         GotShot gotshot = {network->getTCPID(network), warriorInstance->networkId,1};
         network->TCPbroadCast(network, &gotshot, sizeof(GotShot), 8);
         
+        
         printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
          anim->set(anim,"warrior",32,32,6,4,90,0, warriorInstance->isAlive);
         if (warriorInstance->health<=0)
         {
             printf("warrior died at %d\n",warriorInstance->health);
+            audio->playSound(audio, "death");
              warriorInstance->isAlive=false;
              anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
         }
         return true;
     }
-
+    
     return false;
 }
 
