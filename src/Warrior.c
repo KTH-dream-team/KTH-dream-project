@@ -105,7 +105,6 @@ void renderWarrior(void *self)
         instance->hitBox.w,
         instance->hitBox.h,
     };
-    SDL_Renderer *ren = engin->getRenderer(engin);
     anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
 
         if (!((Warrior *)self)->instance->isLocal)
@@ -348,7 +347,8 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
 
     TextureManager *texterManager = getTextureManager();
     texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
-
+    texterManager->load(texterManager,"sniper","./assets/sniper3.png");
+    
     self->instance->isAlive=true;
     self->instance->hitBox.x = 3;
     self->instance->hitBox.y = 7;
