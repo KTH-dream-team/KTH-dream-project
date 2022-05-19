@@ -13,7 +13,7 @@ typedef struct mapManager{
     void(*build)(void *self,int x,int y,int blockType);//place blocks on mp when clicking on mouse and holding E
     void(*destroyMap)(void *self);//destroy the map
     void(*show)(void *self);//debug
-    int(*checkColision)(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType);
+    int(*checkColision)(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType,int *blockTypePtr);
 
     MapManagerInstance *instance;
 }MapManager;

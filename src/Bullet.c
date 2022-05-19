@@ -70,14 +70,12 @@ void updateBullet(void *self, float dt)
         instance->hitBox.h,
     };
     EntityManager *EM = getEntityManager();
-    if (mapManager->checkColision(mapManager, bulletDRect, &instance->vel, dt,2))
+    if (mapManager->checkColision(mapManager, bulletDRect, &instance->vel, dt,2,NULL))
     {
         EM->drop(EM,instance->id);
         return;
     }
     
-    
-
     //check collision with warrior 
     Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
     if(warrior000->checkColisionWarriorVsBullet(warrior000,bulletDRect,&instance->vel,dt)){

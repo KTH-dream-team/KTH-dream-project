@@ -45,19 +45,19 @@ void initMap(void *self)
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,7,7,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-    {0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,2,0,0,0,5,8,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-    {0,0,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,0,9,2,2,0,5,0,0,0,2,2,0,0,5,8,5,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,},
+    {0,0,0,0,0,6,0,0,0,0,0,9,0,0,0,0,0,0,0,9,0,0,5,0,0,0,2,0,0,0,5,8,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+    {0,0,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,0,0,2,2,0,5,0,0,0,2,2,0,0,5,8,5,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,},
     {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,},
     {3,3,3,3,3,3,3,9,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
-    {1,1,1,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
-    {1,4,1,4,4,1,4,1,4,4,1,1,4,1,4,4,1,4,1,1,4,1,1,4,9,4,1,1,1,4,1,1,1,4,1,4,4,4,4,9,1,4,1,1,1,1,4,4,1,4,},
+    {1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
+    {1,1,0,6,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
+    {1,4,1,4,4,1,4,1,4,4,1,1,4,1,4,4,1,4,1,0,0,0,0,0,9,4,1,1,1,4,1,1,1,4,1,4,4,4,4,9,1,4,1,1,1,1,4,4,1,4,},
     {1,4,4,1,4,1,4,4,1,4,1,4,4,1,1,1,4,4,4,1,1,1,1,1,1,1,1,4,1,4,1,1,4,4,1,4,4,4,1,4,1,4,4,4,4,4,4,1,4,4,},
-    {4,1,1,1,4,4,1,4,1,4,4,4,1,1,4,1,1,1,4,1,4,4,1,4,4,1,4,4,4,1,1,1,4,1,4,1,6,4,4,1,4,4,4,1,4,4,1,1,1,1,},
-    {1,4,1,4,4,4,1,1,4,4,1,1,1,4,1,4,1,1,4,1,1,4,4,1,1,1,1,4,1,4,1,1,4,1,4,1,1,1,4,4,4,1,4,4,4,1,1,1,1,4,},
-    {4,4,4,1,1,1,4,4,4,4,1,4,1,1,4,4,1,4,1,4,4,1,4,1,1,4,4,4,4,1,4,4,1,1,4,4,1,4,4,4,1,4,4,1,4,4,1,4,4,1,},
+    {4,1,1,1,4,4,1,4,1,4,4,4,1,1,4,1,1,1,4,1,4,4,1,4,4,1,4,4,4,1,1,1,4,1,0,0,6,0,4,1,4,4,4,1,4,4,1,1,1,1,},
+    {1,4,1,4,4,4,1,1,4,4,1,1,1,4,1,4,1,1,4,1,1,4,4,1,1,1,1,4,1,4,1,1,4,0,0,0,1,1,4,4,4,1,4,4,4,1,1,1,1,4,},
+    {4,4,4,1,1,1,4,4,4,4,1,4,1,1,4,4,1,4,1,4,4,1,4,1,1,4,4,4,4,1,4,4,1,0,4,4,1,4,4,4,1,4,4,1,4,4,1,4,4,1,},
     {1,1,1,1,4,4,4,4,1,4,1,1,1,4,1,1,4,1,1,1,1,1,4,4,4,9,4,1,1,1,4,4,1,1,1,1,4,4,9,1,1,4,4,4,1,1,4,4,4,1,},
     {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,},
     {4,4,4,9,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,},
@@ -66,9 +66,7 @@ void initMap(void *self)
 
           for (int i = 0; i < ROW; i++){
             for (int j = 0; j < COL; j++){   
-                //printf("%d ",mapmanager->instance->map[i][j]);
                 mapmanager->instance->map[i][j]=map1[i][j];
-            
             }
     }
 
@@ -116,7 +114,7 @@ void dig(void *self,int x, int y){//!dig when holding Q
         intBlockCol,
         intBlockRow
     };
-    //Audio *audio = newAudio();
+    // Audio *audio = newAudio();
     //audio->playSound(audio, "brick");
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
     
@@ -139,7 +137,7 @@ bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funk
     return false;
 }
 
-int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType){//
+int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int collisionType,int *blockTypePtr){//
 
     CollisionManager *colisionManager = GetCollisionManager();
     MapManagerInstance *mapManagerInstance = ((MapManager *)self)->instance; 
@@ -147,13 +145,15 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
     
     EntityManager *EM = getEntityManager();
     Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
-    Audio *audio = newAudio();
+     Audio *audio = newAudio();
     
     // WarriorInstance *warriorInstance = ((Warrior *)warrior000)->instance;
     int lowerBounce = ((dRect.y+dRect.h)/20)+2;
     int upperBounce = (dRect.y/20)-1;    
     int rightBounce = ((dRect.x+dRect.w)/20)+2;
     int leftBounce = (dRect.x/20)-1;
+    int blockType=0;
+    int returnBlock=0;
    // int rightBounce = (dRect.x+dRect.w/20)+2;//!optimize collision detection
     for (int i = 0; i < ROW; i++)
         {   
@@ -163,7 +163,7 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
                 if(j<0 && j>COL)continue;
 
                 SDL_Rect mapBlock = {j * 20, i * 20, 20, 20};
-                int blockType = mapManagerInstance->map[i][j];
+                blockType = mapManagerInstance->map[i][j];
                 if (blockType==0)continue;
                 
                 switch (collisionType)
@@ -173,35 +173,39 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
                         if (blockType==6)
                         {
                             audio->playSound(audio, "gunPickup");
-                            // warrior000->setBulletCooldown(warrior000,100);
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            return blockType;
+                            *blockTypePtr= blockType;
+                           
+                            returnBlock= blockType;
                         }
                         if (blockType==9)
                         {
                             audio->playSound(audio, "health");
-                            // warrior000->addHealth(warrior000,10);
-                            // mapManagerInstance->map[i][j]=0;
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            return blockType;
+                            *blockTypePtr= blockType;
+
+                            returnBlock= blockType;
+                        }else{
+                            returnBlock=1;
                         }
-                            // return 1;//todo return blockType
                     }
-                    // return true;
                     break;
                 case 2://! 2 bullet collison
                     if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
                     {
+                        if (blockType==9||blockType==6)
+                        {
+                            return 0;
+                        }
                          map->dig(map,mapBlock.x, mapBlock.y);
-                        return blockType;
+                         return 1;
+                        
                     }  
-                    break;
-                default://printf("den gjorde defult\n");
                     break;
                 }
             }
         }        
-        return 0;
+        return returnBlock;
 }
 
 

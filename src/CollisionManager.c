@@ -141,10 +141,10 @@ bool ResolveBulletVSRect(SDL_Rect DRect, SDL_FPoint *dir, SDL_Rect SRect, float 
     if (DynamicRectVsRect(DRect, *dir, SRect, &normal, &t, dt))
     {   
         if(normal.y == -1 || normal.y == 1){
-             dir->y = 0;
+            //  dir->y = 0;
         }
         if(normal.x == -1 || normal.x == 1){
-             dir->x =0;
+            //  dir->x =0;
         }
         return true;
     }

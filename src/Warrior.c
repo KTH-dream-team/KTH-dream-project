@@ -35,6 +35,7 @@ struct warriorInstance
     int health;
     int bulletCooldown;
     bool isAlive;
+    bool canJump;
 };
 
 void updateWarrior(void *self, float dt)
@@ -64,15 +65,26 @@ void updateWarrior(void *self, float dt)
         hitBox.h,
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
-    int blockType = mapManager->checkColision(mapManager, dRect, vel, dt, 1); //! warrior collision check
-    switch (blockType) {
+    int blockTypePtr;
+    int blockType = mapManager->checkColision(mapManager, dRect, vel, dt, 1,&blockTypePtr); //! warrior collision check
+    if (blockType == 6)
+    {
+        printf("blockType=%d\n", blockType);
+    }
+    
+    switch (blockTypePtr) {
         case 6: warrior->setBulletCooldown(warrior,100); 
         printf("you picked up mashineGun\n"); break;
         case 9: warrior->addHealth(warrior,10);
         printf("added 10 health\n");
         break;
     }
-
+    if (blockType!=0)
+    {
+        instance->canJump = true;
+    }else{
+        instance->canJump = false;
+    }    
     // update position
     SDL_FPoint PTranslate = rig->getPosition(rig);
     SDL_FPoint acc = rig->getAcceleration(rig);
@@ -160,16 +172,16 @@ void warriorEventHandle(void *self)
         anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
         rig->setVelocityX(rig, 130);
     }
-    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
-    {
-        audio->playSound(audio, "jump");
-        anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
-        rig->setVelocityY(rig, -100);
-    }
+
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_W))
     {
-        anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
-        rig->setVelocityY(rig, -100);
+        if (warriorInstance->canJump)
+        {
+            audio->playSound(audio, "jump");
+            anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
+            rig->setVelocityY(rig, -200);
+        }
+        
     }
     int mouse_x, mouse_y;
     char result[50];
@@ -318,6 +330,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     int warriorWidth = 32;
     int health=5;
     int bulletCooldown =400; //inital fier rate cooldown
+    bool canJump;
 
     Warrior *self = malloc(sizeof(Warrior));
     self->instance = malloc(sizeof(WarriorInstance));
@@ -331,6 +344,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     self->instance->hitBox.w = warriorWidth - 12;
     self->instance->hitBox.h = warriorHight - 7;
     self->instance->health = health;
+    self->instance->canJump = canJump;
     self->instance->bulletCooldown= bulletCooldown;
     self->instance->isLocal = isLocal;
     self->instance->networkId = id;
