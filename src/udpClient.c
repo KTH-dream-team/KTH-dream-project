@@ -8,6 +8,8 @@
 #include "Warrior.h"
 #include "string.h"
 #include "networkClient.h"
+#include "startMenu.h"
+
 
 #define MAX_CLIENTS 16
 #define MAX_SIZE 512
@@ -43,11 +45,13 @@ bool UDPinit(void *self)
         fprintf(stderr, "Init error: %s\n", SDLNet_GetError());
         return false;
     }
-    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP, SERVER_PORT) == -1)
+    StartMenu *SM = getStartMenu();
+    char *serverIP = SM->getIP(SM);
+    if (SDLNet_ResolveHost(&(instance->serverAddress), serverIP, SERVER_PORT) == -1)
     {
         fprintf(stderr, "SDLNet_ResolveHost(192.0.0.1 3000): %s\n", SDLNet_GetError());
         return false;
-    }
+    } 
     if (!(instance->serverSocket = SDLNet_UDP_Open(instance->port)))
     {
         fprintf(stderr, "UDP_Open error: %s", SDLNet_GetError());
