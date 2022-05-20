@@ -28,6 +28,9 @@ int main(int argc, char **argv)
     InputHandler *inputHandler = getInputHandler();
     StartMenu *startMenu = getStartMenu();
 
+    char *test = startMenu->getIP(startMenu);
+            printf("\nTest IP: %s\n", test);
+
     FpsManager *fpsManager = getFpsManager();
 
     bool GameInstanceIsInit = false;
@@ -36,6 +39,7 @@ int main(int argc, char **argv)
     {
         if (startMenu->isRunning(startMenu))
         {
+
             inputHandler->listen(inputHandler);
             startMenu->render(startMenu);
             startMenu->update(startMenu);

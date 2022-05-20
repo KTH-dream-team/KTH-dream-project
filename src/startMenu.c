@@ -24,8 +24,21 @@ struct startmenuinstance
     Text *input;
     char *text;
 };
+
 static bool changeWord = false;
 
+char* substr(const char *src, int m, int n)
+{
+    int len = n - m;
+     char *dest = (char*)malloc(sizeof(char) * (len + 1));
+    for (int i = m; i < n && (*(src + i) != '\0'); i++)
+    {
+        *dest = *(src + i);
+        dest++;
+    }
+    *dest = '\0';
+    return dest - len;
+}
 void userInput(void *self)
 {
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
@@ -36,13 +49,13 @@ void userInput(void *self)
         if (event.type == SDL_TEXTINPUT)
         {
             strcat(instance->text, event.text.text);
-            printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
+            //printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
             changeWord = true;
         }
         else if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(instance->text) > 4)
         {
             instance->text[strlen(instance->text) - 1] = '\0';
-            printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
+            //printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
             changeWord = true;
         }
         else if (strlen(instance->text) > 18)
@@ -75,6 +88,13 @@ void renderStartMenu(void *self)
     instance->input->render(instance->input);
 
     SDL_RenderPresent(renderer);
+}
+
+char *getEnteredIP(void *self){
+    StartMenuInstance *instance = ((StartMenu *)self)->instance;
+    int length = strlen(instance->text);
+    char *IP = substr(instance->text, 4,length);
+    return IP;
 }
 
 void updateStartMenu(void *self)
@@ -145,7 +165,7 @@ StartMenu *getStartMenu()
     self.update = updateStartMenu;
     self.destroy = destroyStartMenu;
     self.input = userInput;
-
+    self.getIP = getEnteredIP;
     // create button
     SDL_Color txtColor = {255, 255, 255, 255};
     SDL_Color bgColor = {0, 0, 0, 255};
@@ -157,7 +177,7 @@ StartMenu *getStartMenu()
     char *ip = getMyIPAdress();
     self.instance->IP = newText(ip, 760, 440, 24, txtColor);
     self.instance->text = malloc(sizeof(char) * 20);
-    strcpy(self.instance->text, "IP: ");
+    strcpy(self.instance->text, "IP: 127.0.0.1");
     self.instance->input = newText(self.instance->text, 100, 300, 24, txtColor);
     TextureManager *TM = getTextureManager();
     TM->load(TM, "startMenyBg", "assets/menu.jpg");

@@ -6,6 +6,7 @@ typedef struct startmenu
     void(*update)(void *self);
     void(*destroy)(void *self);
     void(*input)(void *self);
+    char *(*getIP)(void *self);
     bool (*isRunning)(void *self);
     StartMenuInstance *instance;
 }StartMenu;
