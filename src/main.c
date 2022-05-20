@@ -32,14 +32,7 @@ int main(int argc, char **argv)
     network->connect(network, NUM_OF_CLIENTS);
 
     InputHandler *inputHandler = getInputHandler();
-   // StartMenu *startMenu = getStartMenu();
 
-    /*while(startMenu->isRunning(startMenu))
-    {
-        inputHandler->listen(inputHandler);
-        startMenu->render(startMenu);
-        startMenu->update(startMenu);
-    }*/
 
     FpsManager *fpsManager = getFpsManager();
     Engine->innitGameInstances(Engine);

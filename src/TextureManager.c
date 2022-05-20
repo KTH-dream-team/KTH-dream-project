@@ -78,13 +78,13 @@ void destroy(void *self)
     printf("TextureManager destroyed\n");
 }
 
-void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip)
+void draw(void *self, char *id, SDL_Rect *srcRect, SDL_Rect *destRect, SDL_RendererFlip flip)
 {
     GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
     SDL_Texture *tex = getTextureByID(self, id);
 
-    SDL_RenderCopyEx(ren, tex, &srcRect, &destRect, 0, NULL, flip);
+    SDL_RenderCopyEx(ren, tex, srcRect, destRect, 0, NULL, flip);
 }
 
 void drawWithAngle(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip, float angle)

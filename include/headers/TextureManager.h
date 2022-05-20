@@ -1,12 +1,12 @@
 /*
-    Texture manager is a central place to manage all textures. There is only one instance of TextureManager in the 
+    Texture manager is a central place to manage all textures. There is only one instance of TextureManager in the
     whole program. All texture should be loaded in here before use to avoid texture duplication and can be destroyed
-    when program closed. 
+    when program closed.
 
     bool load(void *self, char *id, char *filename)
         load a texture to TextureManager, all unique texture should go with it own unique id (recommened to use fileName
         as ID so one file can only be loaded once). If this function get call twice with the same ID the texture will not
-        be load again. 
+        be load again.
         id: unique id of the texture (Recommended to use fileName as ID)
         filename: path to texture file.
 
@@ -22,7 +22,7 @@
         draw a static texture to window.
         id: identifier to a texture.
         srcRect: source rect, indicate whick part of the texture get drawn
-        destRect: destination rect, position and size of the texture on window. 
+        destRect: destination rect, position and size of the texture on window.
         flip: flip direction of the texture(horizontal, vertical or none)
 
     void drawFrame(void *self, char *id, float x, float y, int w, int h, int row, int frame, float scale, SDL_RendererFlip flip);
@@ -38,10 +38,8 @@
         flip: flip direction of texture
 
     void (*destroy)(void *self)
-        this function should be call on program end. 
+        this function should be call on program end.
 */
-
-
 
 #pragma once
 #include "SDL2/SDL.h"
@@ -56,7 +54,7 @@ typedef struct textureManager
     void (*drop)(void *self, char *id);
     void (*destroy)(void *self);
     SDL_Texture *(*getTextureByID)(void *self, char *id);
-    void (*draw)(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip);
+    void (*draw)(void *self, char *id, SDL_Rect *srcRect, SDL_Rect *destRect, SDL_RendererFlip flip);
     void (*drawWithAngle)(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip, float angle);
     void (*drawFrame)(void *self, char *id, float x, float y, int w, int h, int row, int frame, float scale, SDL_RendererFlip flip);
 

@@ -49,6 +49,13 @@ void destroyTTF(void *self)
 
     return;
 }
+void setTextColor(void *self, SDL_Color color)
+{
+    TextInstance *instance = ((Text *)self)->instance;
+    instance->color = color;
+    if (!(instance->text_surface = TTF_RenderText_Solid(instance->font, instance->text, instance->color)))
+        printf("Oh My Goodness, render error : %s\n", TTF_GetError());
+}
 
 Text *newText(char *text, int x, int y, int size, SDL_Color color)
 {
@@ -59,6 +66,7 @@ Text *newText(char *text, int x, int y, int size, SDL_Color color)
     self->render = renderTTF;
     self->destroy = destroyTTF;
     self->centerText = centerText;
+    self->setColor = setTextColor;
 
     self->instance->color = color;
     self->instance->text = text;

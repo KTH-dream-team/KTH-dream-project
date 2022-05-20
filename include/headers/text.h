@@ -6,6 +6,7 @@ typedef struct text
 {
     void (*render)(void *self);
     void (*destroy)(void *self);
+    void (*setColor)(void *self, SDL_Color color);
     void (*centerText)(void *self, SDL_Rect outerRect);
 
 	TextInstance *instance;
