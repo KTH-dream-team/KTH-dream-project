@@ -7,6 +7,7 @@ typedef struct textButton
 {
     int (*getStateTextButton)(void *self);
     void (*update)(void *self);
+    void (*changeColor)(void *self, SDL_Color bgColor, SDL_Color textColor);
     void (*render)(void *self);
     void (*destroy)(void *self);
     ButtonInstance *instance;

@@ -162,10 +162,6 @@ void destroyEntityManager(void *self)
         {
             ((Bullet *)t->entity)->destroy((Bullet *)t->entity);
         }
-        else if (strstr(t->id, "TextButton-") != NULL)
-        {
-            ((TextButton *)t->entity)->destroy((TextButton *)t->entity);
-        }
     }
 
     EntityManagerInstance *instance = ((EntityManager *)self)->instance;

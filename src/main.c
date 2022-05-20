@@ -11,7 +11,6 @@
 #include "PlayerManager.h"
 #include "define.h"
 
-
 #define SDL_MAIN_HANDLED
 
 #define SCREEN_WIDTH 1000
@@ -21,8 +20,6 @@ int main(int argc, char **argv)
 {
     srand(time(0));
     NetworkClient *network = getNetworkClient();
-    if (!network->init(network))
-        return 1;
 
     GameEngin *Engine = getGameEngin();
     bool isInitSucceed = Engine->init(Engine, "Kth_dream_team", SCREEN_WIDTH, SCREEN_HEIGHT, false);
@@ -32,29 +29,43 @@ int main(int argc, char **argv)
     network->connect(network, NUM_OF_CLIENTS);
 
     InputHandler *inputHandler = getInputHandler();
-   // StartMenu *startMenu = getStartMenu();
 
-    /*while(startMenu->isRunning(startMenu))
-    {
-        inputHandler->listen(inputHandler);
-        startMenu->render(startMenu);
-        startMenu->update(startMenu);
-    }*/
+    StartMenu * startMenu = getStartMenu();
+    char *test = startMenu->getIP(startMenu);
+            printf("\nTest IP: %s\n", test);
 
     FpsManager *fpsManager = getFpsManager();
-    Engine->innitGameInstances(Engine);
+
+    bool GameInstanceIsInit = false;
 
     PlayerManager *PM = getPlayerManager();
-    while (PM->winner(PM)==-1)
+    while (Engine->isRunning(Engine))
     {
-        fpsManager->listen(fpsManager);
-        fpsManager->frameRateListen(fpsManager);
-        inputHandler->listen(inputHandler);
-        network->listen(network);
+        if (startMenu->isRunning(startMenu))
+        {
 
-        Engine->handleEvents(Engine);
-        Engine->handleUpdates(Engine);
-        Engine->handleRenders(Engine);
+            inputHandler->listen(inputHandler);
+            startMenu->render(startMenu);
+            startMenu->mouseInput(startMenu);
+            startMenu->input(startMenu);
+        }
+        else
+        {
+            if (!GameInstanceIsInit)
+            {
+                Engine->innitGameInstances(Engine);
+                GameInstanceIsInit = true;
+            }
+
+            fpsManager->listen(fpsManager);
+            fpsManager->frameRateListen(fpsManager);
+            inputHandler->listen(inputHandler);
+            network->listen(network);
+
+            Engine->handleEvents(Engine);
+            Engine->handleUpdates(Engine);
+            Engine->handleRenders(Engine);
+        }
     }
     Engine->destroyEngine(Engine);
 
