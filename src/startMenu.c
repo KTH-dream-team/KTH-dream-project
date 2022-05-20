@@ -14,21 +14,21 @@
 #include "InputHandler.h"
 #include "networkClient.h"
 //net lib
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <ifaddrs.h>
-#include <unistd.h>
-#include <errno.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <netinet/in.h>
+// #include <arpa/inet.h>
+// #include <sys/socket.h>
+// #include <ifaddrs.h>
+// #include <unistd.h>
+// #include <errno.h>
+// #include <netdb.h>
+// #include <sys/types.h>
+// #include <netinet/in.h>
 
 struct startmenuinstance
 {
     bool isRunning;
     TextButton *connect;
     TextButton *createServer;
-    Text *IP;
+    // Text *IP;
     Text *input;
     char *text;
 };
@@ -79,7 +79,7 @@ void renderStartMenu(void *self)
 
     instance->connect->render(instance->connect);
     instance->createServer->render(instance->createServer);
-    instance->IP->render(instance->IP);
+    // instance->IP->render(instance->IP);
     if (changeWord)
     {
         free(instance->input);
@@ -159,8 +159,8 @@ StartMenu *getStartMenu()
     self.instance->connect = newTextButton("Connect", txtColor, bgColor, 24, connectRect);
     self.instance->createServer = newTextButton("Create Server", txtColor, bgColor, 24, ServerRect);
     // create IP text
-    char *ip = getMyIPAdress();
-    self.instance->IP = newText(ip, 760, 440, 24, txtColor);
+    // char *ip = getMyIPAdress();
+    // self.instance->IP = newText(ip, 760, 440, 24, txtColor);
     self.instance->text = malloc(sizeof(char) * 20);
     strcpy(self.instance->text, "IP: 127.0.0.1");
     self.instance->input = newText(self.instance->text, 100, 300, 24, txtColor);
@@ -183,8 +183,8 @@ char *substr(const char *src, int m, int n)
     return dest - len;
 }
 
-char *getMyIPAdress()
-{
+// char *getMyIPAdress()
+// {
     // struct ifaddrs *ifap, *ifa;
     // struct sockaddr_in *sockAddr;
     // char *addr;
@@ -200,25 +200,27 @@ char *getMyIPAdress()
     // freeifaddrs(ifap);
     // return addr;
     
-    char hostBuffer[256];
-    char *IPbuffer;
-    struct hostent *hostEntry;
-    int hostName;
 
-    if ((hostName = gethostname(hostBuffer, sizeof(hostBuffer))) == -1)
-    {
-        perror("gethostname");
-        exit(1);
-    }
+   //another way 
+//     char hostBuffer[256];
+//     char *IPbuffer;
+//     struct hostent *hostEntry;
+//     int hostName;
 
-    ;
-    if ((hostEntry = gethostbyname(hostBuffer)) == NULL)
-    {
-        perror("gethostbyname");
-        exit(1);
-    }
-    IPbuffer = inet_ntoa(*((struct in_addr *)hostEntry->h_addr_list[0]));
-    printf("Host IP: %s\n", IPbuffer);
+//     if ((hostName = gethostname(hostBuffer, sizeof(hostBuffer))) == -1)
+//     {
+//         perror("gethostname");
+//         exit(1);
+//     }
 
-    return IPbuffer;
-}
+//     ;
+//     if ((hostEntry = gethostbyname(hostBuffer)) == NULL)
+//     {
+//         perror("gethostbyname");
+//         exit(1);
+//     }
+//     IPbuffer = inet_ntoa(*((struct in_addr *)hostEntry->h_addr_list[0]));
+//     printf("Host IP: %s\n", IPbuffer);
+
+//     return IPbuffer;
+// }
