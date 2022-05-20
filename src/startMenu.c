@@ -26,19 +26,10 @@ struct startmenuinstance
 };
 
 static bool changeWord = false;
+char* substr(const char *src, int m, int n);
+char *getMyIPAdress();
 
-char* substr(const char *src, int m, int n)
-{
-    int len = n - m;
-     char *dest = (char*)malloc(sizeof(char) * (len + 1));
-    for (int i = m; i < n && (*(src + i) != '\0'); i++)
-    {
-        *dest = *(src + i);
-        dest++;
-    }
-    *dest = '\0';
-    return dest - len;
-}
+
 void userInput(void *self)
 {
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
@@ -49,13 +40,11 @@ void userInput(void *self)
         if (event.type == SDL_TEXTINPUT)
         {
             strcat(instance->text, event.text.text);
-            //printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
             changeWord = true;
         }
         else if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(instance->text) > 4)
         {
             instance->text[strlen(instance->text) - 1] = '\0';
-            //printf("\nText: %s | Length: %lu", instance->text, strlen(instance->text));
             changeWord = true;
         }
         else if (strlen(instance->text) > 18)
@@ -97,7 +86,7 @@ char *getEnteredIP(void *self){
     return IP;
 }
 
-void updateStartMenu(void *self)
+void handleMouseInput(void *self)
 {
     // get user input on buttons
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
@@ -133,23 +122,6 @@ bool startMenuIsRunning(void *self)
     return ((StartMenu *)self)->instance->isRunning;
 }
 
-char *getMyIPAdress()
-{
-    struct ifaddrs *ifap, *ifa;
-    struct sockaddr_in *sockAddr;
-    char *addr;
-    getifaddrs(&ifap);
-    for (ifa = ifap; ifa; ifa = ifa->ifa_next)
-    {
-        if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET)
-        {
-            sockAddr = (struct sockaddr_in *)ifa->ifa_addr;
-            addr = inet_ntoa(sockAddr->sin_addr);
-        }
-    }
-    freeifaddrs(ifap);
-    return addr;
-}
 
 StartMenu *getStartMenu()
 {
@@ -162,7 +134,7 @@ StartMenu *getStartMenu()
 
     self.render = renderStartMenu;
     self.isRunning = startMenuIsRunning;
-    self.update = updateStartMenu;
+    self.mouseInput = handleMouseInput;
     self.destroy = destroyStartMenu;
     self.input = userInput;
     self.getIP = getEnteredIP;
@@ -183,4 +155,36 @@ StartMenu *getStartMenu()
     TM->load(TM, "startMenyBg", "assets/menu.jpg");
 
     return &self;
+}
+
+
+char* substr(const char *src, int m, int n)
+{
+    int len = n - m;
+     char *dest = (char*)malloc(sizeof(char) * (len + 1));
+    for (int i = m; i < n && (*(src + i) != '\0'); i++)
+    {
+        *dest = *(src + i);
+        dest++;
+    }
+    *dest = '\0';
+    return dest - len;
+}
+
+char *getMyIPAdress()
+{
+    struct ifaddrs *ifap, *ifa;
+    struct sockaddr_in *sockAddr;
+    char *addr;
+    getifaddrs(&ifap);
+    for (ifa = ifap; ifa; ifa = ifa->ifa_next)
+    {
+        if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET)
+        {
+            sockAddr = (struct sockaddr_in *)ifa->ifa_addr;
+            addr = inet_ntoa(sockAddr->sin_addr);
+        }
+    }
+    freeifaddrs(ifap);
+    return addr;
 }
