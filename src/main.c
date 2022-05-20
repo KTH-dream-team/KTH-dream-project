@@ -9,6 +9,7 @@
 #include "startMenu.h"
 #include "EntityManager.h"
 #include "PlayerManager.h"
+#include "define.h"
 
 
 #define SDL_MAIN_HANDLED
@@ -28,7 +29,7 @@ int main(int argc, char **argv)
     if (!isInitSucceed)
         return 1;
 
-    network->connect(network, 2);
+    network->connect(network, NUM_OF_CLIENTS);
 
     InputHandler *inputHandler = getInputHandler();
    // StartMenu *startMenu = getStartMenu();
