@@ -9,9 +9,13 @@
 #include "SDL2/SDL_image.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
+#include <netdb.h>
+#include <sys/types.h>
 #include <sys/socket.h>
-#include <ifaddrs.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <string.h>
 #include <InputHandler.h>
 #include "networkClient.h"
@@ -174,18 +178,25 @@ char* substr(const char *src, int m, int n)
 
 char *getMyIPAdress()
 {
-    struct ifaddrs *ifap, *ifa;
-    struct sockaddr_in *sockAddr;
-    char *addr;
-    getifaddrs(&ifap);
-    for (ifa = ifap; ifa; ifa = ifa->ifa_next)
+    char hostBuffer[256];
+    char *IPbuffer;
+    struct hostent *hostEntry;
+    int hostName;
+
+    if ((hostName = gethostname(hostBuffer, sizeof(hostBuffer))) == -1)
     {
-        if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET)
-        {
-            sockAddr = (struct sockaddr_in *)ifa->ifa_addr;
-            addr = inet_ntoa(sockAddr->sin_addr);
-        }
+        perror("gethostname");
+        exit(1);
     }
-    freeifaddrs(ifap);
-    return addr;
+
+    ;
+    if ((hostEntry = gethostbyname(hostBuffer)) == NULL)
+    {
+        perror("gethostbyname");
+        exit(1);
+    }
+    IPbuffer = inet_ntoa(*((struct in_addr *)hostEntry->h_addr_list[0]));
+    printf("Host IP: %s\n", IPbuffer);
+
+    return IPbuffer;
 }
