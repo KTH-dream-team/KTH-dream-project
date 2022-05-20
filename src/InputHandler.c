@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include "GameEngin.h"
 
+
 struct inputHandlerInstance
 {
     const Uint8 *keyState;
+    SDL_Event event;
 };
 void keyUp(void *self)
 {
@@ -17,9 +19,11 @@ void keyDown(void *self)
     InputHandlerInstance *instance = ((InputHandler *)self)->instance;
     instance->keyState = SDL_GetKeyboardState(NULL);
 }
+
+
 void listen(void *self)
 {
-    SDL_Event event;
+    SDL_Event event = ((InputHandler*)self)->instance->event;
     while (SDL_PollEvent(&event))
     {
         GameEngin *Engine = getGameEngin();
@@ -50,11 +54,15 @@ bool getKeyPress(void *self, SDL_Scancode scancode)
         return true;
     return false;
 }
+
+SDL_Event getEvent(void *self){
+    return ((InputHandler*)self)->instance->event;
+}
+
 void destroyInputHandler(void *self)
 {
     InputHandlerInstance *instance = ((InputHandler *)self)->instance;
     free(instance);
-
     printf("InputHandler Destroyed\n");
 }
 
@@ -68,6 +76,7 @@ InputHandler *getInputHandler()
     SDL_GetKeyboardState(NULL);
     self.instance = malloc(sizeof(InputHandlerInstance *));
     self.listen = listen;
+    self.getEvent = getEvent;
     self.getKeyPress = getKeyPress;
     self.destroy = destroyInputHandler;
     self.getMouseState = getMouseState;
