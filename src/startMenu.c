@@ -1,25 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include "SDL2/SDL_image.h"
+
 #include "GameEngin.h"
 #include "startMenu.h"
 #include "TextButton.h"
 #include "text.h"
 #include "EntityManager.h"
 #include "TextureManager.h"
-#include "SDL2/SDL_image.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "InputHandler.h"
+#include "networkClient.h"
+//net lib
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <ifaddrs.h>
 #include <unistd.h>
 #include <errno.h>
 #include <netdb.h>
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <InputHandler.h>
-#include "networkClient.h"
-
 
 struct startmenuinstance
 {
@@ -32,9 +34,8 @@ struct startmenuinstance
 };
 
 static bool changeWord = false;
-char* substr(const char *src, int m, int n);
+char *substr(const char *src, int m, int n);
 char *getMyIPAdress();
-
 
 void userInput(void *self)
 {
@@ -57,6 +58,12 @@ void userInput(void *self)
         {
             return;
         }
+        else if (event.type == SDL_QUIT)
+        {
+            GameEngin *GE = getGameEngin();
+            GE->quit(GE);
+        }
+        
     }
 }
 
@@ -85,10 +92,11 @@ void renderStartMenu(void *self)
     SDL_RenderPresent(renderer);
 }
 
-char *getEnteredIP(void *self){
+char *getEnteredIP(void *self)
+{
     StartMenuInstance *instance = ((StartMenu *)self)->instance;
     int length = strlen(instance->text);
-    char *IP = substr(instance->text, 4,length);
+    char *IP = substr(instance->text, 4, length);
     return IP;
 }
 
@@ -162,11 +170,10 @@ StartMenu *getStartMenu()
     return &self;
 }
 
-
-char* substr(const char *src, int m, int n)
+char *substr(const char *src, int m, int n)
 {
     int len = n - m;
-     char *dest = (char*)malloc(sizeof(char) * (len + 1));
+    char *dest = (char *)malloc(sizeof(char) * (len + 1));
     for (int i = m; i < n && (*(src + i) != '\0'); i++)
     {
         *dest = *(src + i);
@@ -178,6 +185,21 @@ char* substr(const char *src, int m, int n)
 
 char *getMyIPAdress()
 {
+    // struct ifaddrs *ifap, *ifa;
+    // struct sockaddr_in *sockAddr;
+    // char *addr;
+    // getifaddrs(&ifap);
+    // for (ifa = ifap; ifa; ifa = ifa->ifa_next)
+    // {
+    //     if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET)
+    //     {
+    //         sockAddr = (struct sockaddr_in *)ifa->ifa_addr;
+    //         addr = inet_ntoa(sockAddr->sin_addr);
+    //     }
+    // }
+    // freeifaddrs(ifap);
+    // return addr;
+    
     char hostBuffer[256];
     char *IPbuffer;
     struct hostent *hostEntry;
