@@ -48,7 +48,7 @@ void initMap(void *self)
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,7,7,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-    {0,0,0,0,0,6,0,0,0,0,0,9,0,0,0,0,0,0,0,9,0,0,5,0,0,0,2,0,0,0,5,8,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+    {0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,9,0,0,5,0,0,0,2,0,0,0,5,8,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,0,0,2,2,0,5,0,0,0,2,2,0,0,5,8,5,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,},
     {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,},
     {3,3,3,3,3,3,3,9,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,},
@@ -163,7 +163,7 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
     
     EntityManager *EM = getEntityManager();
     Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
-     Audio *audio = newAudio();
+    Audio *audio = newAudio();
     
     // WarriorInstance *warriorInstance = ((Warrior *)warrior000)->instance;
     int lowerBounce = ((dRect.y+dRect.h)/20)+2;
@@ -239,15 +239,14 @@ void showMap(void *self)
             SDL_Rect destRect = {j * 20, i * 20, 20, 20};//! positionera rectangel enligt for loop
             switch (mapmanager->instance->map[i][j]){
                 case 0: break;
-                case 1: textureManager->draw(textureManager, "dirt", srcRec, destRect, 1); break;//!swicha textures eligt map values
-                case 2: textureManager->draw(textureManager, "grass", srcRec, destRect, 1); break;
-                case 3: textureManager->draw(textureManager, "grass.1", srcRec, destRect, 1); break;
-                case 4: textureManager->draw(textureManager, "stone", srcRec, destRect, 1); break;
-                case 5: textureManager->draw(textureManager, "wood", srcRec, destRect, 1); break;
-                case 6: textureManager->draw(textureManager, "gun", srcRec, destRect, 0); break;
-                case 7: textureManager->draw(textureManager, "brick", srcRec, destRect, 1); break;
-                case 8: textureManager->draw(textureManager, "black", srcRec, destRect, 1); break;
-                case 9: textureManager->draw(textureManager, "healthPack", srcRec, destRect, 1); break;
+                case 1: textureManager->draw(textureManager, "dirt", &srcRec, &destRect, 1); break;//!swicha textures eligt map values
+                case 2: textureManager->draw(textureManager, "grass", &srcRec, &destRect, 1); break;
+                case 3: textureManager->draw(textureManager, "grass.1", &srcRec, &destRect, 1); break;
+                case 4: textureManager->draw(textureManager, "stone", &srcRec, &destRect, 1); break;
+                case 5: textureManager->draw(textureManager, "wood", &srcRec, &destRect, 1); break;
+                case 6: textureManager->draw(textureManager, "gun", &srcRec, &destRect, 1); break;
+                case 7: textureManager->draw(textureManager, "brick", &srcRec, &destRect, 1); break;
+                case 8: textureManager->draw(textureManager, "black", &srcRec, &destRect, 1); break;
 
             }
         

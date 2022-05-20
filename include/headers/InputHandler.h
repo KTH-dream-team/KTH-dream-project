@@ -26,6 +26,7 @@ typedef struct inputHandlerInstance InputHandlerInstance;
 typedef struct inputHandler
 {
     void (*listen)(void *self);
+    SDL_Event (*getEvent)(void *self);
     bool (*getKeyPress)(void *self, SDL_Scancode scancode);
     unsigned int (*getMouseState)(int *mouseX, int *mouseY);
     void (*destroy)(void *self);

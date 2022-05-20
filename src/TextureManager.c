@@ -49,6 +49,7 @@ bool load(void *self, char *id, char *filename)
     GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(ren, surface);
+    SDL_FreeSurface(surface);
     if (texture == NULL)
     {
         SDL_Log("Failed to load texture from surface: %s %s", filename, SDL_GetError());
@@ -60,7 +61,7 @@ bool load(void *self, char *id, char *filename)
     temp->id = id;
     temp->texture = texture;
     ((TextureManager *)self)->instance->textureList->add(((TextureManager *)self)->instance->textureList, temp);
-
+    
     return true;
 }
 
@@ -78,13 +79,13 @@ void destroy(void *self)
     printf("TextureManager destroyed\n");
 }
 
-void draw(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip)
+void draw(void *self, char *id, SDL_Rect *srcRect, SDL_Rect *destRect, SDL_RendererFlip flip)
 {
     GameEngin *Engine = getGameEngin();
     SDL_Renderer *ren = Engine->getRenderer(Engine);
     SDL_Texture *tex = getTextureByID(self, id);
 
-    SDL_RenderCopyEx(ren, tex, &srcRect, &destRect, 0, NULL, flip);
+    SDL_RenderCopyEx(ren, tex, srcRect, destRect, 0, NULL, flip);
 }
 
 void drawWithAngle(void *self, char *id, SDL_Rect srcRect, SDL_Rect destRect, SDL_RendererFlip flip, float angle)

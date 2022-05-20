@@ -4,6 +4,15 @@
 #include "audio.h"
 #include <string.h>
 
+
+// Background music licens
+// This must be included in project description
+// Powerful Trap Beat | Strong by Alex-Productions | https://www.youtube.com/channel/UCx0_M61F81Nfb-BRXE-SeVA
+// Music promoted by https://www.chosic.com/free-music/all/
+// Creative Commons CC BY 3.0
+// https://creativecommons.org/licenses/by/3.0/
+ 
+
 struct audioInstance
 {
     Mix_Music *music;
@@ -21,20 +30,19 @@ void initAudio(void *self){
     if(Mix_OpenAudio(24100, MIX_DEFAULT_FORMAT, 2, 2048))
     {
         printf("Initialising audio Error, %s\n", Mix_GetError());
-    } 
+    }
     printf("Audio_init\n");
 }
 
-
-
-void backgroundMusic(void *self, int volume){
-    Audio *audio = (Audio*)self;
+void backgroundMusic(void *self, int volume)
+{
+    Audio *audio = (Audio *)self;
     Mix_VolumeMusic(volume);
-    audio->instance->music = Mix_LoadMUS("assets/back.wav");
-    if(Mix_PlayMusic(audio->instance->music, -1) != 0){
+    audio->instance->music = Mix_LoadMUS("audio/bgm.wav");
+    if (Mix_PlayMusic(audio->instance->music, -1) != 0)
+    {
         printf("Cant play background, %s\n", Mix_GetError());
     }
-    
 }
 
 
@@ -105,12 +113,12 @@ Audio *newAudio(){
     self.instance->hitWarrior = malloc(sizeof(Mix_Chunk));
     self.instance->death = malloc(sizeof(Mix_Chunk));
 
-    self.instance->jump = Mix_LoadWAV("assets/jump.wav");
-    self.instance->gun = Mix_LoadWAV("assets/gun.wav");
-    self.instance->health = Mix_LoadWAV("assets/health.wav");
-    self.instance->gunPickup = Mix_LoadWAV("assets/gunPickup.wav");
-    self.instance->hitWarrior = Mix_LoadWAV("assets/hitWarrior.wav");
-    self.instance->death = Mix_LoadWAV("assets/death.wav");
+    self.instance->jump = Mix_LoadWAV("audio/jump.wav");
+    self.instance->gun = Mix_LoadWAV("audio/gun.wav");
+    self.instance->health = Mix_LoadWAV("audio/health.wav");
+    self.instance->gunPickup = Mix_LoadWAV("audio/gunPickup.wav");
+    self.instance->hitWarrior = Mix_LoadWAV("audio/hitWarrior.wav");
+    self.instance->death = Mix_LoadWAV("audio/death.wav");
 
     self.backgroud = backgroundMusic;
     self.playSound = playSound;

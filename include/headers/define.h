@@ -1,2 +1,3 @@
 #define MAXPLAYER 16
 #define PLAYERNAME 50
+#define NUM_OF_CLIENTS 2

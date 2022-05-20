@@ -21,9 +21,9 @@ struct textInstance
 };
 void centerText(void *self, SDL_Rect outerRect)
 {
-    TextInstance *textInstance = ((Text*)self)->instance;
-    textInstance->rect.x = (outerRect.x + ((outerRect.w)/2)) - ((textInstance->rect.w)/2);
-    textInstance->rect.y = (outerRect.y + ((outerRect.h)/2)) - ((textInstance->rect.h)/2);
+    TextInstance *textInstance = ((Text *)self)->instance;
+    textInstance->rect.x = (outerRect.x + ((outerRect.w) / 2)) - ((textInstance->rect.w) / 2);
+    textInstance->rect.y = (outerRect.y + ((outerRect.h) / 2)) - ((textInstance->rect.h) / 2);
 }
 
 void renderTTF(void *self)
@@ -42,12 +42,19 @@ void renderTTF(void *self)
 void destroyTTF(void *self)
 {
     Text *text = (Text *)self;
-    free(text->instance->renderer);
-    TTF_Quit();
+    SDL_DestroyRenderer(text->instance->renderer);
     free(text->instance);
     free(text);
+    TTF_Quit();
 
     return;
+}
+void setTextColor(void *self, SDL_Color color)
+{
+    TextInstance *instance = ((Text *)self)->instance;
+    instance->color = color;
+    if (!(instance->text_surface = TTF_RenderText_Solid(instance->font, instance->text, instance->color)))
+        printf("Oh My Goodness, render error : %s\n", TTF_GetError());
 }
 
 Text *newText(char *text, int x, int y, int size, SDL_Color color)
@@ -58,6 +65,7 @@ Text *newText(char *text, int x, int y, int size, SDL_Color color)
 
     self->render = renderTTF;
     self->destroy = destroyTTF;
+    self->setColor = setTextColor;
     self->centerText = centerText;
 
     self->instance->color = color;
@@ -75,7 +83,5 @@ Text *newText(char *text, int x, int y, int size, SDL_Color color)
     self->instance->rect.w = self->instance->text_surface->w;
     self->instance->rect.h = self->instance->text_surface->h;
 
-
-    
     return self;
 }
