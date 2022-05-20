@@ -38,6 +38,7 @@ typedef struct // datatype:5
     int from;
     int x; //testa float;
     int y;
+    int item;
 } BlockDestroy;
 
 typedef struct // datatype:6

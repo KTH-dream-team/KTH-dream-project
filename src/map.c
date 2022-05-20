@@ -9,6 +9,8 @@
 #include "audio.h"
 #include "EntityManager.h"
 #include "Warrior.h"
+#include <time.h>
+
 #define ROW 25
 #define COL 50
 #define PRIVET static 
@@ -24,6 +26,7 @@ bool chekBlockContact(void *self,int blockRow, int blockCol);
 void initMap(void *self)
 {    
     printf("in initMap\n");
+    srand(time(NULL));
     TextureManager *textureManager = getTextureManager();//! hämta befintlig textureManger instant obs inte en new
     textureManager->load(textureManager, "dirt", "./assets/dirt.png");//1 //!load texture function sicka id och fil namn 
     textureManager->load(textureManager, "grass", "./assets/grass.png");//2
@@ -68,6 +71,7 @@ void initMap(void *self)
             for (int j = 0; j < COL; j++){   
                 mapmanager->instance->map[i][j]=map1[i][j];
             }
+        
     }
 
 }
@@ -105,23 +109,37 @@ void dig(void *self,int x, int y){//!dig when holding Q
     MapManager *mapmanager = (MapManager *)self;
     int intBlockCol = x/20;
     int intBlockRow = y/20;
+    int prob = rand() % 100 + 1;
+    int item = 0;
     //float blockCol = intBlockCol;
     //float blockRow = intBlockRow;
-    mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
+    if(prob > 98)
+    {
+        mapmanager->instance->map[intBlockRow][intBlockCol] = 9;
+        item = 9;   
+    }
+    else if(prob > 96  && prob <= 98)
+    {
+         mapmanager->instance->map[intBlockRow][intBlockCol] = 6;
+         item = 6;
+    }
+    else    
+        mapmanager->instance->map[intBlockRow][intBlockCol] = 0;   
     NetworkClient *network = getNetworkClient();
     BlockDestroy dataToSend = {
         network->getTCPID(network),
         intBlockCol,
-        intBlockRow
+        intBlockRow,
+        item
     };
     // Audio *audio = newAudio();
     //audio->playSound(audio, "brick");
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
     
 }
-void digNoSend(void *self,int x, int y){
+void digNoSend(void *self,int x, int y, int item){
     MapManager *mapmanager = (MapManager *)self;
-    mapmanager->instance->map[y][x] = 0;
+    mapmanager->instance->map[y][x] = item;
 }
 
 bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funktion kolla om block gör kontakt
