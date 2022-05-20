@@ -15,6 +15,8 @@
 #include <string.h>
 #include <InputHandler.h>
 #include "networkClient.h"
+
+
 struct startmenuinstance
 {
     bool isRunning;
@@ -121,7 +123,6 @@ bool startMenuIsRunning(void *self)
 {
     return ((StartMenu *)self)->instance->isRunning;
 }
-
 
 StartMenu *getStartMenu()
 {
