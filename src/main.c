@@ -38,6 +38,9 @@ int main(int argc, char **argv)
 
     while (PM->winner(PM) == -1 || Engine->isRunning(Engine))
     {
+        fpsManager->listen(fpsManager);
+        fpsManager->frameRateListen(fpsManager);
+        printf("Fps: %d\n", fpsManager->getFrameRate(fpsManager));
         if (startMenu->isRunning(startMenu))
         {
 
@@ -53,8 +56,6 @@ int main(int argc, char **argv)
                 Engine->innitGameInstances(Engine);
                 GameInstanceIsInit = true;
             }
-            fpsManager->listen(fpsManager);
-            fpsManager->frameRateListen(fpsManager);
             inputHandler->listen(inputHandler);
             network->listen(network);
 

@@ -23,6 +23,7 @@ void fpsManagerListen(void *self)
     int d = currentTime - instance->lastTime;
     if(d < t)
     {
+        SDL_Delay(t-d);
         currentTime = SDL_GetTicks();
     }
 
