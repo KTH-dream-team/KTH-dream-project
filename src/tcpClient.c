@@ -10,6 +10,8 @@
 #include "Bullet.h"
 #include "map.h"
 #include "PlayerManager.h"
+#include "startMenu.h"
+
 
 #define MAX_SIZE 512
 #define CLIENT_PORT 0
@@ -37,7 +39,9 @@ bool TCPinitclient(void *self)
         printf("SDLNet_Init: %s\n", SDLNet_GetError());
         return false;
     }
-    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP, SERVER_PORT))
+    // StartMenu *startMenu = getStartMenu();
+    // char *serverIP = startMenu->getIP(startMenu);
+    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP,SERVER_PORT))
     {
         printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
         return false;
