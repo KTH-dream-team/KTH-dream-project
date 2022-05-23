@@ -2,6 +2,7 @@
 #include "SDL2/SDL.h"
 #include <stdio.h>
 #define FPSARRAY_SIZE 100
+#define MAX_FPS 150
 //#include <SDL_TTF.h>
 
 struct fpsManagerInstance
@@ -16,8 +17,15 @@ struct fpsManagerInstance
 void fpsManagerListen(void *self)
 {
     unsigned int currentTime = SDL_GetTicks();
-
     FpsManagerInstance *instance = ((FpsManager *)self)->instance;
+
+    int t = 1000/MAX_FPS;
+    int d = currentTime - instance->lastTime;
+    if(d < t)
+    {
+        currentTime = SDL_GetTicks();
+    }
+
     float dt = (currentTime - instance->lastTime) * (TARGET_FRAME_RATE / 1000.0);
     instance->deltaTime = dt;
     instance->elapsedTime = (int)(currentTime - instance->lastTime);
@@ -34,8 +42,7 @@ void frameRateListen(void *self){
     }
     
     instance->fps[instance->fpsCurrentIndex]=fps;    
-    // printf("test %f\n",fps);
-    // printf("elapsed %d\n",instance->elapsedTime);
+
 
     instance->fpsCurrentIndex = instance->fpsCurrentIndex+1;
 

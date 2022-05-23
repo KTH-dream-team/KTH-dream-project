@@ -53,7 +53,6 @@ int main(int argc, char **argv)
                 Engine->innitGameInstances(Engine);
                 GameInstanceIsInit = true;
             }
-
             fpsManager->listen(fpsManager);
             fpsManager->frameRateListen(fpsManager);
             inputHandler->listen(inputHandler);

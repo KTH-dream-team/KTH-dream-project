@@ -23,7 +23,6 @@ bool chekBlockContact(void *self,int blockRow, int blockCol);
 
 void initMap(void *self)
 {    
-    printf("in initMap\n");
     TextureManager *textureManager = getTextureManager();//! hämta befintlig textureManger instant obs inte en new
     textureManager->load(textureManager, "dirt", "./assets/dirt.png");//1 //!load texture function sicka id och fil namn 
     textureManager->load(textureManager, "grass", "./assets/grass.png");//2

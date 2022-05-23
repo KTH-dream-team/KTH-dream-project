@@ -40,16 +40,13 @@ void backgroundMusic(void *self, int volume){
 
 void playSound(void *self, char *path){
     Audio *audio = (Audio*)self;
-    printf("try to play sound: %s\n", path);
     if(strcmp("jump", path) == 0){
         int a = Mix_PlayChannel(3, audio->instance->jump, 0);
         Mix_Volume(3,30);
-        printf("play jump on chanel: %d\n", a);
     }
     if(strcmp("gun", path) == 0){
         int a = Mix_PlayChannel(4, audio->instance->gun, 0);
         Mix_Volume(4,30);
-        printf("play jump on chanel: %d\n", a);
     }
     if(strcmp("health", path) == 0){
         Mix_PlayChannel(5, audio->instance->health, 0);

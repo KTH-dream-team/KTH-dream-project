@@ -41,28 +41,21 @@ void innitGameInstances(void *self)
 {
     MapManager *mapManager = getMapManager();
     mapManager->initMap(mapManager);
-
-    Audio *audio = newAudio();
     //audio->init(audio);
     // audio->backgroud(audio, 10);
 
-    EntityManager *entityManager = getEntityManager();
-
-
-    // Warrior creation handel network
-
-    // create button here
-    // SDL_Color tColor = {0,0,0,100};
-    // SDL_Color bgColor = {100,100,200,100};
-    // SDL_Rect destRect = {100,100,100,100};
-    // TextButton *button = newTextButton("Hello",  tColor,  bgColor, 26, destRect);
-    // entityManager->add(entityManager, "TextButton-1",button);
-
     NetworkClient *network = getNetworkClient();
     WarriorCreation wa = {network->getTCPID(network), 100, 0};
-    network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
+    int a = network->TCPbroadCast(network, &wa, sizeof(WarriorCreation), 2);
+    printf("int : %d", a);
+    Audio *audio = newAudio();
+    printf("init audio ok\n");
+    EntityManager *entityManager = getEntityManager();
+    printf("init entityManager ok\n");
 
+    // Warrior creation handel network
     Warrior *warrior = createWarrior(300 * network->getTCPID(network), 0, network->getTCPID(network), -1, true);
+    printf("init warrior tcp id: %d\n",network->getTCPID(network));
     char *wID = warrior->getID(warrior);
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
     printf("warrior id %s\n", wID);
