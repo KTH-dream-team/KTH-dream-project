@@ -55,7 +55,7 @@ int winnerPlayerManager(void *self)
 	{
 		if(PM->instance->players[i].alive==true)
 		{
-			printf("Winner is: %d!!!\n", PM->instance->players[i].id);
+			//printf("Winner is: %d!!!\n", PM->instance->players[i].id);
 			return PM->instance->players[i].id;
 		}
 	}

@@ -97,6 +97,27 @@ void updateWarrior(void *self, float dt)
     SDL_FPoint acc = rig->getAcceleration(rig);
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
+    // update player manager
+    WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
+    PlayerManager *PM = getPlayerManager();
+    NetworkClient *network = getNetworkClient();
+    static int trigged=0;
+    if (warriorInstance->health==0 && trigged ==0)
+    {
+        trigged=1;
+        printf("Warrior died: ID: %d, Health: %d, Name %s, isLocal: %d\n", warriorInstance->networkId, warriorInstance->health, warriorInstance->id, warriorInstance->isLocal);
+
+        // broadcast player dead
+        Alive alive;
+        alive.from = network->getTCPID(network);
+        alive.isAlive = false;
+        alive.isLocal = warriorInstance->isLocal;
+
+        PM->killed(PM, alive.from); // kill yourself
+        PM->winner(PM);             // check if there is a winner
+        network->TCPbroadCast(network, &alive, sizeof(Alive), 9);
+    }
+
 
 }
 void renderWarrior(void *self)
@@ -310,31 +331,7 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
         
         printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
          anim->set(anim,"warrior",32,32,6,4,90,0, warriorInstance->isAlive);
-        if (warriorInstance->health<=0)
-        {
-            printf("warrior died at %d\n",warriorInstance->health);
-            audio->playSound(audio, "death");
-             warriorInstance->isAlive=false;
-             anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
-
-            //tims changes
-            printf("Warrior died: ID: %d, Health: %d, Name %s, isLocal: %d\n", warriorInstance->networkId, warriorInstance->health, warriorInstance->id, warriorInstance->isLocal);
-            warriorInstance->isAlive = false;
-            anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
-            if (warriorInstance->isLocal == true)
-            {
-                printf("broadcast dead warrior\n");
-                // broadcast player dead
-                Alive alive;
-                alive.from = network->getTCPID(network);
-                alive.isAlive = false;
-                alive.isLocal = warriorInstance->isLocal;
-
-                PM->killed(PM, alive.from); // kill yourself
-                PM->winner(PM);             // check if there is a winner
-                network->TCPbroadCast(network, &alive, sizeof(Alive), 7);
-            }
-        }
+        
         return true;
     }
     
