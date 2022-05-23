@@ -88,7 +88,6 @@ TextButton *newTextButton(char *text, SDL_Color textColor, SDL_Color backgroundC
     self->instance->backgroundColor = backgroundColor;
     self->instance->text = newText(text, destRect.x, destRect.y, size, textColor);
     self->instance->text->centerText(self->instance->text, destRect);
-    self->instance->text->render(self->instance->text);
     self->instance->destRect = destRect;
     self->instance->btnState = 0;
 

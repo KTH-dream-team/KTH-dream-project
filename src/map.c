@@ -80,7 +80,6 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
     
     if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
     {
-        
         mapmanager->instance->map[blockRow][blockCol] = blockType;
         NetworkClient *network = getNetworkClient();
         BlockBuild dataToSend = {
@@ -90,8 +89,6 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
             blockType
     };
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockBuild), 6);
-    }else{
-        printf("\ncant build on exiisting block\n");
     }
 }
 
@@ -156,56 +153,46 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
     int returnBlock=0;
    // int rightBounce = (dRect.x+dRect.w/20)+2;//!optimize collision detection
     for (int i = 0; i < ROW; i++)
-        {   
-            for (int j = 0; j < COL; j++)
-            {
-                if(i<0 && i>ROW)continue;
-                if(j<0 && j>COL)continue;
-
-                SDL_Rect mapBlock = {j * 20, i * 20, 20, 20};
-                blockType = mapManagerInstance->map[i][j];
-                if (blockType==0)continue;
-                
-                switch (collisionType)
-                {
+    {   
+        for (int j = 0; j < COL; j++)
+        {
+            if(i<0 && i>ROW)continue;
+            if(j<0 && j>COL)continue;
+            SDL_Rect mapBlock = {j * 20, i * 20, 20, 20};
+            blockType = mapManagerInstance->map[i][j];
+            if (blockType==0)continue;
+            
+            switch (collisionType){
                 case 1://! 1 warrior collison
                     if(colisionManager->ResolveDynamicRectVsRect(dRect,dir,mapBlock,dt)){
-                        if (blockType==6)
-                        {
+                        if (blockType==6){
                             audio->playSound(audio, "gunPickup");
                             map->dig(map,mapBlock.x,mapBlock.y);
-                            *blockTypePtr= blockType;
-                           
+                            *blockTypePtr= blockType; 
                             returnBlock= blockType;
                         }
-                        if (blockType==9)
-                        {
+                        if (blockType==9){
                             audio->playSound(audio, "health");
                             map->dig(map,mapBlock.x,mapBlock.y);
                             *blockTypePtr= blockType;
-
                             returnBlock= blockType;
                         }else{
                             returnBlock=1;
                         }
-                    }
-                    break;
+                    }break;
                 case 2://! 2 bullet collison
-                    if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt))
-                    {
-                        if (blockType==9||blockType==6)
-                        {
+                    if (colisionManager->ResolveBulletVSRect(dRect,dir,mapBlock,dt)){
+                        if (blockType==9||blockType==6){
                             return 0;
                         }
-                         map->dig(map,mapBlock.x, mapBlock.y);
-                         return 1;
+                        map->dig(map,mapBlock.x, mapBlock.y);
+                        return 1;
                         
-                    }  
-                    break;
-                }
+                    }break;
             }
-        }        
-        return returnBlock;
+        }
+    }        
+    return returnBlock;
 }
 
 
@@ -226,9 +213,10 @@ void showMap(void *self)
                 case 3: textureManager->draw(textureManager, "grass.1", &srcRec, &destRect, 1); break;
                 case 4: textureManager->draw(textureManager, "stone", &srcRec, &destRect, 1); break;
                 case 5: textureManager->draw(textureManager, "wood", &srcRec, &destRect, 1); break;
-                case 6: textureManager->draw(textureManager, "gun", &srcRec, &destRect, 1); break;
+                case 6: textureManager->draw(textureManager, "gun", &srcRec, &destRect, 0); break;
                 case 7: textureManager->draw(textureManager, "brick", &srcRec, &destRect, 1); break;
                 case 8: textureManager->draw(textureManager, "black", &srcRec, &destRect, 1); break;
+                case 9: textureManager->draw(textureManager, "healthPack", &srcRec, &destRect, 1); break;
 
             }
         

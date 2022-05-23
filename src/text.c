@@ -36,7 +36,6 @@ void renderTTF(void *self)
 
     SDL_RenderCopy(renderer, texture, NULL, &instance->rect);
 
-    return;
 }
 
 void destroyTTF(void *self)
@@ -67,6 +66,7 @@ Text *newText(char *text, int x, int y, int size, SDL_Color color)
     self->destroy = destroyTTF;
     self->setColor = setTextColor;
     self->centerText = centerText;
+    self->setColor = setTextColor;
 
     self->instance->color = color;
     self->instance->text = text;

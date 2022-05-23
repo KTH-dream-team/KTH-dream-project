@@ -13,15 +13,6 @@
 #include "TextureManager.h"
 #include "InputHandler.h"
 #include "networkClient.h"
-//net lib
-// #include <arpa/inet.h>
-// #include <sys/socket.h>
-// #include <ifaddrs.h>
-// #include <unistd.h>
-// #include <errno.h>
-// #include <netdb.h>
-// #include <sys/types.h>
-// #include <netinet/in.h>
 
 struct startmenuinstance
 {
@@ -62,6 +53,16 @@ void userInput(void *self)
         {
             GameEngin *GE = getGameEngin();
             GE->quit(GE);
+        }
+        else if(event.key.keysym.sym == SDLK_RETURN2){
+             printf("1\n");
+        NetworkClient *network = getNetworkClient();
+        if (!network->init(network))
+            printf("Couldn't initialize network!\n");
+        instance->isRunning = false;
+        network->connect(network, 2);
+        printf("2\n");
+        instance->isRunning = false;
         }
         
     }
@@ -110,17 +111,21 @@ void handleMouseInput(void *self)
     int serverBtnState = instance->createServer->getStateTextButton(instance->createServer);
     if (connectBtnState == 2)
     {
+        printf("1\n");
         NetworkClient *network = getNetworkClient();
         if (!network->init(network))
             printf("Couldn't initialize network!\n");
-        network->connect(network, 2);
         instance->isRunning = false;
+        network->connect(network, 2);
+        printf("2\n");
+        instance->isRunning = false;
+
     }
 
     if (serverBtnState == 2)
     {
-        const char *cmd = "open -a Terminal.app ./server.o";
-        system(cmd);
+        // const char *cmd = "open -a Terminal.app ./server.o";
+        // system(cmd);
     }
 }
 
@@ -182,45 +187,3 @@ char *substr(const char *src, int m, int n)
     *dest = '\0';
     return dest - len;
 }
-
-// char *getMyIPAdress()
-// {
-    // struct ifaddrs *ifap, *ifa;
-    // struct sockaddr_in *sockAddr;
-    // char *addr;
-    // getifaddrs(&ifap);
-    // for (ifa = ifap; ifa; ifa = ifa->ifa_next)
-    // {
-    //     if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET)
-    //     {
-    //         sockAddr = (struct sockaddr_in *)ifa->ifa_addr;
-    //         addr = inet_ntoa(sockAddr->sin_addr);
-    //     }
-    // }
-    // freeifaddrs(ifap);
-    // return addr;
-    
-
-   //another way 
-//     char hostBuffer[256];
-//     char *IPbuffer;
-//     struct hostent *hostEntry;
-//     int hostName;
-
-//     if ((hostName = gethostname(hostBuffer, sizeof(hostBuffer))) == -1)
-//     {
-//         perror("gethostname");
-//         exit(1);
-//     }
-
-//     ;
-//     if ((hostEntry = gethostbyname(hostBuffer)) == NULL)
-//     {
-//         perror("gethostbyname");
-//         exit(1);
-//     }
-//     IPbuffer = inet_ntoa(*((struct in_addr *)hostEntry->h_addr_list[0]));
-//     printf("Host IP: %s\n", IPbuffer);
-
-//     return IPbuffer;
-// }

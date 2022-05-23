@@ -39,9 +39,9 @@ bool TCPinitclient(void *self)
         printf("SDLNet_Init: %s\n", SDLNet_GetError());
         return false;
     }
-    StartMenu *SM = getStartMenu();
-    char *serverIP = SM->getIP(SM);
-    if (SDLNet_ResolveHost(&(instance->serverAddress), serverIP, SERVER_PORT))
+    // StartMenu *startMenu = getStartMenu();
+    // char *serverIP = startMenu->getIP(startMenu);
+    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP,SERVER_PORT))
     {
         printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
         return false;
