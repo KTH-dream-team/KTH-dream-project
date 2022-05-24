@@ -54,7 +54,7 @@ void renderBullet(void *self)
         instance->hitBox.h,
     };
     textureManager->draw(textureManager, "bullet", &srcRec, &box, 1);
-    SDL_RenderDrawRect(engin->getRenderer(engin), &box);//todo remove
+    // SDL_RenderDrawRect(engin->getRenderer(engin), &box);//todo remove
 }
 void updateBullet(void *self, float dt)
 {

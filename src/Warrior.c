@@ -1,3 +1,4 @@
+
 #include "Warrior.h"
 #include "Animation.h"
 #include "InputHandler.h"
@@ -421,10 +422,10 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     texterManager->load(texterManager,"ak","./assets/ak.png");
 
     self->instance->isAlive = true;
-    self->instance->hitBox.x = 3;
-    self->instance->hitBox.y = 7;
-    self->instance->hitBox.w = warriorWidth - 12;
-    self->instance->hitBox.h = warriorHight - 7;
+    self->instance->hitBox.x = 5;
+    self->instance->hitBox.y = 8;
+    self->instance->hitBox.w = warriorWidth - 18;
+    self->instance->hitBox.h = warriorHight - 13;
     self->instance->health = health;
     self->instance->canJump = canJump;
     self->instance->bulletCooldown= bulletCooldown;
