@@ -97,7 +97,7 @@ void renderWarrior(void *self)
 {
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
-    anim->draw(anim, pos->getX(pos), pos->getY(pos), 1);
+    anim->draw(anim, pos->getX(pos), pos->getY(pos), 0.9);
 
     WarriorInstance *instance = ((Warrior *)self)->instance;
     if(!instance->isLocal)
