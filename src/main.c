@@ -13,8 +13,7 @@
 
 #define SDL_MAIN_HANDLED
 
-#define SCREEN_WIDTH 1000
-#define SCREEN_HEIGHT 500
+
 
 int main(int argc, char **argv)
 {
@@ -30,7 +29,7 @@ int main(int argc, char **argv)
     FpsManager *fpsManager = getFpsManager();
     bool GameInstanceIsInit = false;
     PlayerManager *PM = getPlayerManager();
-    network->connect(network,2);
+    network->connect(network,NUM_OF_CLIENTS);
 
     // while(startMenu->isRunning(startMenu))
     // {
@@ -40,11 +39,11 @@ int main(int argc, char **argv)
     // }
 
     // startMenu->destroy(startMenu);
-    printf("1\n");
-    SDL_Delay(2000);
-    printf("2\n");
+    // printf("1\n");
+    // // SDL_Delay(2000);
+    // printf("2\n");
     
-    while(Engine->isRunning(Engine) )
+    while(Engine->isRunning(Engine))
     {
         if(!GameInstanceIsInit){
         Engine->innitGameInstances(Engine);
@@ -58,7 +57,8 @@ int main(int argc, char **argv)
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);
     }
-
+    MapManager *map = getMapManager();
+    map->show(map);
     Engine->destroyEngine(Engine);
 
     return 0;

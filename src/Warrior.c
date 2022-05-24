@@ -1,3 +1,4 @@
+
 #include "Warrior.h"
 #include "Animation.h"
 #include "InputHandler.h"
@@ -252,8 +253,8 @@ void warriorEventHandle(void *self)
     static int bulletCount = 0;                                              //! ongoing
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_LEFT) //! right mouse button pressed
     {
-
-        static unsigned int currentTime;
+        // mapManager->dig(mapManager, mouse_x, mouse_y);
+        static unsigned int currentTime;//todo turn this on
         static unsigned int lastTime;
         currentTime = SDL_GetTicks(); // bullet cooldown 100ms
         if (lastTime + warriorInstance->bulletCooldown < currentTime)
@@ -285,7 +286,7 @@ void warriorEventHandle(void *self)
         SDL_Point offset =  camera->getCameraOffset(camera);
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK)
     {
-           mapManager->build(mapManager, mouse_x  - offset.x, mouse_y - offset.y, 0); //! build hold E
+           mapManager->build(mapManager, mouse_x  - offset.x, mouse_y - offset.y, 1); //! build hold E
         
         // if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
         // {
@@ -354,7 +355,7 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
                 alive.isAlive = false;
                 alive.isLocal = warriorInstance->isLocal;
 
-                PM->killed(PM, alive.from); // kill yourself
+                PM->killed(PM, alive.from); // set alive false
                 PM->winner(PM);             // check if there is a winner
                 network->TCPbroadCast(network, &alive, sizeof(Alive), 7);
             }
@@ -434,10 +435,10 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     texterManager->load(texterManager,"ak","./assets/ak.png");
 
     self->instance->isAlive = true;
-    self->instance->hitBox.x = 3;
-    self->instance->hitBox.y = 7;
-    self->instance->hitBox.w = warriorWidth - 12;
-    self->instance->hitBox.h = warriorHight - 7;
+    self->instance->hitBox.x = 5;
+    self->instance->hitBox.y = 8;
+    self->instance->hitBox.w = warriorWidth - 18;
+    self->instance->hitBox.h = warriorHight - 13;
     self->instance->health = health;
     self->instance->canJump = canJump;
     self->instance->bulletCooldown= bulletCooldown;

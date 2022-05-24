@@ -58,7 +58,7 @@ void renderBullet(void *self)
         instance->hitBox.h,
     };
     textureManager->draw(textureManager, "bullet", &srcRec, &box, 1);
-    SDL_RenderDrawRect(engin->getRenderer(engin), &box);//todo remove
+    // SDL_RenderDrawRect(engin->getRenderer(engin), &box);//todo remove
 }
 void updateBullet(void *self, float dt)
 {
@@ -115,7 +115,7 @@ void updateBullet(void *self, float dt)
 
     // self destroy;
     Transform *pos = instance->position;
-    if (pos->getX(pos) > 1100 || pos->getY(pos) > 1100 || pos->getY(pos) < 0 || pos->getX(pos) < 0)
+    if (pos->getX(pos) > MAP_WIDTH+100 || pos->getY(pos) > MAP_HEIGHT+100 || pos->getY(pos) < 0 || pos->getX(pos) < 0)
     {
         EM->drop(EM, instance->id);
         return;

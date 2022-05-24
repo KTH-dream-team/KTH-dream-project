@@ -18,6 +18,7 @@
 #include "startMenu.h"
 #include "PlayerManager.h"
 #include "Camera.h"
+#include "define.h"
 
 struct enginInstance
 {
@@ -105,8 +106,10 @@ void handleRenders(void *self)
     textureManager->load(textureManager, "moon", "./assets/moon.jpg");
     Camera* camera = getCamera();
     SDL_Point offset =  camera->getCameraOffset(camera);
-    SDL_Rect srcRect = {0, 0, 1000, 500};
-    SDL_Rect destRect = {-200+offset.x*0.6, -300+offset.y*0.6, 1000*1.5, 500*1.5};
+
+    SDL_Rect srcRect = {0, 0, 1920, 1080};
+    SDL_Rect destRect = {-500+offset.x*0.6, -500+offset.y*0.6, 1920*1.5, 1080*1.5};
+
     textureManager->draw(textureManager, "moon", &srcRect, &destRect, 1); //! draw bakgrundsbild
 
     // render map
