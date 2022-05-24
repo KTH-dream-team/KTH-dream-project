@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include "startMenu.h"
 #include "PlayerManager.h"
+#include "Camera.h"
 
 struct enginInstance
 {
@@ -67,6 +68,9 @@ void innitGameInstances(void *self)
     entityManager->add(entityManager, wID, warrior); // add to entity manager list
     printf("warrior id %s\n", wID);
 
+    //init camera
+    Camera* camera = getCamera();
+
     PlayerManager *PM = getPlayerManager();
     PM->init(PM);
 }
@@ -83,8 +87,13 @@ void handleUpdates(void *self)
     FpsManager *fpsManager = getFpsManager();
     float dt = fpsManager->getDelta(fpsManager);
 
+    //update entity magager;
     EntityManager *entityManager = getEntityManager();
     entityManager->updateAll(entityManager, dt);
+
+    //update camera;
+    Camera* camera = getCamera();
+    camera->update(camera);
 }
 
 void handleRenders(void *self)
@@ -94,8 +103,10 @@ void handleRenders(void *self)
     //render background
     TextureManager *textureManager = getTextureManager(textureManager);
     textureManager->load(textureManager, "moon", "./assets/moon.jpg");
+    Camera* camera = getCamera();
+    SDL_Point offset =  camera->getCameraOffset(camera);
     SDL_Rect srcRect = {0, 0, 1000, 500};
-    SDL_Rect destRect = {0, 0, 1000, 500};
+    SDL_Rect destRect = {-200+offset.x*0.6, -300+offset.y*0.6, 1000*1.5, 500*1.5};
     textureManager->draw(textureManager, "moon", &srcRect, &destRect, 1); //! draw bakgrundsbild
 
     // render map
@@ -136,8 +147,8 @@ bool destroyEngine(void *self)
     mapManager->destroyMap(mapManager);
 
     // destroy startMenu
-    StartMenu *startMenu = getStartMenu();
-    startMenu->destroy(startMenu);
+    //StartMenu *startMenu = getStartMenu();
+    //startMenu->destroy(startMenu);
 
 
     //----------destroy all assets above !!!---------//

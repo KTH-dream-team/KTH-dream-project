@@ -16,6 +16,7 @@
 #include "networkClient.h"
 #include "data.h"
 #include "define.h"
+#include "Camera.h"
 
 void destroyBullet(void *self);
 
@@ -41,6 +42,9 @@ int getIntId(void *self)
 
 void renderBullet(void *self)
 {
+    Camera* camera = getCamera();
+    SDL_Point offset =  camera->getCameraOffset(camera);
+
     BulletInstance *instance = ((Bullet *)self)->instance;
     GameEngin *engin = getGameEngin();
     TextureManager *textureManager = getTextureManager();
@@ -48,8 +52,8 @@ void renderBullet(void *self)
     SDL_Rect srcRec = {0, 0, 6, 6};                                      //! skapa 32x32 source rectangel
 
     SDL_Rect box = {
-        instance->position->getX(instance->position) + instance->hitBox.x,
-        instance->position->getY(instance->position) + instance->hitBox.y,
+        instance->position->getX(instance->position) + instance->hitBox.x + offset.x,
+        instance->position->getY(instance->position) + instance->hitBox.y + offset.y,
         instance->hitBox.w,
         instance->hitBox.h,
     };

@@ -18,6 +18,7 @@
 #include "SDL2/SDL.h"
 #include "audio.h"
 #include "PlayerManager.h"
+#include "Camera.h"
 
 static unsigned int currentTime;
 static unsigned int lastTime;
@@ -92,16 +93,25 @@ void updateWarrior(void *self, float dt)
     SDL_FPoint acc = rig->getAcceleration(rig);
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
+    //set camera;
+    Camera* camera = getCamera();
+    camera->set(camera,pos->getX(pos), pos->getY(pos));
+
 }
 void renderWarrior(void *self)
 {
     Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
-    anim->draw(anim, pos->getX(pos), pos->getY(pos), 0.9);
 
+    Camera* camera = getCamera();
+    SDL_Point offset =  camera->getCameraOffset(camera);
     WarriorInstance *instance = ((Warrior *)self)->instance;
+
+    anim->draw(anim, pos->getX(pos) + offset.x, pos->getY(pos) + offset.y, 0.9);
+
     if(!instance->isLocal)
         return;
+
     TextureManager *instanceTexture = getTextureManager();
     InputHandler *input = getInputHandler();
     int mouseX, mouseY;
@@ -111,8 +121,8 @@ void renderWarrior(void *self)
     //Ak setings
     if(instance->bulletCooldown == 100){ 
         SDL_Rect box = {
-        instance->position->getX(instance->position) - 2,
-        instance->position->getY(instance->position) + 5,
+        (instance->position->getX(instance->position) - 2) + offset.x ,
+        (instance->position->getY(instance->position) + 5) + offset.y,
         instance->hitBox.w + 13,
         instance->hitBox.h + 13,
     };
@@ -132,8 +142,8 @@ void renderWarrior(void *self)
     //Pistol setings
     if(instance->bulletCooldown == 400){
         SDL_Rect box = {
-            instance->position->getX(instance->position) + 5,
-            instance->position->getY(instance->position) + 10,
+            instance->position->getX(instance->position) + 5 + offset.x,
+            instance->position->getY(instance->position) + 10 + offset.y,
             instance->hitBox.w,
             instance->hitBox.h,
         };
@@ -165,7 +175,6 @@ void renderWarrior(void *self)
     // printf("warrior current health %d \n ",instance->health);
     WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos),instance->health};
     network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
-    
 
     // draw hitbox debugg
     // SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
@@ -253,8 +262,11 @@ void warriorEventHandle(void *self)
             unsigned int buttons = inputHandler->getMouseState(&cubeX, &cubeY);
 
             //calculate bullet direction;
-            float velx = cubeX - pos->getX(pos);
-            float vely = cubeY - pos->getY(pos);
+             Camera* camera = getCamera();
+            SDL_Point offset =  camera->getCameraOffset(camera);
+
+            float velx = cubeX - (pos->getX(pos) + offset.x);
+            float vely = cubeY - (pos->getY(pos) + offset.y);
             float xN = velx / sqrt(velx * velx + vely * vely);
             float yN = vely / sqrt(velx * velx + vely * vely);
             SDL_FPoint vel = {xN * 15, yN * 15}; //! bullet velocity
@@ -269,10 +281,11 @@ void warriorEventHandle(void *self)
          
         }
     }
-
+        Camera* camera = getCamera();
+        SDL_Point offset =  camera->getCameraOffset(camera);
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK)
     {
-           mapManager->build(mapManager, mouse_x, mouse_y, 0); //! build hold E
+           mapManager->build(mapManager, mouse_x  - offset.x, mouse_y - offset.y, 0); //! build hold E
         
         // if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
         // {

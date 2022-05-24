@@ -9,6 +9,7 @@
 #include "audio.h"
 #include "EntityManager.h"
 #include "Warrior.h"
+#include "Camera.h"
 #define ROW 25
 #define COL 50
 #define PRIVET static 
@@ -37,7 +38,7 @@ void initMap(void *self)
 
     MapManager *mapmanager =(MapManager*)self;
     int map1[ROW][COL] ={ 
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
@@ -198,6 +199,9 @@ int checkColision(void *self,SDL_Rect dRect, SDL_FPoint *dir, float dt,int colli
 
 void showMap(void *self)
 {
+    Camera* camera = getCamera();
+    SDL_Point offset =  camera->getCameraOffset(camera);
+
     TextureManager *textureManager = getTextureManager();//! hämta befintlig instant av textureManager
     MapManager *mapmanager = (MapManager *)self;
     SDL_Rect srcRec = {0, 0, 20, 20};//!skapa 20x20 source rectangel
@@ -205,7 +209,7 @@ void showMap(void *self)
     {   
         for (int j = 0; j < COL; j++)
         {
-            SDL_Rect destRect = {j * 20, i * 20, 20, 20};//! positionera rectangel enligt for loop
+            SDL_Rect destRect = {j * 20 + offset.x, i * 20 + offset.y, 20, 20};//! positionera rectangel enligt for loop
             switch (mapmanager->instance->map[i][j]){
                 case 0: break;
                 case 1: textureManager->draw(textureManager, "dirt", &srcRec, &destRect, 1); break;//!swicha textures eligt map values
