@@ -17,7 +17,7 @@
 #include <stdbool.h>
 #include "startMenu.h"
 #include "PlayerManager.h"
-
+#include "define.h"
 struct enginInstance
 {
     bool isRunning;
@@ -94,8 +94,8 @@ void handleRenders(void *self)
     //render background
     TextureManager *textureManager = getTextureManager(textureManager);
     textureManager->load(textureManager, "moon", "./assets/moon.jpg");
-    SDL_Rect srcRect = {0, 0, 1000, 500};
-    SDL_Rect destRect = {0, 0, 1000, 500};
+    SDL_Rect srcRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_Rect destRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     textureManager->draw(textureManager, "moon", &srcRect, &destRect, 1); //! draw bakgrundsbild
 
     // render map

@@ -244,8 +244,8 @@ void warriorEventHandle(void *self)
     static int bulletCount = 0;                                              //! ongoing
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_LEFT) //! right mouse button pressed
     {
-
-        static unsigned int currentTime;
+        // mapManager->dig(mapManager, mouse_x, mouse_y);
+        static unsigned int currentTime;//todo turn this on
         static unsigned int lastTime;
         currentTime = SDL_GetTicks(); // bullet cooldown 100ms
         if (lastTime + warriorInstance->bulletCooldown < currentTime)
@@ -273,12 +273,8 @@ void warriorEventHandle(void *self)
 
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK)
     {
-           mapManager->build(mapManager, mouse_x, mouse_y, 0); //! build hold E
-        
-        // if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
-        // {
-        //     mapManager->dig(mapManager, mouse_x, mouse_y); //! dig hold Q
-        // }
+        mapManager->build(mapManager, mouse_x, mouse_y, 1); 
+              
     }
 }
 
@@ -342,7 +338,7 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
                 alive.isAlive = false;
                 alive.isLocal = warriorInstance->isLocal;
 
-                PM->killed(PM, alive.from); // kill yourself
+                PM->killed(PM, alive.from); // set alive false
                 PM->winner(PM);             // check if there is a winner
                 network->TCPbroadCast(network, &alive, sizeof(Alive), 7);
             }

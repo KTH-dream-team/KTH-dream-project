@@ -1,3 +1,5 @@
 #define MAXPLAYER 16
 #define PLAYERNAME 50
 #define NUM_OF_CLIENTS 2
+#define SCREEN_WIDTH 2000
+#define SCREEN_HEIGHT 1000
