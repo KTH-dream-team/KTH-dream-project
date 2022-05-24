@@ -1,6 +1,6 @@
 #include "Camera.h"
-#define SCREEN_WIDTH 1000
-#define SCREEN_HEIGHT 500
+#include "define.h"
+#include "define.h"
 
 
 struct cameraInstance
@@ -16,6 +16,11 @@ void updateCamera(void *self)
 
     int camX = -(pos->x - (SCREEN_WIDTH / 2));
     int camY = -(pos->y - (SCREEN_HEIGHT / 2));
+
+    if(camX > 0) camX = 0;
+    if(camY > 0) camY = 0;
+    if(camX < -SCREEN_WIDTH) camX = -SCREEN_WIDTH;
+    if(camY < -SCREEN_HEIGHT) camY = -SCREEN_HEIGHT;
 
     int deltaX =  camX - instance->cameraOffset.x;
     int deltaY = camY - instance->cameraOffset.y ;

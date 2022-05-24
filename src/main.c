@@ -57,8 +57,6 @@ int main(int argc, char **argv)
         Engine->handleUpdates(Engine);
         Engine->handleRenders(Engine);
     }
-    MapManager *map = getMapManager();
-    map->show(map);
     Engine->destroyEngine(Engine);
 
     return 0;
