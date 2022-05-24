@@ -20,7 +20,7 @@ void updateCamera(void *self)
     if(camX > 0) camX = 0;
     if(camY > 0) camY = 0;
     if(camX < -SCREEN_WIDTH) camX = -SCREEN_WIDTH;
-    if(camY < -SCREEN_HEIGHT) camY = -SCREEN_HEIGHT;
+    if(camY < -(SCREEN_HEIGHT+30)) camY = -(SCREEN_HEIGHT+30);
 
     int deltaX =  camX - instance->cameraOffset.x;
     int deltaY = camY - instance->cameraOffset.y ;

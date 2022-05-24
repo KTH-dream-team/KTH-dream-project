@@ -116,7 +116,7 @@ void initMap(void *self)
 {1,3,4,4,4,3,1,3,1,4,1,4,3,4,4,1,4,0,0,3,4,4,3,1,1,3,4,1,4,1,3,3,4,4,4,3,3,4,3,3,4,1,4,3,1,1,3,9,0,0,6,9,1,4,1,1,1,1,0,0,0,0,0,0,0,0,4,3,1,4,1,4,3,3,0,0,1,4,4,4,3,1,3,1,3,4,4,3,3,1,4,4,4,3,4,1,4,1,4,3,},
 {1,1,3,1,4,3,4,1,4,3,1,3,4,1,4,1,3,4,4,4,4,1,1,1,4,1,4,4,1,4,1,1,1,4,4,4,3,4,1,1,4,1,4,4,4,1,3,3,1,3,4,3,3,1,1,1,1,1,3,3,3,4,1,1,4,0,0,0,0,0,0,0,0,4,0,1,3,1,3,4,4,4,1,1,1,1,4,1,3,1,3,4,4,1,3,1,3,1,3,1,},    
 {3,1,1,3,1,3,3,3,3,3,1,4,3,3,4,1,1,3,1,3,3,1,4,4,3,4,1,3,3,3,1,1,3,4,3,1,4,3,4,1,1,1,3,1,4,1,4,1,4,4,4,3,3,4,1,4,1,1,1,1,3,1,1,1,4,4,4,1,3,4,1,4,0,0,0,3,4,1,3,1,4,4,3,1,4,1,4,3,1,3,3,1,3,1,4,1,4,1,4,3,},
-{4,3,4,3,3,4,4,4,4,1,1,4,4,1,1,4,4,3,3,3,4,4,3,1,4,3,3,1,3,3,4,3,4,3,1,4,1,4,3,1,3,1,4,1,1,3,3,1,3,3,1,4,1,1,4,3,3,1,4,1,3,4,4,4,4,3,3,4,4,4,3,3,4,1,3,1,1,1,1,4,4,3,4,4,3,3,1,1,4,4,4,3,4,1,4,3,1,3,1,1,}, 
+{8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,}, 
 };
 
           for (int i = 0; i < ROW; i++){
@@ -158,7 +158,9 @@ void dig(void *self,int x, int y){//!dig when holding Q
     int intBlockRow = y/20;
     //float blockCol = intBlockCol;
     //float blockRow = intBlockRow;
+    if(mapmanager->instance->map[intBlockRow][intBlockCol]!=8){
     mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
+    }
     NetworkClient *network = getNetworkClient();
     BlockDestroy dataToSend = {
         network->getTCPID(network),
@@ -258,9 +260,9 @@ void showMap(void *self)
     TextureManager *textureManager = getTextureManager();//! hämta befintlig instant av textureManager
     MapManager *mapmanager = (MapManager *)self;
     SDL_Rect srcRec = {0, 0, 20, 20};//!skapa 20x20 source rectangel
-    for (int i = 0; i < ROW; i++)
+    for (int i = 0; i <= ROW; i++)
     {   
-        for (int j = 0; j < COL; j++)
+        for (int j = 0; j <= COL; j++)
         {
             SDL_Rect destRect = {j * 20 + offset.x, i * 20 + offset.y, 20, 20};//! positionera rectangel enligt for loop
             switch (mapmanager->instance->map[i][j]){
