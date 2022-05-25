@@ -10,6 +10,7 @@
 #include "EntityManager.h"
 #include "PlayerManager.h"
 #include "define.h"
+#include "text.h"
 
 #define SDL_MAIN_HANDLED
 
@@ -42,13 +43,23 @@ int main(int argc, char **argv)
     // printf("1\n");
     // // SDL_Delay(2000);
     // printf("2\n");
-    
     while(Engine->isRunning(Engine))
     {
+        
         if(!GameInstanceIsInit){
         Engine->innitGameInstances(Engine);
         GameInstanceIsInit = true;
         }
+        // if(PM->winner(PM)!=-1){ 
+            SDL_Color green ={0,255,0,255};
+            Text *text = newText("WINNER",100,100,32,green);
+            text->setColor(text,green);
+    
+            text->render(text);
+            SDL_RenderPresent(Engine->getRenderer(Engine));
+            printf("not =-1\n");
+        // }
+
         network->listen(network);
         inputHandler->listen(inputHandler);
         fpsManager->listen(fpsManager);
