@@ -56,6 +56,17 @@ void setTextColor(void *self, SDL_Color color)
         printf("Oh My Goodness, render error : %s\n", TTF_GetError());
 }
 
+void setText(void *self, char *newText)
+{
+    TextInstance *instance = ((Text *)self)->instance;
+    free(instance->text);
+    instance->text = malloc(sizeof(char) * strlen(newText) + 1);
+    strcpy(instance->text,newText);
+    
+    if (!(instance->text_surface = TTF_RenderText_Solid(instance->font, instance->text, instance->color)))
+        printf("Oh My Goodness, render error : %s\n", TTF_GetError());
+}
+
 Text *newText(char *text, int x, int y, int size, SDL_Color color)
 {
     Text *self = malloc(sizeof(Text));
@@ -66,7 +77,7 @@ Text *newText(char *text, int x, int y, int size, SDL_Color color)
     self->destroy = destroyTTF;
     self->setColor = setTextColor;
     self->centerText = centerText;
-    self->setColor = setTextColor;
+    self->setText = setText;
 
     self->instance->color = color;
     self->instance->text = text;

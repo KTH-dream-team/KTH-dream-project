@@ -119,6 +119,9 @@ void handleRenders(void *self)
     EntityManager *entityManager = getEntityManager();
     entityManager->renderAll(entityManager);
 
+    PlayerManager *PM = getPlayerManager();
+    PM->displayWinner(PM);
+
     // render functions go here !!!
     SDL_RenderPresent(Engin->instance->renderer);
 }

@@ -5,6 +5,9 @@
 #include "define.h"
 #include "PlayerManager.h"
 #include "networkClient.h"
+#include "text.h"
+#include "GameEngin.h"
+
 
 typedef struct player
 {
@@ -18,6 +21,7 @@ struct playerManagerInstance
 	Player players[MAXPLAYER];
 	int nrOfPlayers;
 	int nrOfPlayerAlive;
+	Text *winner;
 };
 
 void initPlayerManager(void *self)
@@ -40,6 +44,7 @@ int winnerPlayerManager(void *self)
 {	
 	//printf("winner\n");
 	PlayerManager *PM = getPlayerManager();
+	GameEngin *Engine = getGameEngin();
 	if(PM->instance->nrOfPlayerAlive>1)
 	{
 		//printf("More than 1 player alive!\n");
@@ -50,17 +55,42 @@ int winnerPlayerManager(void *self)
 		//printf("Draw 0 players alive!\n");
 		return -2;
 	}
-
+	
 	for(int i=0;i<PM->instance->nrOfPlayers;i++)
 	{
 		if(PM->instance->players[i].alive==true)
 		{
-			printf("Winner is: %d!!!\n", PM->instance->players[i].id);
+			//printf("Winner is: %d!!!\n", PM->instance->players[i].id);
 			return PM->instance->players[i].id;
 		}
 	}
+
 	return -1;
 }
+void displayWinner(void *self)
+{
+	PlayerManager *PM = getPlayerManager();
+	
+	int winnerID = winnerPlayerManager(self);
+
+	if(winnerID >=0)
+	{
+		if(PM->instance->winner==NULL)
+		{
+			SDL_Color green ={0,255,0,255};
+			char text[20] = "winner 0";
+			text[7] += winnerID;
+			text[8] += '\0';
+			PM->instance->winner = newText(text, 250, 250, 50, green);
+			SDL_Rect rect = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
+			PM->instance->winner->centerText(PM->instance->winner,rect);
+		}
+		PM->instance->winner->render(PM->instance->winner);
+		//printf("Winner is: %d!!!\n", PM->instance->players[i].id);
+	}
+
+}
+
 
 void killedPlayerManager(void *self, int id)
 {
@@ -78,8 +108,12 @@ PlayerManager *getPlayerManager()
 
 	self.instance = malloc(sizeof(PlayerManagerInstance));
 
+	SDL_Color green ={0,255,0,255};
+	self.instance->winner = NULL;
+
 	self.init = initPlayerManager;
 	self.winner = winnerPlayerManager;
+	self.displayWinner = displayWinner;
 	self.killed = killedPlayerManager;
 
 	return &self;

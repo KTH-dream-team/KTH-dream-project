@@ -98,6 +98,26 @@ void updateWarrior(void *self, float dt)
     Camera* camera = getCamera();
     camera->set(camera,pos->getX(pos), pos->getY(pos));
 
+    //playerManager
+    PlayerManager *PM = getPlayerManager();
+    NetworkClient *network = getNetworkClient();
+    static int once = 0;
+
+    // broadcast player dead
+    Alive alive;
+    alive.from = network->getTCPID(network);
+    alive.isAlive = false;
+    alive.isLocal = instance->isLocal;
+    if(instance->health==0 && once == 0)
+    {
+        printf("Warrior died: ID: %d, Health: %d, Name %s, isLocal: %d\n", instance->networkId, instance->health, instance->id, instance->isLocal);
+        once = 1;
+        PM->killed(PM, alive.from); // kill yourself
+        network->TCPbroadCast(network, &alive, sizeof(Alive), 9);
+    }
+    PM->winner(PM);             // check if there is a winner
+
+
 }
 void renderWarrior(void *self)
 {
@@ -341,24 +361,6 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
             audio->playSound(audio, "death");
              warriorInstance->isAlive=false;
              anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
-
-            //tims changes
-            printf("Warrior died: ID: %d, Health: %d, Name %s, isLocal: %d\n", warriorInstance->networkId, warriorInstance->health, warriorInstance->id, warriorInstance->isLocal);
-            warriorInstance->isAlive = false;
-            anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive);
-            if (warriorInstance->isLocal == true)
-            {
-                printf("broadcast dead warrior\n");
-                // broadcast player dead
-                Alive alive;
-                alive.from = network->getTCPID(network);
-                alive.isAlive = false;
-                alive.isLocal = warriorInstance->isLocal;
-
-                PM->killed(PM, alive.from); // set alive false
-                PM->winner(PM);             // check if there is a winner
-                network->TCPbroadCast(network, &alive, sizeof(Alive), 7);
-            }
         }
         return true;
     }

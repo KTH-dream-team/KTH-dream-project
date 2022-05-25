@@ -48,17 +48,7 @@ int main(int argc, char **argv)
         
         if(!GameInstanceIsInit){
         Engine->innitGameInstances(Engine);
-        GameInstanceIsInit = true;
-        }
-        // if(PM->winner(PM)!=-1){ 
-            SDL_Color green ={0,255,0,255};
-            Text *text = newText("WINNER",100,100,32,green);
-            text->setColor(text,green);
-    
-            text->render(text);
-            SDL_RenderPresent(Engine->getRenderer(Engine));
-            printf("not =-1\n");
-        // }
+        GameInstanceIsInit = true;}
 
         network->listen(network);
         inputHandler->listen(inputHandler);
