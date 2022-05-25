@@ -377,6 +377,9 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
 void addHealth(void *self, int health){
     Warrior *warrior = ((Warrior *)self);
     warrior->instance->health +=health;
+    if(warrior->instance->health>30){ //
+        warrior->instance->health = 30;
+    }
 }
 
 int getHealth(void *self){
