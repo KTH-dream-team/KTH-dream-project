@@ -308,7 +308,7 @@ void warriorEventHandle(void *self)
             entityManager->add(entityManager, id, bullet);
             lastTime = currentTime;
             audio->playSound(audio, "gun");
-         
+            
         }
     }
         Camera* camera = getCamera();
