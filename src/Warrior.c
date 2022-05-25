@@ -20,6 +20,7 @@
 #include "audio.h"
 #include "PlayerManager.h"
 #include "Camera.h"
+#include "healthBar.h"
 
 static unsigned int currentTime;
 static unsigned int lastTime;
@@ -32,6 +33,7 @@ struct warriorInstance
     Animation *animation;
     Transform *position;
     Rigidbody *rigidBody;
+    HealthBar *healthBar;
     SDL_Rect hitBox;
     bool isLocal;
     int networkId;
@@ -46,13 +48,20 @@ void updateWarrior(void *self, float dt)
 {
     // update animation
     Animation *anim = ((Warrior *)self)->instance->animation;
+    WarriorInstance *instance = ((Warrior *)self)->instance;
     anim->update(anim);
+
+    //health bar
+    Camera* camera = getCamera();
+    SDL_Point offset =  camera->getCameraOffset(camera);
+    HealthBar* hp = ((Warrior *)self)->instance->healthBar;
+    hp->set(hp,instance->health, instance->position->getX(instance->position) + offset.x, instance->position->getY(instance->position) + offset.y, instance->isLocal);
+
 
     if (!((Warrior *)self)->instance->isLocal)
         return;
 
     Warrior *warrior = ((Warrior *)self);
-    WarriorInstance *instance = ((Warrior *)self)->instance;
 
     // update rigidBody
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
@@ -95,7 +104,6 @@ void updateWarrior(void *self, float dt)
     pos->translate(pos, PTranslate.x, PTranslate.y);
 
     //set camera;
-    Camera* camera = getCamera();
     camera->set(camera,pos->getX(pos), pos->getY(pos));
 
     //playerManager
@@ -129,6 +137,9 @@ void renderWarrior(void *self)
     WarriorInstance *instance = ((Warrior *)self)->instance;
 
     anim->draw(anim, pos->getX(pos) + offset.x, pos->getY(pos) + offset.y, 0.9);
+
+    //health bar
+    instance->healthBar->show(instance->healthBar);
 
     if(!instance->isLocal)
         return;
@@ -180,10 +191,9 @@ void renderWarrior(void *self)
         else
             instanceTexture->drawWithAngle(instanceTexture, "pistol", srcRect, box, SDL_FLIP_VERTICAL, angle);
     }
+
     
-    if (!((Warrior *)self)->instance->isLocal)
-    return;
- // broadcast data;
+    // broadcast data;
     static unsigned int lastTime;
     
     unsigned int currentTime = SDL_GetTicks();
@@ -424,7 +434,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
 
     int warriorHight = 32;
     int warriorWidth = 32;
-    int health=5;
+    int health=30;
     int bulletCooldown =400; //inital fier rate cooldown
     bool canJump;
 
@@ -464,6 +474,8 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
 
     self->instance->rigidBody = newRigidBody();
     self->instance->rigidBody->setForce(self->instance->rigidBody, 0, 0); //! forces på gubben initialt
+
+    self->instance->healthBar = newHealthBar();
 
     self->update = updateWarrior;
     self->events = warriorEventHandle;
