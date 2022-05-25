@@ -160,6 +160,8 @@ void dig(void *self,int x, int y){//!dig when holding Q
     int item = 0;
     //float blockCol = intBlockCol;
     //float blockRow = intBlockRow;
+    if(mapmanager->instance->map[intBlockRow][intBlockCol]==8) return;
+
     if(prob > 98)
     {
         mapmanager->instance->map[intBlockRow][intBlockCol] = 9;
@@ -167,8 +169,8 @@ void dig(void *self,int x, int y){//!dig when holding Q
     }
     else if(prob > 96  && prob <= 98)
     {
-         mapmanager->instance->map[intBlockRow][intBlockCol] = 6;
-         item = 6;
+        mapmanager->instance->map[intBlockRow][intBlockCol] = 6;
+        item = 0;
     }
     else
         mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
@@ -179,6 +181,7 @@ void dig(void *self,int x, int y){//!dig when holding Q
         intBlockRow,
         item
     };
+    
     // Audioaudio = newAudio();
     //audio->playSound(audio, "brick");
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
