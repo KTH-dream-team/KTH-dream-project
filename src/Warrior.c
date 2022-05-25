@@ -150,47 +150,50 @@ void renderWarrior(void *self)
     float angle, radian;
     input->getMouseState(&mouseX, &mouseY);
 
-    //Ak setings
-    if(instance->bulletCooldown == 100){ 
-        SDL_Rect box = {
-        (instance->position->getX(instance->position) - 2) + offset.x ,
-        (instance->position->getY(instance->position) + 5) + offset.y,
-        instance->hitBox.w + 13,
-        instance->hitBox.h + 13,
-    };
-
-    radian = atan2(mouseY - box.y, mouseX - box.x);
-    box.x = box.x + (12 * cos(radian));
-    box.y = box.y + (15 * sin(radian));
-    angle = radian * (180 / PI);
-    SDL_Rect srcRect = {0, 0, 150, 150}; // SDL_Rect srcRect = {0, 0, 70, 30};
-
-    if (angle < 90 && angle > -90)
-        instanceTexture->drawWithAngle(instanceTexture, "ak", srcRect, box, SDL_FLIP_NONE, angle);
-    else
-        instanceTexture->drawWithAngle(instanceTexture, "ak", srcRect, box, SDL_FLIP_VERTICAL, angle);
-
-    }
-    //Pistol setings
-    if(instance->bulletCooldown == 400){
-        SDL_Rect box = {
-            instance->position->getX(instance->position) + 5 + offset.x,
-            instance->position->getY(instance->position) + 10 + offset.y,
-            instance->hitBox.w,
-            instance->hitBox.h,
+    if(instance->health>0){
+        //Ak setings
+        if(instance->bulletCooldown == 100){ 
+            SDL_Rect box = {
+            (instance->position->getX(instance->position) - 2) + offset.x ,
+            (instance->position->getY(instance->position) + 5) + offset.y,
+            instance->hitBox.w + 13,
+            instance->hitBox.h + 13,
         };
 
         radian = atan2(mouseY - box.y, mouseX - box.x);
-        box.x = box.x + (14 * cos(radian));
+        box.x = box.x + (12 * cos(radian));
         box.y = box.y + (15 * sin(radian));
         angle = radian * (180 / PI);
-        SDL_Rect srcRect = {0, 0, 100, 100}; // SDL_Rect srcRect = {0, 0, 70, 30};
+        SDL_Rect srcRect = {0, 0, 150, 150}; // SDL_Rect srcRect = {0, 0, 70, 30};
 
         if (angle < 90 && angle > -90)
-            instanceTexture->drawWithAngle(instanceTexture, "pistol", srcRect, box, SDL_FLIP_NONE, angle);
+            instanceTexture->drawWithAngle(instanceTexture, "ak", srcRect, box, SDL_FLIP_NONE, angle);
         else
-            instanceTexture->drawWithAngle(instanceTexture, "pistol", srcRect, box, SDL_FLIP_VERTICAL, angle);
+            instanceTexture->drawWithAngle(instanceTexture, "ak", srcRect, box, SDL_FLIP_VERTICAL, angle);
+
+        }
+        //Pistol setings
+        if(instance->bulletCooldown == 400){
+            SDL_Rect box = {
+                instance->position->getX(instance->position) + 5 + offset.x,
+                instance->position->getY(instance->position) + 10 + offset.y,
+                instance->hitBox.w,
+                instance->hitBox.h,
+            };
+
+            radian = atan2(mouseY - box.y, mouseX - box.x);
+            box.x = box.x + (14 * cos(radian));
+            box.y = box.y + (15 * sin(radian));
+            angle = radian * (180 / PI);
+            SDL_Rect srcRect = {0, 0, 100, 100}; // SDL_Rect srcRect = {0, 0, 70, 30};
+
+            if (angle < 90 && angle > -90)
+                instanceTexture->drawWithAngle(instanceTexture, "pistol", srcRect, box, SDL_FLIP_NONE, angle);
+            else
+                instanceTexture->drawWithAngle(instanceTexture, "pistol", srcRect, box, SDL_FLIP_VERTICAL, angle);
+        }
     }
+    
 
     
     // broadcast data;
@@ -213,19 +216,22 @@ void renderWarrior(void *self)
 }
 void warriorEventHandle(void *self)
 {
-    if (!(((Warrior *)self)->instance->isLocal && ((Warrior *)self)->instance->health>0))//!if dead stop controlls
+    WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
+    Animation *anim = ((Warrior *)self)->instance->animation;
+    if (((Warrior *)self)->instance->health<=0){
+        anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, 0);
+    }
+    
+    if (!(((Warrior *)self)->instance->isLocal && ((Warrior *)self)->instance->health>0)){//!if dead stop controlls
         return;
-
+    }
     InputHandler *inputHandler = getInputHandler();
     MapManager *mapManager = getMapManager();
     Rigidbody *rig = ((Warrior *)self)->instance->rigidBody;
     EntityManager *entityManager = getEntityManager();
-    Animation *anim = ((Warrior *)self)->instance->animation;
     Transform *pos = ((Warrior *)self)->instance->position;
-
     NetworkClient *network = getNetworkClient();
 
-    WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
 
     // warriorInstance->isAlive=false;
     Audio *audio = newAudio();
@@ -293,7 +299,7 @@ void warriorEventHandle(void *self)
             unsigned int buttons = inputHandler->getMouseState(&cubeX, &cubeY);
 
             //calculate bullet direction;
-             Camera* camera = getCamera();
+            Camera* camera = getCamera();
             SDL_Point offset =  camera->getCameraOffset(camera);
 
             float velx = cubeX - (pos->getX(pos) + offset.x);
@@ -315,12 +321,7 @@ void warriorEventHandle(void *self)
         SDL_Point offset =  camera->getCameraOffset(camera);
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_RMASK)
     {
-           mapManager->build(mapManager, mouse_x  - offset.x, mouse_y - offset.y, 1); //! build hold E
-        
-        // if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))
-        // {
-        //     mapManager->dig(mapManager, mouse_x, mouse_y); //! dig hold Q
-        // }
+        mapManager->build(mapManager, mouse_x  - offset.x, mouse_y - offset.y, (network->getTCPID(network)+1)); 
     }
 }
 
@@ -433,7 +434,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
 
     int warriorHight = 32;
     int warriorWidth = 32;
-    int health=30;
+    int health=10;
     int bulletCooldown =400; //inital fier rate cooldown
     bool canJump;
 

@@ -78,9 +78,9 @@ void displayWinner(void *self)
 		if(PM->instance->winner==NULL)
 		{
 			SDL_Color green ={0,255,0,255};
-			char text[20] = "winner 0";
-			text[7] += winnerID;
-			text[8] += '\0';
+			char text[20] = "WINNER PLAYER ID 0";
+			text[17] += winnerID;
+			text[18] += '\0';
 			PM->instance->winner = newText(text, 250, 250, 50, green);
 			SDL_Rect rect = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 			PM->instance->winner->centerText(PM->instance->winner,rect);

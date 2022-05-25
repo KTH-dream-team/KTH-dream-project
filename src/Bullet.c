@@ -115,7 +115,7 @@ void updateBullet(void *self, float dt)
 
     // self destroy;
     Transform *pos = instance->position;
-    if (pos->getX(pos) > MAP_WIDTH+100 || pos->getY(pos) > MAP_HEIGHT+100 || pos->getY(pos) < 0 || pos->getX(pos) < 0)
+    if (pos->getX(pos) > MAP_WIDTH+100 || pos->getY(pos) > MAP_HEIGHT+100 || pos->getY(pos) < -20 || pos->getX(pos) < -20)
     {
         EM->drop(EM, instance->id);
         return;
