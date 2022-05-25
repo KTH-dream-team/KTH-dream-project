@@ -84,7 +84,7 @@ void UDPbroadCast(void *self, void *data, unsigned long length, int dataType)
 void UDPclientListen(void *self)
 {
     ClientInstance *instance = ((UDPclient *)self)->instance;
-    if (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived))
+    while (SDLNet_UDP_Recv(instance->serverSocket, instance->packetReceived) > 0)
     {
         if (((char *)instance->packetReceived->data)[0] == (char)1)
         {
