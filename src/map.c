@@ -169,7 +169,7 @@ void dig(void *self,int x, int y){//!dig when holding Q
     }
     else if(prob > 96  && prob <= 98)
     {
-        mapmanager->instance->map[intBlockRow][intBlockCol] = 6;
+        mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
         item = 0;
     }
     else
