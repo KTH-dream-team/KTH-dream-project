@@ -108,7 +108,7 @@ void TCPlisten(void *self)
                     case (char)5:
                         offset ++;
                         BlockDestroy * blockDestroyed = (BlockDestroy*)(instance->packetReceived+offset);
-                        map->digNoSend(map, blockDestroyed->x, blockDestroyed->y);
+                        map->digNoSend(map, blockDestroyed->x, blockDestroyed->y, blockDestroyed->item);
                         offset += sizeof(BlockDestroy);
                     break;
                     case (char)6:

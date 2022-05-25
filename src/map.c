@@ -153,28 +153,40 @@ void buildNoSend(void *self, int x,int y, int blockType){
 
 //!function can bradcast data with udp
 void dig(void *self,int x, int y){//!dig when holding Q
-    MapManager *mapmanager = (MapManager *)self;
+    MapManager *mapmanager = (MapManager*)self;
     int intBlockCol = x/20;
     int intBlockRow = y/20;
+    int prob = rand() % 100 + 1;
+    int item = 0;
     //float blockCol = intBlockCol;
     //float blockRow = intBlockRow;
-    if(mapmanager->instance->map[intBlockRow][intBlockCol]!=8){
-    mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
+    if(prob > 98)
+    {
+        mapmanager->instance->map[intBlockRow][intBlockCol] = 9;
+        item = 9;
     }
+    else if(prob > 96  && prob <= 98)
+    {
+         mapmanager->instance->map[intBlockRow][intBlockCol] = 6;
+         item = 6;
+    }
+    else
+        mapmanager->instance->map[intBlockRow][intBlockCol] = 0;
     NetworkClient *network = getNetworkClient();
     BlockDestroy dataToSend = {
         network->getTCPID(network),
         intBlockCol,
-        intBlockRow
+        intBlockRow,
+        item
     };
-    // Audio *audio = newAudio();
+    // Audioaudio = newAudio();
     //audio->playSound(audio, "brick");
     network->TCPbroadCast(network, &dataToSend, sizeof(BlockDestroy), 5);
-    
+
 }
-void digNoSend(void *self,int x, int y){
+void digNoSend(void *self,int x, int y, int item){
     MapManager *mapmanager = (MapManager *)self;
-    mapmanager->instance->map[y][x] = 0;
+    mapmanager->instance->map[y][x] = item;
 }
 
 bool chekBlockContact(void *self,int blockRow, int blockCol){//klass hjälp funktion kolla om block gör kontakt

@@ -307,7 +307,6 @@ void warriorEventHandle(void *self)
             char *id = bullet->getID(bullet);
             entityManager->add(entityManager, id, bullet);
             lastTime = currentTime;
-            printf("before playsound was called\n");
             audio->playSound(audio, "gun");
          
         }
@@ -348,7 +347,6 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
 
     if (warriorInstance->health<=0)
     {
-        printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
         return false;
     }    
     
@@ -358,12 +356,10 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
         audio->playSound(audio, "hitWarrior");
         //brodcast healt decline
         NetworkClient *network = getNetworkClient();
-        printf("id %d tcp id %d",warriorInstance->networkId, network->getTCPID(network));
         GotShot gotshot = {network->getTCPID(network), warriorInstance->networkId,1};
         network->TCPbroadCast(network, &gotshot, sizeof(GotShot), 8);
         
         
-        printf("bullet vs Warrior collision detected warrior helth = %d\n",warriorInstance->health);
          anim->set(anim,"warrior",32,32,6,4,90,0, warriorInstance->isAlive);
         if (warriorInstance->health<=0)
         {
