@@ -299,7 +299,7 @@ void warriorEventHandle(void *self)
             lastTime = currentTime;
             printf("before playsound was called\n");
             audio->playSound(audio, "gun");
-         
+            
         }
     }
         Camera* camera = getCamera();
