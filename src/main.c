@@ -3,7 +3,6 @@
 #include "GameEngin.h"
 #include "InputHandler.h"
 #include "map.h"
-#include "hitBox.h"
 #include <time.h>
 #include "networkClient.h"
 #include "startMenu.h"
