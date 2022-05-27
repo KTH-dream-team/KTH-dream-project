@@ -15,7 +15,7 @@
 #define CLIENT_PORT 0
 #define CLIENT_IP "127.0.0.1" // 127.0.0.1
 #define SERVER_PORT 7000
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "130.229.173.123"
 
 bool sendUdpPacageToServer(void *self, void *data, unsigned long len, int dataType);
 
@@ -44,8 +44,9 @@ bool UDPinit(void *self)
         fprintf(stderr, "Init error: %s\n", SDLNet_GetError());
         return false;
     }
- 
-    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP, SERVER_PORT) == -1)
+    StartMenu *SM = getStartMenu();
+    char *serverIp = SM->getIP(SM);
+    if (SDLNet_ResolveHost(&(instance->serverAddress), serverIp, SERVER_PORT) == -1)
     {
         fprintf(stderr, "SDLNet_ResolveHost(192.0.0.1 3000): %s\n", SDLNet_GetError());
         return false;

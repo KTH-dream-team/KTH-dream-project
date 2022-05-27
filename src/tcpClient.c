@@ -17,7 +17,7 @@
 #define CLIENT_PORT 0
 #define CLIENT_IP "127.0.0.1" // 127.0.0.1//130.229.166.16
 #define SERVER_PORT 3000
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "130.229.173.123"
 
 struct TCPclientInstance
 {
@@ -39,9 +39,9 @@ bool TCPinitclient(void *self)
         printf("SDLNet_Init: %s\n", SDLNet_GetError());
         return false;
     }
-    // StartMenu *startMenu = getStartMenu();
-    // char *serverIP = startMenu->getIP(startMenu);
-    if (SDLNet_ResolveHost(&(instance->serverAddress), SERVER_IP,SERVER_PORT))
+     StartMenu *SM = getStartMenu();
+    char *serverIp = SM->getIP(SM);
+    if (SDLNet_ResolveHost(&(instance->serverAddress), serverIp,SERVER_PORT))
     {
         printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
         return false;
