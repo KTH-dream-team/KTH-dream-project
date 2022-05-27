@@ -11,6 +11,7 @@ struct healthBarInstance
     int x;
     int y;
     int health;
+    bool isLocal;
 };
 
 void setHealthBar(void *self, int health, int x, int y, bool isLocal)
@@ -18,6 +19,7 @@ void setHealthBar(void *self, int health, int x, int y, bool isLocal)
     HealthBarInstance *instance = ((HealthBar *)self)->instance;
     
     instance->health = health;
+    instance->isLocal = isLocal;
     instance->x = x;
     instance->y = y;
 }
@@ -43,6 +45,10 @@ void showHealthBar(void *self)
     SDL_Renderer *ren =  engin->getRenderer(engin);
     
     SDL_SetRenderDrawColor(ren, 255,0,0,255);
+    if(instance->isLocal)
+        SDL_SetRenderDrawColor(ren, 0,0,255,255);
+
+
     SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 
     if(instance->health == 0)
