@@ -45,20 +45,11 @@ void innitGameInstances(void *self)
     mapManager->initMap(mapManager);
 
     Audio *audio = newAudio();
-    //audio->init(audio);
-    // audio->backgroud(audio, 10);
+    audio->init(audio);
+    audio->backgroud(audio, 10);
 
     EntityManager *entityManager = getEntityManager();
 
-
-    // Warrior creation handel network
-
-    // create button here
-    // SDL_Color tColor = {0,0,0,100};
-    // SDL_Color bgColor = {100,100,200,100};
-    // SDL_Rect destRect = {100,100,100,100};
-    // TextButton *button = newTextButton("Hello",  tColor,  bgColor, 26, destRect);
-    // entityManager->add(entityManager, "TextButton-1",button);
 
     NetworkClient *network = getNetworkClient();
     WarriorCreation wa = {network->getTCPID(network), 100, 0};

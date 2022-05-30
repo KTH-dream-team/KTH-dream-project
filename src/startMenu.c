@@ -124,8 +124,8 @@ void handleMouseInput(void *self)
 
     if (serverBtnState == 2)
     {
-        // const char *cmd = "open -a Terminal.app ./server.o";
-        // system(cmd);
+        const char *cmd = "open -a Terminal.app ./server.o";
+        system(cmd);
     }
 }
 
@@ -161,11 +161,25 @@ StartMenu *getStartMenu()
     SDL_Color bgColor = {0, 0, 0, 255};
     SDL_Rect connectRect = {100, 100, 200, 60};
     SDL_Rect ServerRect = {100, 200, 200, 60};
+
     self.instance->connect = newTextButton("Connect", txtColor, bgColor, 24, connectRect);
+
+
+
+
+    TextButton button1 = newTextButton("Connect",
+    txtColor, bgColor, 24, connectRect);
+    TextButton button2 = newTextButton("Disconnect",  
+    txtColor, bgColor, 24, connectRect);
+    button1->render(button1);
+    button1->destroy(button2);
+
+
+
+
+
     self.instance->createServer = newTextButton("Create Server", txtColor, bgColor, 24, ServerRect);
-    // create IP text
-    // char *ip = getMyIPAdress();
-    // self.instance->IP = newText(ip, 760, 440, 24, txtColor);
+
     self.instance->text = malloc(sizeof(char) * 20);
     strcpy(self.instance->text, "IP: 127.0.0.1");
     self.instance->input = newText(self.instance->text, 100, 300, 24, txtColor);

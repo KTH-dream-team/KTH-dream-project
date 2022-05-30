@@ -86,11 +86,8 @@ void updateWarrior(void *self, float dt)
     }
     
     switch (blockTypePtr) {
-        case 6: warrior->setBulletCooldown(warrior,100); 
-        printf("you picked up mashineGun\n"); break;
-        case 9: warrior->addHealth(warrior,10);
-        printf("added 10 health\n");
-        break;
+        case 6: warrior->setBulletCooldown(warrior,100); break;
+        case 9: warrior->addHealth(warrior,10);break;
     }
     if (blockType!=0)
     {
@@ -164,7 +161,7 @@ void renderWarrior(void *self)
         box.x = box.x + (12 * cos(radian));
         box.y = box.y + (15 * sin(radian));
         angle = radian * (180 / PI);
-        SDL_Rect srcRect = {0, 0, 150, 150}; // SDL_Rect srcRect = {0, 0, 70, 30};
+        SDL_Rect srcRect = {0, 0, 150, 150}; 
 
         if (angle < 90 && angle > -90)
             instanceTexture->drawWithAngle(instanceTexture, "ak", srcRect, box, SDL_FLIP_NONE, angle);
@@ -185,7 +182,7 @@ void renderWarrior(void *self)
             box.x = box.x + (14 * cos(radian));
             box.y = box.y + (15 * sin(radian));
             angle = radian * (180 / PI);
-            SDL_Rect srcRect = {0, 0, 100, 100}; // SDL_Rect srcRect = {0, 0, 70, 30};
+            SDL_Rect srcRect = {0, 0, 100, 100}; 
 
             if (angle < 90 && angle > -90)
                 instanceTexture->drawWithAngle(instanceTexture, "pistol", srcRect, box, SDL_FLIP_NONE, angle);
@@ -194,7 +191,6 @@ void renderWarrior(void *self)
         }
     }
     
-
     
     // broadcast data;
     static unsigned int lastTime;
@@ -209,10 +205,6 @@ void renderWarrior(void *self)
     // printf("warrior current health %d \n ",instance->health);
     WarriorSnapshot wa = {network->getTCPID(network), pos->getX(pos), pos->getY(pos),instance->health};
     network->UDPbroadCast(network, &wa, sizeof(WarriorSnapshot), 3);
-
-    // draw hitbox debugg
-    // SDL_SetRenderDrawColor(ren, 200, 20, 20, 255);
-    // SDL_RenderDrawRect(engin->getRenderer(engin), &box);
 }
 void warriorEventHandle(void *self)
 {
@@ -253,12 +245,10 @@ void warriorEventHandle(void *self)
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_S))
     {
-        // anim->set(anim, "warrior", 32, 32, 7, 7, 90, 0, warriorInstance->isAlive); byt till nån annan
         rig->setVelocityX(rig, 50);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_D))
     {
-        // anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
         rig->setVelocityX(rig, 130);
     }
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_SPACE))
@@ -269,8 +259,6 @@ void warriorEventHandle(void *self)
             anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
             rig->setVelocityY(rig, -200);
         }
-        // anim->set(anim, "warrior", 32, 32, 3, 10, 90, 0, warriorInstance->isAlive);
-        // rig->setVelocityY(rig, -100);
     }
 
     if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_W))
@@ -286,11 +274,11 @@ void warriorEventHandle(void *self)
     int mouse_x, mouse_y;
     char result[50];
     char bulletId[50] = "Bullet-";
-    static int bulletCount = 0;                                              //! ongoing
+    static int bulletCount = 0;                                              
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_LEFT) //! right mouse button pressed
     {
         // mapManager->dig(mapManager, mouse_x, mouse_y);
-        static unsigned int currentTime;//todo turn this on
+        static unsigned int currentTime
         static unsigned int lastTime;
         currentTime = SDL_GetTicks(); // bullet cooldown 100ms
         if (lastTime + warriorInstance->bulletCooldown < currentTime)

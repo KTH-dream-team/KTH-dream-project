@@ -154,16 +154,13 @@ void TCPlisten(void *self)
                         id[11] = '\0';
                                             
                         Warrior *warrior1= entityManager->getByID(entityManager,id);
-                        printf("got Warrior: %s\n", id);
 
                         if (warrior1 != NULL)
                         {
                             if (warrior1->isLocalWarrior(warrior1))
                             {
                                 
-                                printf("from %d id %d healtdecline %d",gotshotData->from,gotshotData->id,gotshotData->healthDecline);
                                 warrior1->addHealth(warrior1,-gotshotData->healthDecline);
-                                printf("got shot\n");
                                 /* code */
                             }
                         }

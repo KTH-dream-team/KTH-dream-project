@@ -103,7 +103,7 @@ void build(void *self, int x,int y, int blockType){//!builds when holding E
     int blockCol = x/20;
     int blockRow = y/20;
     
-    if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))//todo turn on
+    if (mapmanager->instance->map[blockRow][blockCol] == 0 && chekBlockContact(mapmanager,blockRow,blockCol))
     {
         mapmanager->instance->map[blockRow][blockCol] = blockType;
         NetworkClient *network = getNetworkClient();
@@ -123,7 +123,7 @@ void buildNoSend(void *self, int x,int y, int blockType){
 }
 
 //!function can bradcast data with udp
-void dig(void *self,int x, int y){//!dig when holding Q
+void dig(void *self,int x, int y){
     MapManager *mapmanager = (MapManager*)self;
     int intBlockCol = x/20;
     int intBlockRow = y/20;
@@ -242,18 +242,15 @@ void showMap(void *self)
 {
     Camera* camera = getCamera();
     SDL_Point offset =  camera->getCameraOffset(camera);
-
     TextureManager *textureManager = getTextureManager();//! hämta befintlig instant av textureManager
     MapManager *mapmanager = (MapManager *)self;
     SDL_Rect srcRec = {0, 0, 20, 20};//!skapa 20x20 source rectangel
-    for (int i = 0; i <= ROW; i++)
-    {   
-        for (int j = 0; j <= COL; j++)
-        {
+    for (int i = 0; i <= ROW; i++){   
+        for (int j = 0; j <= COL; j++){
             SDL_Rect destRect = {j * 20 + offset.x, i * 20 + offset.y, 20, 20};//! positionera rectangel enligt for loop
             switch (mapmanager->instance->map[i][j]){
                 case 0: break;
-                case 1: textureManager->draw(textureManager, "dirt", &srcRec, &destRect, 1); break;//!swicha textures eligt map values
+                case 1: textureManager->draw(textureManager, "dirt", &srcRec, &destRect, 1); break;//!swicha textures enligt map values
                 case 2: textureManager->draw(textureManager, "grass", &srcRec, &destRect, 1); break;
                 case 3: textureManager->draw(textureManager, "moss", &srcRec, &destRect, 1); break;
                 case 4: textureManager->draw(textureManager, "stone", &srcRec, &destRect, 1); break;
@@ -262,9 +259,7 @@ void showMap(void *self)
                 case 7: textureManager->draw(textureManager, "brick", &srcRec, &destRect, 1); break;
                 case 8: textureManager->draw(textureManager, "black", &srcRec, &destRect, 1); break;
                 case 9: textureManager->draw(textureManager, "healthPack", &srcRec, &destRect, 1); break;
-
             }
-        
         }
     }
 }
@@ -277,46 +272,40 @@ void destroyMap(void *self){
 }
 
 void show(void *self){ //map maker prints activ map to terminal in array fromat. use to make a new map
-    printf("in show\n");
-
     MapManager *mapmanager = (MapManager *)self;
-        for (int i = 0; i < ROW; i++){
-            printf("{");   
-            for (int j = 0; j < COL; j++){
-                //hardcode map values
-                // if(i==0){
-                //     printf("1,");
-                // }
-                // if (0<i&&i<=20)
-                // {
-                //     printf("0,");//nothing 
-                // }
-                // if(i==21){
-                //     printf("2,");//grass
-                // }
-                // if(i>21&&i<26){
-                //     printf("1,");//dirt
-                // }
-                // if(i>=26){
-                //      int randomnumber = rand()%3;
-                //     if (randomnumber==0)
-                //     {
-                //         printf("4,");//stone
-                //     }
-                //     if (randomnumber==1)
-                //     {
-                //         printf("1,");//dirt
-                //     }
-                //     if (randomnumber==2)
-                //     {
-                //         printf("3,");//moss
-                //     }                  
-                // }    
-                
-                //activ map      
-                printf("%d,",mapmanager->instance->map[i][j]);
-            }
-            printf("},\n");
+    for (int i = 0; i < ROW; i++){
+        printf("{");   
+        for (int j = 0; j < COL; j++){
+            //hardcode map values
+            // if(i==0){
+            //     printf("1,");
+            // }
+            // if (0<i&&i<=20)
+            // {
+            //     printf("0,");//nothing 
+            // }
+            // if(i==21){
+            //     printf("2,");//grass
+            // }
+            // if(i>21&&i<26){
+            //     printf("1,");//dirt
+            // }
+            // if(i>=26){
+            //         int randomnumber = rand()%3;
+            //     if (randomnumber==0){
+            //         printf("4,");//stone
+            //     }
+            //     if (randomnumber==1){
+            //         printf("1,");//dirt
+            //     }
+            //     if (randomnumber==2){
+            //         printf("3,");//moss
+            //     }                  
+            // }    
+            //activ map      
+            printf("%d,",mapmanager->instance->map[i][j]);
+        }
+        printf("},\n");
     }
 }
 

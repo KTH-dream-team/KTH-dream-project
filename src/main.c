@@ -39,9 +39,7 @@ int main(int argc, char **argv)
     }
 
     startMenu->destroy(startMenu);
-    printf("1\n");
     SDL_Delay(2000);
-    printf("2\n");
     while(Engine->isRunning(Engine))
     {
         
