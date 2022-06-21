@@ -22,4 +22,4 @@ typedef struct bullet
     BulletInstance *instance;
 } Bullet;
 
-Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, int id, bool isLocal);
+Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, int id, bool isLocal,int bulletType);

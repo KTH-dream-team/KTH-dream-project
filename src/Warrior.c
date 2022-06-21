@@ -21,6 +21,7 @@
 #include "PlayerManager.h"
 #include "Camera.h"
 #include "healthBar.h"
+#include "define.h"
 
 static unsigned int currentTime;
 static unsigned int lastTime;
@@ -79,15 +80,23 @@ void updateWarrior(void *self, float dt)
     };
     SDL_FPoint *vel = rig->getPositionPointer(rig);
     int blockTypePtr;
-    int blockType = mapManager->checkColision(mapManager, dRect, vel, dt, 1,&blockTypePtr); //! warrior collision check
+    int blockType = mapManager->checkColision(mapManager, dRect, vel, dt, 1,&blockTypePtr,0); //! warrior collision check
     if (blockType == 6)
     {
         printf("blockType=%d\n", blockType);
     }
     
+    int randomnumber = rand()%3;
     switch (blockTypePtr) {
-        case 6: warrior->setBulletCooldown(warrior,100); 
-        printf("you picked up mashineGun\n"); break;
+        case 6:  
+            if (randomnumber ==2)//sniper 33% drop sniper
+            {
+                warrior->setBulletCooldown(warrior,SNIPER_RPM);
+                printf("you picked up AWP \n");
+            }else{warrior->setBulletCooldown(warrior,AK_RPM);
+            printf("you picked up ak47\n");
+            }//77% drop ak
+        break;
         case 9: warrior->addHealth(warrior,10);
         printf("added 10 health\n");
         break;
@@ -120,7 +129,7 @@ void updateWarrior(void *self, float dt)
     {
         printf("Warrior died: ID: %d, Health: %d, Name %s, isLocal: %d\n", instance->networkId, instance->health, instance->id, instance->isLocal);
         once = 1;
-        PM->killed(PM, alive.from); // kill yourself
+        PM->killed(PM, alive.from); 
         network->TCPbroadCast(network, &alive, sizeof(Alive), 9);
     }
     PM->winner(PM);             // check if there is a winner
@@ -152,10 +161,10 @@ void renderWarrior(void *self)
 
     if(instance->health>0){
         //Ak setings
-        if(instance->bulletCooldown == 100){ 
+        if(instance->bulletCooldown == AK_RPM){ 
             SDL_Rect box = {
-            (instance->position->getX(instance->position) - 2) + offset.x ,
-            (instance->position->getY(instance->position) + 5) + offset.y,
+            (instance->position->getX(instance->position) - 2) + offset.x ,//lower value moves the gun left
+            (instance->position->getY(instance->position) + 5) + offset.y,//lower value moves the gun up
             instance->hitBox.w + 13,
             instance->hitBox.h + 13,
         };
@@ -173,7 +182,7 @@ void renderWarrior(void *self)
 
         }
         //Pistol setings
-        if(instance->bulletCooldown == 400){
+        if(instance->bulletCooldown == HANDGUN_RPM){
             SDL_Rect box = {
                 instance->position->getX(instance->position) + 5 + offset.x,
                 instance->position->getY(instance->position) + 10 + offset.y,
@@ -192,6 +201,29 @@ void renderWarrior(void *self)
             else
                 instanceTexture->drawWithAngle(instanceTexture, "pistol", srcRect, box, SDL_FLIP_VERTICAL, angle);
         }
+            //Sniper setings
+        if(instance->bulletCooldown == SNIPER_RPM){ 
+            SDL_Rect box = {
+            (instance->position->getX(instance->position) - 9) + offset.x ,//lower value moves the gun left
+            (instance->position->getY(instance->position) - 8) + offset.y,//lower value moves the gun up
+            instance->hitBox.w + 40,
+            instance->hitBox.h + 40,
+        };
+
+        radian = atan2(mouseY - box.y, mouseX - box.x);
+        box.x = box.x + (12 * cos(radian));
+        box.y = box.y + (15 * sin(radian));
+        angle = radian * (180 / PI);
+        SDL_Rect srcRect = {0, 0, 150, 150}; // SDL_Rect srcRect = {0, 0, 70, 30};
+
+        if (angle < 90 && angle > -90)
+            instanceTexture->drawWithAngle(instanceTexture, "sniper4", srcRect, box, SDL_FLIP_NONE, angle);
+        else
+            instanceTexture->drawWithAngle(instanceTexture, "sniper4", srcRect, box, SDL_FLIP_VERTICAL, angle);
+
+        }
+
+
     }
     
 
@@ -302,14 +334,21 @@ void warriorEventHandle(void *self)
             Camera* camera = getCamera();
             SDL_Point offset =  camera->getCameraOffset(camera);
 
+            int xVelocity=0, yVelocity=0;
+            switch (warriorInstance->bulletCooldown){
+                case AK_RPM:xVelocity=15; yVelocity=15;break;//ak
+                case HANDGUN_RPM:xVelocity=10; yVelocity=10;break;//pistol
+                case SNIPER_RPM:xVelocity=35; yVelocity=35;break;//sniper
+            }
+
             float velx = cubeX - (pos->getX(pos) + offset.x);
             float vely = cubeY - (pos->getY(pos) + offset.y);
             float xN = velx / sqrt(velx * velx + vely * vely);
             float yN = vely / sqrt(velx * velx + vely * vely);
-            SDL_FPoint vel = {xN * 15, yN * 15}; //! bullet velocity
+            SDL_FPoint vel= {xN * xVelocity,  yN* yVelocity};
 
             //create new bullet
-            Bullet *bullet = newBullet(pos->get(pos), vel, -1, true);
+            Bullet *bullet = newBullet(pos->get(pos), vel, -1, true,warriorInstance->bulletCooldown);
             char *id = bullet->getID(bullet);
             entityManager->add(entityManager, id, bullet);
             lastTime = currentTime;
@@ -325,7 +364,7 @@ void warriorEventHandle(void *self)
     }
 }
 
-bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *vel, float dt)
+bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *vel, float dt,int bulletType)
 {
     CollisionManager *collisionManager = GetCollisionManager();
     WarriorInstance *warriorInstance = ((Warrior *)self)->instance;
@@ -352,12 +391,16 @@ bool checkColisionWarriorVsBullet(void *self, SDL_Rect bulletDRect, SDL_FPoint *
     }    
     
     if(collisionManager->ResolveDynamicRectVsRect(bulletDRect,vel,warriorDRect,dt)){ 
-        
-        warriorInstance->health--;
+        int healthDecline=1;
+        switch(bulletType){ 
+            case AK_RPM:healthDecline = warriorInstance->health-=AK_DAMAGE;break;//hit by ak
+            case HANDGUN_RPM: healthDecline = HANDGUN_DAMAGE; warriorInstance->health-=HANDGUN_DAMAGE;break;//hit by handgun
+            case SNIPER_RPM: healthDecline = SNIPER_DAMAGE; warriorInstance->health=warriorInstance->health-SNIPER_DAMAGE;break;//hit by sniper
+        }
         audio->playSound(audio, "hitWarrior");
         //brodcast healt decline
         NetworkClient *network = getNetworkClient();
-        GotShot gotshot = {network->getTCPID(network), warriorInstance->networkId,1};
+        GotShot gotshot = {network->getTCPID(network), warriorInstance->networkId,healthDecline};
         network->TCPbroadCast(network, &gotshot, sizeof(GotShot), 8);
         
         
@@ -445,6 +488,7 @@ Warrior *createWarrior(float x, float y, int id, int networkId, bool isLocal)
     texterManager->load(texterManager, "warrior", "./assets/WariorAnim.png");
     texterManager->load(texterManager,"pistol","./assets/pistol.png");
     texterManager->load(texterManager,"ak","./assets/ak.png");
+    texterManager->load(texterManager,"sniper4","./assets/sniper4.png");
 
     self->instance->isAlive = true;
     self->instance->hitBox.x = 5;

@@ -100,7 +100,7 @@ void TCPlisten(void *self)
                         ShootBullet * bullet = (ShootBullet*)(instance->packetReceived+offset);
                         SDL_FPoint velN = {bullet->velX, bullet->velY}; //! bullet velocity
                         SDL_FPoint pos = {bullet->x, bullet->y};
-                        Bullet *bullet1 = newBullet(pos, velN, bullet->intId, false);
+                        Bullet *bullet1 = newBullet(pos, velN, bullet->intId, false,bullet->bulletType);
                         char * idBullet = bullet1->getID(bullet1);
                         entityManager->add(entityManager, idBullet, bullet1);
                         offset += sizeof(ShootBullet);

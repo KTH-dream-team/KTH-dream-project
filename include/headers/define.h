@@ -6,3 +6,10 @@
 
 #define MAP_WIDTH 2000
 #define MAP_HEIGHT 1000
+
+#define HANDGUN_RPM 400
+#define SNIPER_RPM 700
+#define AK_RPM 100
+#define HANDGUN_DAMAGE 1
+#define SNIPER_DAMAGE 20
+#define AK_DAMAGE 1

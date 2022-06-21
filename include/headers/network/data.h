@@ -31,6 +31,7 @@ typedef struct // datatype: 4
     float y;
     float velX;
     float velY;
+    int bulletType;
 } ShootBullet;
 
 typedef struct // datatype:5

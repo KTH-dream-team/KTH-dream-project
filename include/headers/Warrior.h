@@ -16,7 +16,7 @@ typedef struct warrior
     void (*destroy)(void *self);
     void (*updatePossition)(void *self, float x, float y);
     char *(*getID)(void*self);
-    bool (*checkColisionWarriorVsBullet)(void *self,SDL_Rect bulletDRect,SDL_FPoint *vel, float dt);
+    bool (*checkColisionWarriorVsBullet)(void *self,SDL_Rect bulletDRect,SDL_FPoint *vel, float dt,int bulletType);
     void (*addHealth)(void *self,int health);
     int (*getHealth)(void *self);
     void (*setBulletCooldown)(void *self,int bulletCooldown);//shorter cooldown means faster shoting

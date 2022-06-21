@@ -28,6 +28,7 @@ struct bulletInstance
     char *id;
     int intId;
     bool isLocal;
+    int bulletType;
 };
 
 char *getBulletID(void *self)
@@ -76,7 +77,7 @@ void updateBullet(void *self, float dt)
         instance->hitBox.h,
     };
     EntityManager *EM = getEntityManager();
-    if (mapManager->checkColision(mapManager, bulletDRect, &instance->vel, dt,2,NULL))
+    if (mapManager->checkColision(mapManager, bulletDRect, &instance->vel, dt,2,NULL,instance->bulletType))
     {
         EM->drop(EM,instance->id);
         return;
@@ -84,14 +85,14 @@ void updateBullet(void *self, float dt)
     
     //check collision with warrior 
     Warrior *warrior000 = EM->getByID(EM,"Warrior-000");
-    if(warrior000->checkColisionWarriorVsBullet(warrior000,bulletDRect,&instance->vel,dt)){
+    if(warrior000->checkColisionWarriorVsBullet(warrior000,bulletDRect,&instance->vel,dt,instance->bulletType)){
         EM->drop(EM,instance->id);
         return;
     }
     
     if (NUM_OF_CLIENTS>1){
         Warrior *warrior001 = EM->getByID(EM,"Warrior-001");
-        if(warrior001->checkColisionWarriorVsBullet(warrior001,bulletDRect,&instance->vel,dt)){
+        if(warrior001->checkColisionWarriorVsBullet(warrior001,bulletDRect,&instance->vel,dt,instance->bulletType)){
             EM->drop(EM,instance->id);
             return;
         }
@@ -99,7 +100,7 @@ void updateBullet(void *self, float dt)
 
     if (NUM_OF_CLIENTS>2){
         Warrior *warrior002 = EM->getByID(EM,"Warrior-002");
-        if(warrior002->checkColisionWarriorVsBullet(warrior002,bulletDRect,&instance->vel,dt)){
+        if(warrior002->checkColisionWarriorVsBullet(warrior002,bulletDRect,&instance->vel,dt,instance->bulletType)){
             EM->drop(EM,instance->id);
             return;
         }
@@ -107,7 +108,7 @@ void updateBullet(void *self, float dt)
 
     if (NUM_OF_CLIENTS>3){
         Warrior *warrior003 = EM->getByID(EM,"Warrior-003");
-        if(warrior003->checkColisionWarriorVsBullet(warrior003,bulletDRect,&instance->vel,dt)){
+        if(warrior003->checkColisionWarriorVsBullet(warrior003,bulletDRect,&instance->vel,dt,instance->bulletType)){
             EM->drop(EM,instance->id);
             return;
         }
@@ -143,7 +144,7 @@ void destroyBullet(void *self)
     free(self);   
 }
 
-Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, int id, bool isLocal)
+Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, int id, bool isLocal,int bulletType)
 {
     Bullet *self = malloc(sizeof(Bullet));
     self->instance = malloc(sizeof(BulletInstance));
@@ -151,6 +152,7 @@ Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, int id, bool isLocal)
 
     self->instance->position = newTransform();                             //! positon
     self->instance->position->set(self->instance->position, pos.x, pos.y); //! position
+    self->instance->bulletType= bulletType;
 
     strcpy(self->instance->id, "Bullet-000");
 
@@ -207,7 +209,8 @@ Bullet *newBullet(SDL_FPoint pos, SDL_FPoint vel, int id, bool isLocal)
         pos.x,
         pos.y,
         vel.x,
-        vel.y};
+        vel.y,
+        bulletType};
     network->TCPbroadCast(network, &ataToSend, sizeof(ShootBullet), 4);
 
     return self;
