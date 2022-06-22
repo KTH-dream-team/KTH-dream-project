@@ -315,14 +315,40 @@ void warriorEventHandle(void *self)
         }
         
     }
+    if (inputHandler->getKeyPress(inputHandler, SDL_SCANCODE_Q))//toggel gun
+    {
+        static unsigned int currentTime1;
+        static unsigned int lastTime1;
+        currentTime1 = SDL_GetTicks(); // bullet cooldown 100ms
+
+        if(lastTime1+300<currentTime1){
+
+            static int mainWepon=0; 
+            if(warriorInstance->bulletCooldown!=HANDGUN_RPM){
+                mainWepon = warriorInstance->bulletCooldown;
+                printf("main wepon %d\n", mainWepon);
+            }
+
+            if (warriorInstance->bulletCooldown==SNIPER_RPM)
+            {
+            warriorInstance->bulletCooldown=HANDGUN_RPM;
+            }else if (warriorInstance->bulletCooldown==AK_RPM)
+            {
+                warriorInstance->bulletCooldown=HANDGUN_RPM;
+            }else if(warriorInstance->bulletCooldown==HANDGUN_RPM&&mainWepon!=0){
+                warriorInstance->bulletCooldown=mainWepon;
+            }
+            lastTime1 = currentTime1;
+        }    
+                   
+    }
     int mouse_x, mouse_y;
     char result[50];
     char bulletId[50] = "Bullet-";
     static int bulletCount = 0;                                              //! ongoing
     if (inputHandler->getMouseState(&mouse_x, &mouse_y) == SDL_BUTTON_LEFT) //! right mouse button pressed
     {
-        // mapManager->dig(mapManager, mouse_x, mouse_y);
-        static unsigned int currentTime;//todo turn this on
+        static unsigned int currentTime;
         static unsigned int lastTime;
         currentTime = SDL_GetTicks(); // bullet cooldown 100ms
         if (lastTime + warriorInstance->bulletCooldown < currentTime)
