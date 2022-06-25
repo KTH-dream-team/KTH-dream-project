@@ -13,6 +13,10 @@
 
 #define SDL_MAIN_HANDLED
 
+//how to use
+//trun of fier wall 
+//start a server and define nr of clients in define.h
+//start all clients to launch the game
 
 
 int main(int argc, char **argv)
